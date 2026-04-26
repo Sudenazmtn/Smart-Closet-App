@@ -1,0 +1,1 @@
+# models paketi — Flask-Migrate bu dosyayı tanımlı olmasını ister
