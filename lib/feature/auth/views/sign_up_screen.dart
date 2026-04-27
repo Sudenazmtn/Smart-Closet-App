@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'sign_in_screen.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _fullNameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +36,9 @@ class SignUpScreen extends StatelessWidget {
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 32,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D2D2D),   
-                  letterSpacing: -0.5,     
-                  ),
+                  color: const Color(0xFF2D2D2D),
+                  letterSpacing: -0.5,
+                ),
               ),
 
               const Text(
@@ -41,22 +52,44 @@ class SignUpScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 48),
-              
-              _buildTextField('Full Name'),
-              
-              const SizedBox(height: 12),
-              _buildTextField('Email', keyboardType: TextInputType.emailAddress),
-              
-              const SizedBox(height: 12), // DÜZELTME: Virgül eklendi
-              _buildTextField('Password', obscure: true),
 
-              const SizedBox(height: 12), // DÜZELTME: Virgül eklendi
-              _buildTextField('Confirm Your Password', obscure: true),
+              _buildTextField('Full Name', controller: _fullNameController),
+              const SizedBox(height: 12),
+              _buildTextField('Email', controller: _emailController, keyboardType: TextInputType.emailAddress),
+              const SizedBox(height: 12),
+              _buildTextField('Password', controller: _passwordController, obscure: true),
+              const SizedBox(height: 12),
+              _buildTextField('Confirm Your Password', controller: _confirmPasswordController, obscure: true),
 
               const SizedBox(height: 24),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if(_passwordController.text != _confirmPasswordController.text){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Passwords do not match')),
+                    );
+                    return;
+                  }
+
+                
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    );
+
+                    await FirebaseAuth.instance.currentUser!.updateDisplayName(_fullNameController.text.trim());
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SignInScreen()),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: ${e.toString()}')),
+                    );
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: goldColor,
                   foregroundColor: Colors.white,
@@ -69,13 +102,12 @@ class SignUpScreen extends StatelessWidget {
                   'Create Account',
                   style: TextStyle(fontSize: 16),
                 ),
-              ), // DÜZELTME: ElevatedButton burada kapatıldı
+              ),
 
               const SizedBox(height: 12),
 
               OutlinedButton.icon(
                 onPressed: () {},
-                
                 label: const Text('Continue with Google'),
                 style: OutlinedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
@@ -90,7 +122,7 @@ class SignUpScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Already have an account? '), // Boşluk eklendi yapışmasın diye
+                  const Text('Already have an account? '),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -114,10 +146,12 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildTextField(
     String hint, {
+    TextEditingController? controller,
     bool obscure = false,
     TextInputType keyboardType = TextInputType.text,
   }) {
     return TextField(
+      controller: controller,
       obscureText: obscure,
       keyboardType: keyboardType,
       decoration: InputDecoration(
@@ -133,4 +167,3 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 }
-

@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'home_screen.dart';
+import 'dashboard_screen.dart';
 
-class SignInScreen extends StatefulWidget{
+
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
-
 }
 
-class _SignInScreenState extends State<SignInScreen>{
+class _SignInScreenState extends State<SignInScreen> {
   bool _obscurePassword = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     const goldColor = Color(0xFFC9A96E);
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F0E8),
       body: SafeArea(
@@ -24,24 +29,23 @@ class _SignInScreenState extends State<SignInScreen>{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height:40),
+              const SizedBox(height: 40),
 
               Text(
-                'Smart Closet',
+                'SmartCloset',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 32,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D2D2D), 
-                  letterSpacing: -0.5,  
+                  color: const Color(0xFF2D2D2D),
+                  letterSpacing: -0.5,
                 ),
-
               ),
 
               const Text(
                 'YOUR AI WARDROBE',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize:12, color: goldColor, letterSpacing:2),
+                style: TextStyle(fontSize: 12, color: goldColor, letterSpacing: 2),
               ),
 
               const SizedBox(height: 32),
@@ -52,7 +56,6 @@ class _SignInScreenState extends State<SignInScreen>{
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                 ),
-
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -60,22 +63,22 @@ class _SignInScreenState extends State<SignInScreen>{
                       'Welcome Back',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.playfairDisplay(
-                        fontSize: 24, 
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        ),
+                      ),
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Sign In To Your Account',
+                      'Sign in to your account.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(height: 24),
 
-                    ),
-                    const Text('E-mail',
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(height:8),
+                    const Text('Email', style: TextStyle(fontWeight: FontWeight.w500)),
+                    const SizedBox(height: 8),
                     TextField(
+                      controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         hintText: 'email@example.com',
@@ -85,21 +88,17 @@ class _SignInScreenState extends State<SignInScreen>{
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                      
                       ),
                     ),
                     const SizedBox(height: 16),
 
-                    const Text(
-                      'Password',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-
+                    const Text('Password', style: TextStyle(fontWeight: FontWeight.w500)),
                     const SizedBox(height: 8),
                     TextField(
+                      controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        hintText: 'Your Password',
+                        hintText: 'Your password',
                         filled: true,
                         fillColor: const Color(0xFFF5F5F5),
                         border: OutlineInputBorder(
@@ -111,29 +110,51 @@ class _SignInScreenState extends State<SignInScreen>{
                             _obscurePassword ? Icons.visibility_off : Icons.visibility,
                             color: Colors.grey,
                           ),
-                          onPressed: (){
+                          onPressed: () {
                             setState(() {
                               _obscurePassword = !_obscurePassword;
                             });
                           },
-                        )
+                        ),
                       ),
                     ),
 
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {}, 
+                        onPressed: () {},
                         child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(color:goldColor),
+                          'Forgot password?',
+                          style: TextStyle(color: goldColor),
                         ),
                       ),
-                        
                     ),
 
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await FirebaseAuth.instance.signInWithEmailAndPassword(
+                            email: _emailController.text.trim(),
+                            password: _passwordController.text.trim(),
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => DashboardScreen()),
+                          );
+                        } catch (e) {
+                          String message = 'An error occurred.';
+                          if (e.toString().contains('invalid-credential')) {
+                            message = 'Email or password is incorrect!';
+                          } else if (e.toString().contains('user-not-found')) {
+                            message = 'No user found with this email!';
+                          } else if (e.toString().contains('wrong-password')) {
+                            message = 'Incorrect password!';
+                          }
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(message)),
+                          );
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: goldColor,
                         foregroundColor: Colors.white,
@@ -144,13 +165,13 @@ class _SignInScreenState extends State<SignInScreen>{
                       ),
                       child: const Text(
                         'Sign In',
-                        style: TextStyle(fontSize:16),
-                        ),
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
 
-                      const SizedBox(height: 16),
-                      
-                      Container(
+                    const SizedBox(height: 16),
+
+                    Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF5F0E8),
@@ -179,5 +200,3 @@ class _SignInScreenState extends State<SignInScreen>{
     );
   }
 }
-
-     
