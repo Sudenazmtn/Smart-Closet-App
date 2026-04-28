@@ -1,0 +1,121 @@
+import 'package:flutter/material.dart';
+import 'package:smart_closet_app/product/data/model/outfit_model.dart';
+import 'package:smart_closet_app/product/data/model/stats_model.dart';
+import 'package:smart_closet_app/product/data/repositories/outfit_repository.dart';
+import 'package:smart_closet_app/product/utils/enums/outfit_status_enum.dart';
+
+class OutfitProvider extends ChangeNotifier {
+  OutfitProvider() : _repository = OutfitRepository();
+
+  final OutfitRepository _repository;
+
+  OutfitStatus _status = OutfitStatus.idle;
+  List<OutfitModel> _outfits = [];
+  StatsModel? _stats;
+  String? _errorMessage;
+
+  // ── Getters ───────────────────────────────────────────────────────────────
+  OutfitStatus get status => _status;
+  List<OutfitModel> get outfits => _outfits;
+  StatsModel? get stats => _stats;
+  String? get errorMessage => _errorMessage;
+  bool get isLoading => _status == OutfitStatus.loading;
+
+  List<OutfitModel> get favorites =>
+      _outfits.where((o) => o.isFavorite).toList();
+
+  // ── Kombinleri yükle ──────────────────────────────────────────────────────
+  Future<void> loadOutfits({bool? isFavorite}) async {
+    _setLoading();
+    try {
+      _outfits = await _repository.getOutfits(isFavorite: isFavorite);
+      _setSuccess();
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  // ── Kombin kaydet ─────────────────────────────────────────────────────────
+  Future<void> saveOutfit({
+    required List<int> itemIds,
+    String? name,
+    String? eventType,
+    String? aiNote,
+  }) async {
+    _setLoading();
+    try {
+      final newOutfit = await _repository.saveOutfit(
+        itemIds: itemIds,
+        name: name,
+        eventType: eventType,
+        aiNote: aiNote,
+      );
+      _outfits.insert(0, newOutfit);
+      _setSuccess();
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  // ── Favori toggle ─────────────────────────────────────────────────────────
+  Future<void> toggleFavorite(int outfitId) async {
+    try {
+      final updated = await _repository.toggleFavorite(outfitId);
+      final index = _outfits.indexWhere((o) => o.id == outfitId);
+      if (index != -1) {
+        _outfits[index] = updated;
+        notifyListeners();
+      }
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  // ── Kombin sil ────────────────────────────────────────────────────────────
+  Future<void> deleteOutfit(int outfitId) async {
+    _setLoading();
+    try {
+      await _repository.deleteOutfit(outfitId);
+      _outfits.removeWhere((o) => o.id == outfitId);
+      _setSuccess();
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  // ── İstatistikleri yükle ──────────────────────────────────────────────────
+  Future<void> loadStats() async {
+    _setLoading();
+    try {
+      _stats = await _repository.getStats();
+      _setSuccess();
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
+  // ── Reset ─────────────────────────────────────────────────────────────────
+  void resetStatus() {
+    _status = OutfitStatus.idle;
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  // ── Private helpers ───────────────────────────────────────────────────────
+  void _setLoading() {
+    _status = OutfitStatus.loading;
+    _errorMessage = null;
+    notifyListeners();
+  }
+
+  void _setSuccess() {
+    _status = OutfitStatus.success;
+    notifyListeners();
+  }
+
+  void _setError(String message) {
+    _status = OutfitStatus.error;
+    _errorMessage = message;
+    notifyListeners();
+  }
+}

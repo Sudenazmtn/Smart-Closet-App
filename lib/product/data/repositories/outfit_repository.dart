@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:smart_closet_app/product/data/model/outfit_model.dart';
 import 'package:smart_closet_app/product/data/model/stats_model.dart';
-
-import '../services/api_service.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 
 class OutfitRepository {
   OutfitRepository() : _dio = ApiService.instance.dio;
