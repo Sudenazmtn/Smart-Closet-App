@@ -1,0 +1,170 @@
+{
+  "appName": "SmartCloset",
+  "appTagline": "Yapay Zeka Gardırobun",
+  "appSlogan": "Bilinçli giy.",
+  "appSloganSub": "Gardırobuna, havaya ve güne göre kişiselleştirilmiş yapay zeka kombin önerileri.",
+
+  "auth": {
+    "getStarted": "Başla",
+    "signIn": "Giriş Yap",
+    "signInTitle": "Tekrar hoş geldin",
+    "signInSubtitle": "Gardırobuna giriş yap.",
+    "signUp": "Kayıt Ol",
+    "signUpTitle": "Hesap oluştur",
+    "signUpSubtitle": "Bugün akıllı gardırobunu oluşturmaya başla.",
+    "signOut": "Çıkış Yap",
+    "continueWithGoogle": "Google ile devam et",
+    "alreadyHaveAccount": "Zaten hesabın var mı?",
+    "dontHaveAccount": "Hesabın yok mu?",
+    "forgotPassword": "Şifreni mi unuttun?",
+    "forgotPasswordTitle": "Şifreyi sıfırla",
+    "forgotPasswordSubtitle": "E-posta adresini gir, sana bir sıfırlama bağlantısı gönderelim.",
+    "sendResetLink": "Sıfırlama Bağlantısı Gönder",
+    "backToSignIn": "Girişe Dön",
+    "rememberedPassword": "Hatırladın mı?",
+    "securityNote": "Verileriniz şifrelenerek güvenli bir şekilde saklanmaktadır."
+  },
+
+  "field": {
+    "fullName": "Ad Soyad",
+    "email": "E-posta",
+    "password": "Şifre",
+    "confirmPassword": "Şifreyi onayla",
+    "hintFullName": "örn. Sude Yılmaz",
+    "hintEmail": "sude@ornek.com",
+    "hintPassword": "Min. 8 karakter",
+    "hintConfirmPassword": "Şifreni tekrar gir",
+    "hintEmailAddress": "E-posta adresin",
+    "hintItemName": "örn. Bej keten palto"
+  },
+
+  "validation": {
+    "required": "{field} boş bırakılamaz.",
+    "emailInvalid": "Lütfen geçerli bir e-posta adresi gir.",
+    "passwordShort": "Şifre en az 8 karakter olmalıdır.",
+    "passwordMismatch": "Şifreler eşleşmiyor."
+  },
+
+  "home": {
+    "goodMorning": "Günaydın,",
+    "goodAfternoon": "İyi öğleden sonralar,",
+    "goodEvening": "İyi akşamlar,",
+    "aiButton": "Yapay Zeka Önerisi Al",
+    "aiButtonSub": "Bugün ne giysem?",
+    "sectionWardrobe": "Gardırobum",
+    "sectionOutfit": "Bugünün Kombini",
+    "viewAll": "Tümünü gör",
+    "matchPercent": "%{} uyum"
+  },
+
+  "wardrobe": {
+    "title": "Gardırobum",
+    "itemCount": "{} parça",
+    "filterAll": "Tümü",
+    "filterTops": "Üstler",
+    "filterBottoms": "Altlar",
+    "filterDresses": "Elbiseler",
+    "filterOuterwear": "Dış Giyim",
+    "filterShoes": "Ayakkabılar",
+    "filterBags": "Çantalar"
+  },
+
+  "addItem": {
+    "title": "Parça Ekle",
+    "save": "Gardıroba Ekle",
+    "photoPrompt": "Fotoğraf çekmek veya galeriden yüklemek için dokun",
+    "autoClassify": "Otomatik Sınıflandır",
+    "fieldName": "Parça Adı",
+    "fieldCategory": "Kategori",
+    "fieldSeason": "Mevsim",
+    "fieldColor": "Renk"
+  },
+
+  "season": {
+    "spring": "İlkbahar",
+    "summer": "Yaz",
+    "fall": "Sonbahar",
+    "winter": "Kış",
+    "all": "Tüm Mevsimler"
+  },
+
+  "color": {
+    "beige": "Bej",
+    "black": "Siyah",
+    "white": "Beyaz",
+    "navy": "Lacivert",
+    "red": "Kırmızı"
+  },
+
+  "outfit": {
+    "title": "Bugünün görünümü",
+    "eventCasual": "Günlük",
+    "eventWork": "İş",
+    "eventSport": "Spor",
+    "eventEvening": "Akşam",
+    "aiLabel": "Yapay Zeka Önerisi",
+    "claudeSays": "Claude diyor ki:",
+    "save": "Kombini Kaydet",
+    "askPlaceholder": "Claude'a danış..."
+  },
+
+  "stats": {
+    "title": "İstatistikler",
+    "overview": "Genel Bakış",
+    "periodWeek": "Hafta",
+    "periodMonth": "Ay",
+    "periodAllTime": "Tüm Zamanlar",
+    "chartLabel": "Günlük giyilen kombin sayısı",
+    "mostWorn": "En çok giyilenler",
+    "wornTimes": "{} kez giyildi",
+    "neverWorn": "Hiç giyilmeyen parçalar",
+    "neverWornSub": "İncelemek için dokun"
+  },
+
+  "profile": {
+    "title": "Profilim",
+    "editButton": "Profili Düzenle",
+    "statItems": "Parça",
+    "statOutfits": "Kombin",
+    "statAiUses": "Yapay Zeka",
+    "menuEditProfile": "Profili Düzenle",
+    "menuEditProfileSub": "Ad, fotoğraf, tercihler",
+    "menuNotifications": "Bildirimler",
+    "menuNotificationsSub": "Günlük kombin hatırlatıcısı açık",
+    "menuLocation": "Konum",
+    "menuPrivacy": "Gizlilik & Güvenlik",
+    "menuPrivacySub": "Verilerini yönet"
+  },
+
+  "nav": {
+    "home": "Ana Sayfa",
+    "wardrobe": "Gardırop",
+    "ai": "Yapay Zeka",
+    "profile": "Profil"
+  },
+
+  "error": {
+    "general": "Bir hata oluştu. Lütfen tekrar dene.",
+    "noInternet": "İnternet bağlantısı yok.",
+    "invalidCredentials": "Geçersiz e-posta veya şifre.",
+    "emailInUse": "Bu e-posta adresi zaten kullanımda.",
+    "weakPassword": "Şifre çok zayıf.",
+    "userNotFound": "Bu e-posta adresiyle kayıtlı hesap bulunamadı."
+  },
+
+  "success": {
+    "resetEmailSent": "Sıfırlama e-postası gönderildi. Gelen kutunu kontrol et.",
+    "itemAdded": "Parça gardıroba eklendi.",
+    "outfitSaved": "Kombin kaydedildi."
+  },
+
+  "common": {
+    "cancel": "İptal",
+    "delete": "Sil",
+    "save": "Kaydet",
+    "loading": "Yükleniyor...",
+    "retry": "Tekrar Dene",
+    "deleteConfirmTitle": "Parçayı sil?",
+    "deleteConfirmMessage": "Bu işlem geri alınamaz."
+  }
+}
