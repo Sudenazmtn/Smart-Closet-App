@@ -64,4 +64,10 @@ backend/uploads/
 # Firebase
 google-services.json
 GoogleService-Info.plist
-lib/firebase_options.dart
+
+"backend/instance/"
+"backend/*.db"
+"backend/python"
+backend/instance/ 
+backend/venv/ 
+backend/__pycache__/ 
