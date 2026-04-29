@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Hp/Desktop/smart_closet_app/backend/**)",
+      "Read(//c/Users/Hp/Desktop/smart_closet_app/backend/instance/**)",
+      "Bash(cp \"C:/Users/Hp/Desktop/smart_closet_app/backend/.env\" \"C:/Users/Hp/Desktop/smart_closet_app/.claude/worktrees/peaceful-lichterman-e0a46e/backend/.env\")",
+      "Bash(cp \"C:/Users/Hp/Desktop/smart_closet_app/backend/instance/smartcloset.db\" \"C:/Users/Hp/Desktop/smart_closet_app/.claude/worktrees/peaceful-lichterman-e0a46e/backend/instance/smartcloset.db\")",
+      "Bash(python -m venv venv)",
+      "Bash(venv/Scripts/pip install *)",
+      "Bash(venv/Scripts/python -c \"from app import create_app; app = create_app\\(\\); print\\('OK'\\)\")",
+      "Bash(venv/Scripts/python run.py)",
+      "Bash(curl -s http://localhost:5000/auth/me)",
+      "Bash(curl -s -X POST http://localhost:5000/auth/register -H \"Content-Type: application/json\" -d \"{\\\\\"firebase_uid\\\\\": \\\\\"test-uid-123\\\\\", \\\\\"name\\\\\": \\\\\"Test Kullanici\\\\\", \\\\\"email\\\\\": \\\\\"test@example.com\\\\\"}\")"
+    ]
+  }
+}

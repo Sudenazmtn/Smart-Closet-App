@@ -3,7 +3,7 @@ flask-sqlalchemy==3.1.1
 flask-migrate==4.0.7
 flask-cors==5.0.0
 python-dotenv==1.0.1
-anthropic==0.40.0
+anthropic>=0.55.0
 requests==2.32.3
 pillow==11.1.0
 werkzeug==3.1.3
