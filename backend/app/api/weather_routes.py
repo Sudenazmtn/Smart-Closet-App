@@ -64,3 +64,17 @@ def _outfit_tip(temperature: int, description: str) -> str:
     if temperature >= 8:  return 'Cool day — wear a medium coat or sweater.'
     if temperature >= 0:  return 'Cold day — layer up with a warm coat and scarf.'
     return 'Very cold — heavy coat, gloves and a hat are essential.'
+
+def fetch_weather(lat: float, lon: float, api_key: str) -> dict:
+    response = requests.get(
+        'https://api.openweathermap.org/data/2.5/weather',
+        params={'lat': lat, 'lon': lon, 'appid': api_key, 'units': 'metric', 'lang': 'en'},
+        timeout=5,
+    )
+    response.raise_for_status()
+    d = response.json()
+
+    return {
+        'temperature': round(d['main']['temp']),
+        'description': d['weather'][0]['description'].capitalize(),
+    }
