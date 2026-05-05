@@ -62,7 +62,7 @@ backend/uploads/
 *.pt
 
 # Firebase
-google-services.json
+##google-services.json
 GoogleService-Info.plist
 
 "backend/instance/"

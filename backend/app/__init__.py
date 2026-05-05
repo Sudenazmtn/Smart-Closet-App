@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 
+
 db      = SQLAlchemy()
 migrate = Migrate()
 
@@ -31,10 +32,13 @@ def create_app():
     from app.api.clothing_routes import clothing_bp
     from app.api.outfit_routes   import outfit_bp
     from app.api.weather_routes  import weather_bp
+    from app.api.chat_routes import chat_bp
 
     app.register_blueprint(auth_bp,     url_prefix='/auth')
     app.register_blueprint(clothing_bp, url_prefix='/clothes')
     app.register_blueprint(outfit_bp,   url_prefix='/outfit')
     app.register_blueprint(weather_bp,  url_prefix='/weather')
+    app.register_blueprint(chat_bp,     url_prefix='/chat')
+
 
     return app
