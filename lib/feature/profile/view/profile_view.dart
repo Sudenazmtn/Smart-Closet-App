@@ -6,9 +6,14 @@ import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_bar.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 import '../../../feature/auth/provider/auth_provider.dart';
+import '../../../feature/wardrobe/provider/clothing_provider.dart';
+import '../../../feature/wardrobe/provider/outfit_provider.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -34,7 +39,7 @@ class ProfileView extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       color: AppColors.primary,
-                      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+                      padding: EdgeInsets.fromLTRB(AppSizes.l, AppSizes.m, AppSizes.l, AppSizes.xl),
                       child: Column(
                         children: [
                           Row(
@@ -42,26 +47,23 @@ class ProfileView extends StatelessWidget {
                             children: [
                               Text(
                                 LocaleKeys.profileTitle.tr(),
-                                style: const TextStyle(
-                                  fontFamily: 'PlayfairDisplay',
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
+                                style: AppTextStyles.displaySmall.copyWith(
+                                  color: AppColors.textOnDark,
                                 ),
                               ),
-                              const Icon(
+                              Icon(
                                 Icons.settings_outlined,
-                                color: Colors.white54,
-                                size: 22,
+                                color: AppColors.textOnDark.withValues(alpha: 0.6),
+                                size: AppSizes.m + AppSizes.xs - AppSizes.xxs,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSizes.m),
                           Row(
                             children: [
                               Container(
-                                width: 52,
-                                height: 52,
+                                width: AppSizes.maxiS + AppSizes.xxs,
+                                height: AppSizes.maxiS + AppSizes.xxs,
                                 decoration: const BoxDecoration(
                                   color: AppColors.accent,
                                   shape: BoxShape.circle,
@@ -69,34 +71,22 @@ class ProfileView extends StatelessWidget {
                                 child: Center(
                                   child: Text(
                                     initial,
-                                    style: const TextStyle(
-                                      fontFamily: 'PlayfairDisplay',
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
+                                    style: AppTextStyles.headingOnDark,
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 14),
+                              const SizedBox(width: AppSizes.s + AppSizes.xxs),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     displayName,
-                                    style: const TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
+                                    style: AppTextStyles.headingOnDark,
                                   ),
                                   Text(
                                     email,
-                                    style: const TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 12,
-                                      color: Colors.white54,
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: AppColors.textOnDark.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ],
@@ -109,19 +99,19 @@ class ProfileView extends StatelessWidget {
 
                     // ── Menü ─────────────────────────────────────────────────
                     Padding(
-                      padding: const EdgeInsets.all(20),
+                      padding: AppPaddings.allL,
                       child: Column(
                         children: [
                           _MenuItem(
                             icon: Icons.edit_outlined,
-                            iconBg: const Color(0xFFF5F0E8),
+                            iconBg: AppColors.iconBgOrange,
                             label: LocaleKeys.profileMenuEditProfile.tr(),
                             subtitle: LocaleKeys.profileMenuEditProfileSub.tr(),
                             onTap: () {},
                           ),
                           _MenuItem(
                             icon: Icons.notifications_outlined,
-                            iconBg: const Color(0xFFFEE2E2),
+                            iconBg: AppColors.iconBgRed,
                             label: LocaleKeys.profileMenuNotifications.tr(),
                             subtitle: LocaleKeys.profileMenuNotificationsSub
                                 .tr(),
@@ -129,44 +119,39 @@ class ProfileView extends StatelessWidget {
                           ),
                           _MenuItem(
                             icon: Icons.language_outlined,
-                            iconBg: const Color(0xFFD1FAE5),
+                            iconBg: AppColors.iconBgGreen,
                             label: LocaleKeys.profileMenuLocation.tr(),
                             subtitle: 'Istanbul, Turkey',
                             onTap: () {},
                           ),
                           _MenuItem(
                             icon: Icons.lock_outline,
-                            iconBg: const Color(0xFFEDE9FE),
+                            iconBg: AppColors.iconBgPurple,
                             label: LocaleKeys.profileMenuPrivacy.tr(),
                             subtitle: LocaleKeys.profileMenuPrivacySub.tr(),
                             onTap: () {},
                           ),
 
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSizes.m),
 
                           // Sign Out butonu
                           SizedBox(
                             width: double.infinity,
-                            height: 48,
+                            height: AppSizes.maxiS - AppSizes.xxs,
                             child: OutlinedButton(
                               onPressed: () => _onSignOut(context),
                               style: OutlinedButton.styleFrom(
                                 side: const BorderSide(
-                                  color: Color(0xFFFCA5A5),
+                                  color: AppColors.errorLight,
                                   width: 0.8,
                                 ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: AppRadius.allS,
                                 ),
                               ),
                               child: Text(
                                 LocaleKeys.authSignOut.tr(),
-                                style: const TextStyle(
-                                  fontFamily: 'DMSans',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Color(0xFFA32D2D),
-                                ),
+                                style: AppTextStyles.buttonDestructive,
                               ),
                             ),
                           ),
@@ -185,6 +170,10 @@ class ProfileView extends StatelessWidget {
   }
 
   Future<void> _onSignOut(BuildContext context) async {
+    // Tüm kullanıcıya özel state'i temizle
+    context.read<ClothingProvider>().resetState();
+    context.read<OutfitProvider>().resetState();
+
     final auth = context.read<AuthProvider>();
     await auth.signOut();
     if (context.mounted) {
@@ -215,7 +204,7 @@ class _MenuItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: AppPaddings.verticalS,
         decoration: const BoxDecoration(
           border: Border(
             bottom: BorderSide(color: AppColors.border, width: 0.5),
@@ -224,15 +213,15 @@ class _MenuItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 36,
-              height: 36,
+              width: AppSizes.xl + AppSizes.xxs,
+              height: AppSizes.xl + AppSizes.xxs,
               decoration: BoxDecoration(
                 color: iconBg,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: AppRadius.allS,
               ),
-              child: Icon(icon, size: 18, color: AppColors.textSecondary),
+              child: Icon(icon, size: AppSizes.m + AppSizes.xxs, color: AppColors.textSecondary),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,7 +234,7 @@ class _MenuItem extends StatelessWidget {
             const Icon(
               Icons.chevron_right_rounded,
               color: AppColors.border,
-              size: 20,
+              size: AppSizes.l,
             ),
           ],
         ),

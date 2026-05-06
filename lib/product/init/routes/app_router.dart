@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smart_closet_app/feature/add_clothing/view/add_clothing_view.dart';
 import 'package:smart_closet_app/feature/auth/views/forgot_password_view.dart';
 import 'package:smart_closet_app/feature/auth/views/onboarding_view.dart';
 import 'package:smart_closet_app/feature/auth/views/sign_in_view.dart';
 import 'package:smart_closet_app/feature/auth/views/sign_up_view.dart';
 import 'package:smart_closet_app/feature/home/view/home_view.dart';
+import 'package:smart_closet_app/feature/outfit/view/outfit_view.dart';
 import 'package:smart_closet_app/feature/profile/view/profile_view.dart';
+import 'package:smart_closet_app/feature/stats/view/stats_view.dart';
 import 'package:smart_closet_app/feature/wardrobe/view/wardrobe_view.dart';
 
 class AppRoutes {
@@ -75,19 +78,19 @@ final appRouter = GoRouter(
         GoRoute(
           path: 'add',
           name: 'addClothing',
-          builder: (context, state) => const Placeholder(),
+          builder: (context, state) => const AddClothingView(),
         ),
       ],
     ),
     GoRoute(
       path: AppRoutes.outfit,
       name: 'outfit',
-      builder: (context, state) => const Placeholder(),
+      builder: (context, state) => const OutfitView(),
     ),
     GoRoute(
       path: AppRoutes.stats,
       name: 'stats',
-      builder: (context, state) => const Placeholder(),
+      builder: (context, state) => const StatsView(),
     ),
     GoRoute(
       path: AppRoutes.profile,

@@ -1,9 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/auth/views/widget/auth_visibilty_icon.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
+import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 import '../provider/auth_provider.dart';
@@ -26,7 +30,7 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
       backgroundColor: AppColors.accentLight,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.xl),
           child: Form(
             key: formKey,
             child: Column(
@@ -38,10 +42,10 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
 
                 // ── Kart ──────────────────────────────────────────────────
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(AppSizes.xl),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: AppRadius.allL,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -116,7 +120,7 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
-                            // context.go(AppRoutes.forgotPassword);
+                            context.go(AppRoutes.forgotPassword);
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -145,7 +149,7 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
                               foregroundColor: Colors.white,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: AppRadius.allS,
                               ),
                             ),
                             child: auth.isLoading
@@ -169,10 +173,10 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
 
                       // Güvenlik notu
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: EdgeInsets.all(AppSizes.s),
                         decoration: BoxDecoration(
                           color: AppColors.accentLight,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: AppRadius.allS,
                         ),
                         child: Row(
                           children: [
@@ -202,7 +206,7 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
                   question: LocaleKeys.authDontHaveAccount.tr(),
                   actionText: LocaleKeys.authSignUp.tr(),
                   onTap: () {
-                    // context.go(AppRoutes.register);
+                    context.go(AppRoutes.register);
                   },
                 ),
 

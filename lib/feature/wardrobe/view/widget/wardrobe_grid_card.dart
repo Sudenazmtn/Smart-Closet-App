@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/product/data/model/clothing_model.dart';
-import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 import 'package:smart_closet_app/product/utils/extension/clothing_category_ext.dart';
 
 class WardrobeGridCard extends StatelessWidget {
@@ -83,12 +83,7 @@ class _EmojiContent extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
-            ),
+            style: AppTextStyles.bodySmall,
           ),
         ),
       ],

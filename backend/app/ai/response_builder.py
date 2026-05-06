@@ -4,109 +4,95 @@ import random
 
 OPENING_TEMPLATES = {
     "casual": [
-        "Here's a relaxed and stylish look for your day!",
-        "Keeping it casual and comfortable — here's what I'd suggest.",
-        "Perfect for a laid-back day out!",
+        "Günlük ve şık bir bakış için bu kombini öneririm!",
+        "Rahat ve şık — bugün için harika bir seçim.",
+        "Gündelik bir gün için mükemmel!",
     ],
     "formal": [
-        "For a formal occasion, here's an elegant ensemble.",
-        "Looking sharp! Here's a sophisticated outfit for your event.",
-        "A polished look that's sure to impress.",
+        "Resmi bir etkinlik için zarif bir kombin hazırladım.",
+        "Etkileyici görünmek için bu şık kombini dene.",
+        "Resmi ortamlar için cilalı ve profesyonel bir bakış.",
     ],
     "date": [
-        "Perfect! For a chic {occasion_detail}, I recommend this sophisticated yet comfortable ensemble.",
-        "Romance calls for the right outfit — here's my pick for your {occasion_detail}.",
-        "You'll look amazing! Here's a stylish combination for your {occasion_detail}.",
+        "Harika! {occasion_detail} için hem şık hem rahat bu kombini öneririm.",
+        "Romantizm doğru kıyafeti hak ediyor — {occasion_detail} için bu seçim!",
+        "Muhteşem görüneceksin! {occasion_detail} için stilistik bir kombin.",
     ],
     "business": [
-        "A professional and confident look for your {occasion_detail}.",
-        "Dressed to impress at work — here's what I'd recommend.",
-        "Sharp and polished — perfect for a business setting.",
+        "{occasion_detail} için profesyonel ve özgüvenli bir bakış.",
+        "İşte tam bir ofis kombini — şık ve etkileyici.",
+        "Keskin ve bakımlı — iş ortamı için ideal.",
     ],
     "sport": [
-        "Comfort meets style for your workout!",
-        "Ready to move — here's a great athletic combination.",
-        "Performance and style together — here's your look.",
+        "Konfor ve stil bir arada — antrenman için hazırsın!",
+        "Hareket etmeye hazır — harika bir spor kombini.",
+        "Performans ve stil birlikte — işte bugünün görünümü.",
     ],
     "party": [
-        "Time to stand out! Here's a fun and vibrant outfit for the {occasion_detail}.",
-        "Party-ready and looking great — here's my suggestion.",
-        "Let's make an entrance! Here's what I'd wear.",
+        "Göz alıcı ol! {occasion_detail} için eğlenceli ve canlı bir kombin.",
+        "Partiye hazır ve harika görünüyorsun — işte önerim.",
+        "Görkemli bir giriş yap! Bu kombini giyerdim.",
     ],
 }
 
-# ── Weather notes ─────────────────────────────────────────────────────────────
 WEATHER_NOTES = {
-    "hot":          "It's quite hot today, so I kept it light and breathable.",
-    "warm":         "The weather is warm and pleasant — perfect for this look.",
-    "cool":         "It's a bit cool out, so I added some layers to keep you comfortable.",
-    "cold":         "Bundled up but still stylish — great for the cold weather.",
-    "rainy":        "Rainy day ahead — I picked pieces that work well in wet weather.",
-    "rain":         "Rainy day ahead — I picked pieces that work well in wet weather.",
-    "drizzle":      "A little drizzle out there — I kept that in mind for this pick.",
-    "snow":         "Snowy day — staying warm and stylish at the same time.",
-    "sunny":        "Sunny day — a great excuse to wear something bright!",
-    "cloudy":       "Cloudy skies today — still a great day to look good!",
-    "mild":         "The mild weather gives you plenty of outfit options.",
-    "clear":        "Clear skies today — perfect weather to show off a great outfit.",
-    "overcast":     "A grey sky outside, but your outfit will brighten things up.",
-    "thunderstorm": "Stormy weather — I picked something practical yet stylish.",
+    "hot":          "Bugün oldukça sıcak, bu yüzden hafif ve nefes alan parçalar seçtim.",
+    "warm":         "Hava sıcak ve güzel — bu kombin için mükemmel bir gün.",
+    "cool":         "Biraz serin, bu yüzden seni rahat tutacak katmanlar ekledim.",
+    "cold":         "Soğuk havaya rağmen stil sahibi — harika bir kış kombini.",
+    "rainy":        "Yağmurlu bir gün — yağışa uygun parçalar seçtim.",
+    "rain":         "Yağmurlu bir gün — yağışa uygun parçalar seçtim.",
+    "drizzle":      "Hafif yağmur var — bunu göz önünde bulundurarak seçtim.",
+    "snow":         "Karlı bir gün — sıcak ve şık bir arada.",
+    "sunny":        "Güneşli bir gün — parlak bir şey giymek için harika fırsat!",
+    "cloudy":       "Bulutlu bir gün ama kombin güzel olacak!",
+    "mild":         "Ilıman hava pek çok kombinlere kapı açıyor.",
+    "clear":        "Açık bir gün — harika bir kombin için mükemmel hava.",
+    "overcast":     "Gri bir gök, ama kombin her şeyi aydınlatacak.",
+    "thunderstorm": "Fırtınalı hava — pratik ama şık bir kombin hazırladım.",
 }
 
-# ── Style tips by occasion ────────────────────────────────────────────────────
 STYLE_TIPS = {
     "casual": [
-        "Roll up your sleeves for a more relaxed vibe.",
-        "Add a cap or sneakers to complete the casual look.",
-        "Keep accessories minimal for an effortless style.",
+        "Kollarını sıva, daha rahat ve chic bir his verir.",
+        "Bir şapka veya spor ayakkabı günlük stili tamamlar.",
+        "Aksesuarları minimal tut — zahmetsiz bir şıklık için.",
     ],
     "formal": [
-        "A classic watch will elevate this look.",
-        "Make sure everything is well-ironed for a sharp finish.",
-        "Subtle accessories work best with formal outfits.",
+        "Klasik bir kol saati bu kombini üst seviyeye taşır.",
+        "Keskin bir görünüm için her şeyin iyi ütülenmiş olduğundan emin ol.",
+        "Resmi kombinlerde sade aksesuarlar en iyi tercih.",
     ],
     "date": [
-        "A light fragrance and minimal accessories will complete the look.",
-        "Confidence is your best accessory!",
-        "Keep it simple — let the outfit speak for itself.",
+        "Hafif bir parfüm ve minimal aksesuar kombini tamamlar.",
+        "Özgüven en iyi aksesuarındır!",
+        "Sade tut — kombin kendi başına konuşsun.",
     ],
     "business": [
-        "A structured bag will add to the professional feel.",
-        "Keep accessories classic and understated.",
-        "Make sure your shoes are polished!",
+        "Yapılandırılmış bir çanta profesyonel havayı pekiştirir.",
+        "Aksesuarları klasik ve gösterişsiz tut.",
+        "Ayakkabılarının boyalı olduğundan emin ol!",
     ],
     "sport": [
-        "Don't forget to stay hydrated!",
-        "Moisture-wicking fabrics are your best friend.",
-        "Comfort should always come first for workouts.",
+        "Bol su içmeyi unutma!",
+        "Nem emici kumaşlar en iyi dostun.",
+        "Spor için konfor her zaman önce gelir.",
     ],
     "party": [
-        "Bold accessories can really make this outfit pop.",
-        "Don't be afraid to add a statement piece.",
-        "Have fun with it — it's a party!",
+        "Cesur aksesuarlar bu kombini gerçekten öne çıkarır.",
+        "İddia sahibi bir parça eklemekten çekinme.",
+        "Eğlen — parti bu!",
     ],
 }
 
-# ── Fallback responses ────────────────────────────────────────────────────────
 FALLBACK_RESPONSES = [
-    "Your wardrobe is a bit limited for this occasion. Try adding more items to get better suggestions!",
-    "I couldn't find a perfect match in your wardrobe. Consider adding more variety!",
-    "Hmm, your wardrobe needs a few more pieces for this occasion. Time to go shopping?",
+    "Gardırobun bu etkinlik için biraz kısıtlı. Daha iyi öneriler için daha fazla parça eklemeyi dene!",
+    "Gardırobunda mükemmel bir eşleşme bulamadım. Çeşitliliği artırmayı düşün!",
+    "Bu etkinlik için gardırobunda birkaç parça daha gerekiyor. Alışveriş zamanı mı?",
 ]
 
 
 def build_response(recommendation: dict, user_message: str) -> dict:
-    """
-    Converts the recommender output into a chat-style response.
-
-    Returns:
-    {
-        "message":   "Perfect! For a chic coffee date...",
-        "outfit":    [...],
-        "score":     0.87,
-        "style_tip": "Confidence is your best accessory!"
-    }
-    """
     if "error" in recommendation:
         return {
             "message":   random.choice(FALLBACK_RESPONSES),
@@ -122,17 +108,14 @@ def build_response(recommendation: dict, user_message: str) -> dict:
 
     occasion_detail = _extract_occasion_detail(user_message, occasion)
 
-    # Opening sentence
     templates = OPENING_TEMPLATES.get(occasion, OPENING_TEMPLATES["casual"])
     opening   = random.choice(templates).format(occasion_detail=occasion_detail)
 
-    # Weather note
     weather_note = _get_weather_note(weather_desc)
     message = opening
     if weather_note:
         message += f" {weather_note}"
 
-    # Style tip
     tips      = STYLE_TIPS.get(occasion, STYLE_TIPS["casual"])
     style_tip = random.choice(tips)
 
@@ -145,9 +128,8 @@ def build_response(recommendation: dict, user_message: str) -> dict:
 
 
 def build_greeting() -> dict:
-    """Returns the opening message when the chat starts."""
     return {
-        "message":   "Hello! What kind of occasion are you dressing for today? ✨",
+        "message":   "Merhaba! Bugün ne tür bir etkinlik için giyiniyorsun? ✨",
         "outfit":    [],
         "score":     None,
         "style_tip": None,
@@ -155,10 +137,9 @@ def build_greeting() -> dict:
 
 
 def build_clarification() -> dict:
-    """Returns a follow-up message when the occasion is unclear or wardrobe is empty."""
     return {
-        "message":   "Could you tell me a bit more about where you're heading? "
-                     "For example: a coffee date, a work meeting, or a casual day out?",
+        "message":   "Gardırobuna henüz kıyafet eklemedin. "
+                     "Önce birkaç parça ekle, sonra sana kombin önereyim! 👗",
         "outfit":    [],
         "score":     None,
         "style_tip": None,
@@ -168,25 +149,32 @@ def build_clarification() -> dict:
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _extract_occasion_detail(message: str, occasion: str) -> str:
-    """Extracts a specific occasion label from the user's message."""
     msg = message.lower()
 
     detail_map = {
-        "coffee date":   "coffee date",
-        "dinner date":   "dinner date",
-        "dinner":        "dinner",
-        "lunch":         "lunch",
-        "brunch":        "brunch",
-        "job interview": "job interview",
-        "interview":     "interview",
-        "wedding":       "wedding",
-        "graduation":    "graduation",
-        "birthday":      "birthday party",
-        "concert":       "concert",
-        "gym":           "gym session",
-        "hiking":        "hiking trip",
-        "running":       "run",
-        "yoga":          "yoga session",
+        "kahve":      "kahve buluşması",
+        "coffee":     "kahve buluşması",
+        "akşam yemeği": "akşam yemeği",
+        "dinner":     "akşam yemeği",
+        "öğle":       "öğle yemeği",
+        "lunch":      "öğle yemeği",
+        "brunch":     "brunch",
+        "mülakat":    "iş mülakatı",
+        "interview":  "iş mülakatı",
+        "düğün":      "düğün",
+        "wedding":    "düğün",
+        "mezuniyet":  "mezuniyet töreni",
+        "graduation": "mezuniyet töreni",
+        "doğum günü": "doğum günü partisi",
+        "birthday":   "doğum günü partisi",
+        "konser":     "konser",
+        "concert":    "konser",
+        "spor":       "spor aktivitesi",
+        "gym":        "spor salonu",
+        "koşu":       "koşu",
+        "running":    "koşu",
+        "yoga":       "yoga",
+        "date":       "randevu",
     }
 
     for keyword, detail in detail_map.items():
@@ -194,18 +182,17 @@ def _extract_occasion_detail(message: str, occasion: str) -> str:
             return detail
 
     defaults = {
-        "casual":   "casual day",
-        "formal":   "formal event",
-        "date":     "date night",
-        "business": "business meeting",
-        "sport":    "workout",
-        "party":    "party",
+        "casual":   "günlük aktivite",
+        "formal":   "resmi etkinlik",
+        "date":     "randevu",
+        "business": "iş toplantısı",
+        "sport":    "spor aktivitesi",
+        "party":    "parti",
     }
     return defaults.get(occasion, occasion)
 
 
 def _get_weather_note(weather_desc: str) -> str | None:
-    """Returns a weather-related note based on the description."""
     for key, note in WEATHER_NOTES.items():
         if key in weather_desc:
             return note

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
+import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 /// Filtre chip verisi
 class WardrobeFilterItem {
@@ -24,12 +27,12 @@ class WardrobeFilterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 36,
+      height: AppSizes.xl + AppSizes.xxs,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.l),
         itemCount: filters.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (_, __) => const SizedBox(width: AppSizes.xs),
         itemBuilder: (context, index) {
           final filter = filters[index];
           final isActive = selectedValue == filter.value;
@@ -62,10 +65,10 @@ class _FilterChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.s + AppSizes.xxs, vertical: AppSizes.xxs + AppSizes.xxxs),
         decoration: BoxDecoration(
           color: isActive ? AppColors.primary : Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: AppRadius.allXXL,
           border: Border.all(
             color: isActive ? AppColors.primary : AppColors.border,
             width: 0.5,
@@ -73,12 +76,9 @@ class _FilterChip extends StatelessWidget {
         ),
         child: Text(
           filter.label,
-          style: TextStyle(
-            fontFamily: 'DMSans',
-            fontSize: 12,
-            fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-            color: isActive ? Colors.white : AppColors.textMuted,
-          ),
+          style: isActive
+              ? AppTextStyles.labelMediumActive.copyWith(color: AppColors.textOnDark)
+              : AppTextStyles.labelMedium,
         ),
       ),
     );

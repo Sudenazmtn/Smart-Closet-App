@@ -1,15 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiService {
   ApiService._();
 
   static final ApiService instance = ApiService._();
 
-  // Android emülatörde localhost = 10.0.2.2
-  // Fiziksel cihazda bilgisayarın IP adresi olmalı
-  // Örn: http://192.168.1.5:5000
-  static const String _baseUrl = 'http://10.0.2.2:5000';
+  // Web (Chrome) → localhost
+  // Android emülatör → 10.0.2.2
+  // Fiziksel cihaz → bilgisayarın yerel IP'si
+  static final String _baseUrl = kIsWeb
+      ? 'http://localhost:5000'
+      : 'http://172.20.10.2:5000';
 
   late final Dio _dio =
       Dio(

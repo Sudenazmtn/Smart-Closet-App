@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_bar.dart';
 import 'package:smart_closet_app/feature/home/provider/weather_provider.dart';
+import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/feature/home/view/widget/header.dart';
 import 'package:smart_closet_app/feature/home/view/widget/home_today_outfit_card.dart';
 import 'package:smart_closet_app/feature/home/view/widget/home_wardrobe_category.dart';
@@ -74,7 +76,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                     HomeWardrobeCategories(
                       categories: homeCategories,
                       onCategoryTap: (filter) {
-                        // context.go(AppRoutes.wardrobe, extra: filter);
+                        context.go(AppRoutes.wardrobe);
                       },
                     ),
 

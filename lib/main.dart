@@ -18,7 +18,7 @@ void main() async {
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('tr'), Locale('en')],
-      path: 'assets/lang',
+      path: 'assets/locales',
       fallbackLocale: const Locale('tr'),
       child: MultiProvider(
         providers: [

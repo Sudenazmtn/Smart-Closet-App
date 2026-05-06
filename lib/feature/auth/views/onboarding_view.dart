@@ -58,6 +58,35 @@ class _OnboardingViewState extends State<OnboardingView>
     super.dispose();
   }
 
+  Widget _buildGrid() {
+    return Column(
+      children: [
+        Row(
+          children: [0, 1, 2].map((i) => _buildCell(i)).toList(),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [3, 4, 5].map((i) => _buildCell(i)).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCell(int index) {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: index % 3 == 0 ? 0 : 5,
+          right: index % 3 == 2 ? 0 : 5,
+        ),
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: ClothingTile(data: _items[index]),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,116 +96,118 @@ class _OnboardingViewState extends State<OnboardingView>
           opacity: _fadeIn,
           child: SlideTransition(
             position: _slideUp,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 48),
-
-                  // Başlık
-                  RichText(
-                    text: TextSpan(
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        TextSpan(
-                          text: 'Dress with\n',
-                          style: const TextStyle(
-                            fontFamily: 'PlayfairDisplay',
-                            fontSize: 42,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textPrimary,
-                            height: 1.15,
-                          ),
+                        // ── Üst içerik ──────────────────────────────────
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 48),
+
+                            RichText(
+                              text: const TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Dress with\n',
+                                    style: TextStyle(
+                                      fontFamily: 'PlayfairDisplay',
+                                      fontSize: 42,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.textPrimary,
+                                      height: 1.15,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'intention.',
+                                    style: TextStyle(
+                                      fontFamily: 'PlayfairDisplay',
+                                      fontSize: 42,
+                                      fontWeight: FontWeight.w400,
+                                      fontStyle: FontStyle.italic,
+                                      color: AppColors.accent,
+                                      height: 1.15,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            const SizedBox(height: 36),
+
+                            // GridView yerine Row + Expanded + AspectRatio
+                            _buildGrid(),
+                          ],
                         ),
-                        TextSpan(
-                          text: 'intention.',
-                          style: const TextStyle(
-                            fontFamily: 'PlayfairDisplay',
-                            fontSize: 42,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.italic,
-                            color: AppColors.accent,
-                            height: 1.15,
-                          ),
+
+                        // ── Alt içerik ───────────────────────────────────
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: double.infinity,
+                              height: 52,
+                              child: ElevatedButton(
+                                onPressed: () =>
+                                    context.go(AppRoutes.register),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: AppColors.textOnDark,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(
+                                  LocaleKeys.authGetStarted.tr(),
+                                  style: const TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  LocaleKeys.authAlreadyHaveAccount.tr(),
+                                  style: AppTextStyles.buttonSecondary,
+                                ),
+                                const SizedBox(width: 4),
+                                GestureDetector(
+                                  onTap: () => context.go(AppRoutes.login),
+                                  child: Text(
+                                    LocaleKeys.authSignIn.tr(),
+                                    style: const TextStyle(
+                                      fontFamily: 'DMSans',
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const SizedBox(height: 24),
+                          ],
                         ),
                       ],
                     ),
                   ),
-
-                  const SizedBox(height: 36),
-
-                  // Grid
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 1,
-                        ),
-                    itemCount: _items.length,
-                    itemBuilder: (context, index) =>
-                        ClothingTile(data: _items[index]),
-                  ),
-
-                  const Spacer(),
-
-                  // Get Started butonu
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: () => context.go(AppRoutes.register),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: AppColors.textOnDark,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(
-                        LocaleKeys.authGetStarted.tr(),
-                        style: const TextStyle(
-                          fontFamily: 'DMSans',
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Alt link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        LocaleKeys.authAlreadyHaveAccount.tr(),
-                        style: AppTextStyles.buttonSecondary,
-                      ),
-                      const SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () => context.go(AppRoutes.login),
-                        child: Text(
-                          LocaleKeys.authSignIn.tr(),
-                          style: const TextStyle(
-                            fontFamily: 'DMSans',
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 24),
-                ],
+                ),
               ),
             ),
           ),
