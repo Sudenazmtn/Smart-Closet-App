@@ -106,6 +106,15 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
+  // ── Kullanıcı çıkışında tüm state'i temizle ──────────────────────────────
+  void resetState() {
+    _status = ClothingStatus.idle;
+    _errorMessage = null;
+    _items = [];
+    _selectedFilter = 'all';
+    notifyListeners();
+  }
+
   // ── Reset ─────────────────────────────────────────────────────────────────
   void resetStatus() {
     _status = ClothingStatus.idle;

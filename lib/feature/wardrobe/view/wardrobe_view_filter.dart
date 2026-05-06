@@ -2,12 +2,12 @@ part of 'wardrobe_view.dart';
 
 /// WardrobeView'ın bir parçası.
 /// Filter listesi burada tanımlı — view dosyasını şişirmez.
-final List<WardrobeFilterItem> wardrobeFilters = [
-  WardrobeFilterItem(label: 'All', value: 'all'),
-  WardrobeFilterItem(label: 'Tops', value: 'tops'),
-  WardrobeFilterItem(label: 'Bottoms', value: 'bottoms'),
-  WardrobeFilterItem(label: 'Dresses', value: 'dress'),
-  WardrobeFilterItem(label: 'Outerwear', value: 'outerwear'),
-  WardrobeFilterItem(label: 'Shoes', value: 'shoes'),
-  WardrobeFilterItem(label: 'Bags', value: 'bags'),
-];
+List<WardrobeFilterItem> get wardrobeFilters => [
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterAll.tr(), value: 'all'),
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterTops.tr(), value: 'tops'),
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterBottoms.tr(), value: 'bottoms'),
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterDresses.tr(), value: 'dress'),
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterOuterwear.tr(), value: 'outerwear'),
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterShoes.tr(), value: 'shoes'),
+      WardrobeFilterItem(label: LocaleKeys.wardrobeFilterBags.tr(), value: 'bags'),
+    ];

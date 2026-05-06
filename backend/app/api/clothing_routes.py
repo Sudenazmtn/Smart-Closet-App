@@ -27,7 +27,6 @@ def _get_user():
     return user, None, None
 
 
-# ── GET /clothes/ ─────────────────────────────────────────────────────────────
 @clothing_bp.route('/', methods=['GET'])
 def get_clothes():
     user, err, code = _get_user()
@@ -47,7 +46,6 @@ def get_clothes():
     return jsonify({'items': [i.to_dict() for i in items], 'count': len(items)}), 200
 
 
-# ── GET /clothes/<id> ─────────────────────────────────────────────────────────
 @clothing_bp.route('/<int:item_id>', methods=['GET'])
 def get_clothing_item(item_id):
     user, err, code = _get_user()
@@ -61,7 +59,6 @@ def get_clothing_item(item_id):
     return jsonify({'item': item.to_dict()}), 200
 
 
-# ── POST /clothes/ ────────────────────────────────────────────────────────────
 @clothing_bp.route('/', methods=['POST'])
 def add_clothing():
     user, err, code = _get_user()
@@ -100,7 +97,6 @@ def add_clothing():
     return jsonify({'message': 'Clothing item added successfully', 'item': item.to_dict()}), 201
 
 
-# ── PUT /clothes/<id> ─────────────────────────────────────────────────────────
 @clothing_bp.route('/<int:item_id>', methods=['PUT'])
 def update_clothing(item_id):
     user, err, code = _get_user()
@@ -121,7 +117,6 @@ def update_clothing(item_id):
     return jsonify({'message': 'Updated successfully', 'item': item.to_dict()}), 200
 
 
-# ── DELETE /clothes/<id> ──────────────────────────────────────────────────────
 @clothing_bp.route('/<int:item_id>', methods=['DELETE'])
 def delete_clothing(item_id):
     user, err, code = _get_user()
@@ -132,7 +127,6 @@ def delete_clothing(item_id):
     if not item:
         return jsonify({'error': 'Item not found'}), 404
 
-    # Görseli diskten sil
     if item.image_url:
         filename = item.image_url.replace('/uploads/', '')
         filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
@@ -143,8 +137,6 @@ def delete_clothing(item_id):
     db.session.commit()
     return jsonify({'message': 'Deleted successfully'}), 200
 
-
-# ── POST /clothes/<id>/wear ───────────────────────────────────────────────────
 @clothing_bp.route('/<int:item_id>/wear', methods=['POST'])
 def mark_as_worn(item_id):
     user, err, code = _get_user()

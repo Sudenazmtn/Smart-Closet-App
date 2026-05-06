@@ -9,7 +9,6 @@ def _get_uid():
     return request.headers.get('X-Firebase-UID')
 
 
-# ── POST /auth/register ───────────────────────────────────────────────────────
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -23,12 +22,11 @@ def register():
     if not all([firebase_uid, name, email]):
         return jsonify({'error': 'firebase_uid, name and email are required'}), 400
 
-    # Zaten kayıtlı mı?
     existing = User.query.filter_by(firebase_uid=firebase_uid).first()
     if existing:
         return jsonify({'message': 'User already exists', 'user': existing.to_dict()}), 200
 
-    # Email kullanımda mı?
+
     if User.query.filter_by(email=email).first():
         return jsonify({'error': 'Email already in use'}), 409
 
@@ -39,7 +37,6 @@ def register():
     return jsonify({'message': 'User registered successfully', 'user': user.to_dict()}), 201
 
 
-# ── POST /auth/login ──────────────────────────────────────────────────────────
 @auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -48,7 +45,6 @@ def login():
 
     user = User.query.filter_by(firebase_uid=data['firebase_uid']).first()
 
-    # Yoksa oluştur (Google sign-in)
     if not user:
         if not data.get('email') or not data.get('name'):
             return jsonify({'error': 'email and name are required for new users'}), 400
@@ -63,7 +59,7 @@ def login():
     return jsonify({'message': 'Login successful', 'user': user.to_dict()}), 200
 
 
-# ── GET /auth/me ──────────────────────────────────────────────────────────────
+
 @auth_bp.route('/me', methods=['GET'])
 def me():
     uid = _get_uid()
@@ -76,8 +72,6 @@ def me():
 
     return jsonify({'user': user.to_dict()}), 200
 
-
-# ── DELETE /auth/delete ───────────────────────────────────────────────────────
 @auth_bp.route('/delete', methods=['DELETE'])
 def delete_account():
     uid = _get_uid()

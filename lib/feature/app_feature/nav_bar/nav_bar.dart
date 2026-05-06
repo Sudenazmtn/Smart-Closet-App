@@ -1,7 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_item_model.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_item_widget.dart';
+import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 
@@ -10,27 +12,27 @@ class AppBottomNavBar extends StatelessWidget {
 
   final int currentIndex;
 
-  static final List<NavItem> _items = [
+  List<NavItem> _items(BuildContext context) => [
     NavItem(
-      label: 'Home',
+      label: LocaleKeys.navHome.tr(),
       route: AppRoutes.home,
       icon: Icons.home_outlined,
       activeIcon: Icons.home_rounded,
     ),
     NavItem(
-      label: 'Wardrobe',
+      label: LocaleKeys.navWardrobe.tr(),
       route: AppRoutes.wardrobe,
       icon: Icons.checkroom_outlined,
       activeIcon: Icons.checkroom_rounded,
     ),
     NavItem(
-      label: 'AI',
+      label: LocaleKeys.navAi.tr(),
       route: AppRoutes.outfit,
       icon: Icons.auto_awesome_outlined,
       activeIcon: Icons.auto_awesome_rounded,
     ),
     NavItem(
-      label: 'Profile',
+      label: LocaleKeys.navProfile.tr(),
       route: AppRoutes.profile,
       icon: Icons.person_outline_rounded,
       activeIcon: Icons.person_rounded,
@@ -50,10 +52,10 @@ class AppBottomNavBar extends StatelessWidget {
           height: 60,
           child: Row(
             children: List.generate(
-              _items.length,
+              _items(context).length,
               (index) => Expanded(
                 child: NavItemWidget(
-                  item: _items[index],
+                  item: _items(context)[index],
                   isActive: currentIndex == index,
                   onTap: () => _onTap(context, index),
                 ),
@@ -67,6 +69,6 @@ class AppBottomNavBar extends StatelessWidget {
 
   void _onTap(BuildContext context, int index) {
     if (index == currentIndex) return;
-    context.go(_items[index].route);
+    context.go(_items(context)[index].route);
   }
 }

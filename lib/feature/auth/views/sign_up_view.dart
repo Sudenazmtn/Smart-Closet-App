@@ -1,9 +1,14 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/auth/views/widget/auth_visibilty_icon.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
+import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
+import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 import '../provider/auth_provider.dart';
 import 'mixin/sign_up_mixin.dart';
@@ -34,14 +39,14 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                 height: screenHeight * 0.32,
                 color: AppColors.accentLight,
               ),
-              Expanded(child: Container(color: const Color(0xFFF2EDE4))),
+              Expanded(child: Container(color: AppColors.accentLight)),
             ],
           ),
 
           // İçerik
           SafeArea(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.xl),
               child: Form(
                 key: formKey,
                 child: Column(
@@ -53,10 +58,10 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
 
                     // ── Beyaz kart ─────────────────────────────────────────
                     Container(
-                      padding: const EdgeInsets.all(20),
+                      padding: EdgeInsets.all(AppSizes.l),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppRadius.allL,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -157,7 +162,7 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                                   foregroundColor: Colors.white,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: AppRadius.allS,
                                   ),
                                 ),
                                 child: auth.isLoading
@@ -171,11 +176,7 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                                       )
                                     : Text(
                                         LocaleKeys.authSignUp.tr(),
-                                        style: const TextStyle(
-                                          fontFamily: 'DMSans',
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: AppTextStyles.buttonAccent,
                                       ),
                               ),
                             ),
@@ -197,7 +198,7 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                       question: LocaleKeys.authAlreadyHaveAccount.tr(),
                       actionText: LocaleKeys.authSignIn.tr(),
                       onTap: () {
-                        // context.go(AppRoutes.login);
+                        context.go(AppRoutes.login);
                       },
                     ),
 

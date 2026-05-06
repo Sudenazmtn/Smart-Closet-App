@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:smart_closet_app/product/data/model/chat_message_model.dart';
 import 'package:smart_closet_app/product/data/model/outfit_model.dart';
 import 'package:smart_closet_app/product/data/model/stats_model.dart';
 import 'package:smart_closet_app/product/data/services/api_service.dart';
@@ -60,5 +61,24 @@ class OutfitRepository {
   Future<StatsModel> getStats() async {
     final response = await _dio.get('/outfit/stats');
     return StatsModel.fromJson(response.data as Map<String, dynamic>);
+  }
+
+  /// Kural tabanlı AI — POST /chat/message
+  Future<ChatAiResponse> sendChatMessage({
+    required String userText,
+    double? temperature,
+    String? weatherDesc,
+  }) async {
+    final response = await _dio.post(
+      '/chat/message',
+      data: {
+        'message': userText,
+        // ignore: use_null_aware_elements
+        if (temperature != null) 'temperature': temperature.round(),
+        // ignore: use_null_aware_elements
+        if (weatherDesc != null) 'weather_desc': weatherDesc,
+      },
+    );
+    return ChatAiResponse.fromJson(response.data as Map<String, dynamic>);
   }
 }

@@ -18,7 +18,12 @@ def create_app():
     # Extension'ları başlat
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app)
+    CORS(
+        app,
+        resources={r'/*': {'origins': '*'}},
+        allow_headers=['Content-Type', 'X-Firebase-UID'],
+        methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    )
 
     # Uploads klasörünü oluştur
     import os

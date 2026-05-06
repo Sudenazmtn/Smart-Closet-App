@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_bar.dart';
 import 'package:smart_closet_app/feature/wardrobe/view/widget/header.dart';
+import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 import 'package:smart_closet_app/product/utils/enums/clothing_status_enum.dart';
@@ -65,7 +67,6 @@ class _WardrobeViewState extends State<WardrobeView> with WardrobeMixin {
                   if (clothing.items.isEmpty) {
                     return const WardrobeEmptyState();
                   }
-
                   return WardrobeGrid(
                     items: clothing.items,
                     onItemTap: (item) {
