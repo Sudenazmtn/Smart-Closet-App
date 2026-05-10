@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_closet_app/product/data/model/chat_message_model.dart';
 import 'package:smart_closet_app/product/data/model/outfit_model.dart';
 import 'package:smart_closet_app/product/data/model/stats_model.dart';
 import 'package:smart_closet_app/product/data/repositories/outfit_repository.dart';
@@ -13,6 +14,7 @@ class OutfitProvider extends ChangeNotifier {
   List<OutfitModel> _outfits = [];
   StatsModel? _stats;
   String? _errorMessage;
+  List<ChatMessageModel> _messages = [];
 
   // ── Getters ───────────────────────────────────────────────────────────────
   OutfitStatus get status => _status;
@@ -20,9 +22,63 @@ class OutfitProvider extends ChangeNotifier {
   StatsModel? get stats => _stats;
   String? get errorMessage => _errorMessage;
   bool get isLoading => _status == OutfitStatus.loading;
+  List<ChatMessageModel> get messages => List.unmodifiable(_messages);
 
   List<OutfitModel> get favorites =>
       _outfits.where((o) => o.isFavorite).toList();
+
+  // ── Chat başlat ───────────────────────────────────────────────────────────
+  void initChat(String greeting) {
+    if (_messages.isEmpty) {
+      _messages = [ChatMessageModel(sender: MessageSender.ai, text: greeting)];
+      notifyListeners();
+    }
+  }
+
+  // ── Mesaj gönder + kural tabanlı AI yanıt al ─────────────────────────────
+  Future<void> sendMessage({
+    required String userText,
+    required String aiErrorText,
+    double? temperature,
+    String? weatherDescription,
+  }) async {
+    _messages = [
+      ..._messages,
+      ChatMessageModel(sender: MessageSender.user, text: userText),
+    ];
+    notifyListeners();
+
+    _setLoading();
+    try {
+      final aiResponse = await _repository.sendChatMessage(
+        userText   : userText,
+        temperature: temperature,
+        weatherDesc: weatherDescription,
+      );
+      _messages = [
+        ..._messages,
+        ChatMessageModel(
+          sender        : MessageSender.ai,
+          text          : aiResponse.message,
+          suggestedItems: aiResponse.items.isNotEmpty ? aiResponse.items : null,
+          styleTip      : aiResponse.styleTip,
+        ),
+      ];
+      _setSuccess();
+    } catch (e) {
+      _messages = [
+        ..._messages,
+        ChatMessageModel(sender: MessageSender.ai, text: '🔴 $e'),
+      ];
+      _setError(e.toString());
+    }
+  }
+
+  // ── Chat sıfırla ──────────────────────────────────────────────────────────
+  void clearChat(String greeting) {
+    _messages = [ChatMessageModel(sender: MessageSender.ai, text: greeting)];
+    notifyListeners();
+  }
 
   // ── Kombinleri yükle ──────────────────────────────────────────────────────
   Future<void> loadOutfits({bool? isFavorite}) async {
@@ -94,6 +150,16 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
+  // ── Kullanıcı çıkışında tüm state'i temizle ──────────────────────────────
+  void resetState() {
+    _status = OutfitStatus.idle;
+    _errorMessage = null;
+    _outfits = [];
+    _stats = null;
+    _messages = [];
+    notifyListeners();
+  }
+
   // ── Reset ─────────────────────────────────────────────────────────────────
   void resetStatus() {
     _status = OutfitStatus.idle;
@@ -101,7 +167,6 @@ class OutfitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── Private helpers ───────────────────────────────────────────────────────
   void _setLoading() {
     _status = OutfitStatus.loading;
     _errorMessage = null;

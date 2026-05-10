@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
+import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 import '../provider/auth_provider.dart';
@@ -42,7 +45,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                     width: 72,
                     height: 72,
                     decoration: BoxDecoration(
-                      color: AppColors.accent.withOpacity(0.15),
+                      color: AppColors.accent.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: const Center(
@@ -57,12 +60,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                 Text(
                   LocaleKeys.authForgotPasswordTitle.tr(),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'PlayfairDisplay',
-                    fontSize: 26,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: AppTextStyles.displayMedium,
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -108,7 +106,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: AppRadius.allS,
                         ),
                       ),
                       child: auth.isLoading
@@ -122,11 +120,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                             )
                           : Text(
                               LocaleKeys.authSendResetLink.tr(),
-                              style: const TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              style: AppTextStyles.buttonAccent,
                             ),
                     ),
                   ),
@@ -144,7 +138,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                   question: LocaleKeys.authRememberedPassword.tr(),
                   actionText: LocaleKeys.authBackToSignIn.tr(),
                   onTap: () {
-                    // context.go(AppRoutes.login);
+                    context.go(AppRoutes.login);
                   },
                 ),
 

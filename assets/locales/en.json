@@ -105,7 +105,9 @@
     "aiLabel": "AI Recommendation",
     "claudeSays": "Claude says:",
     "save": "Save Outfit",
-    "askPlaceholder": "Ask Claude for advice..."
+    "askPlaceholder": "Ask Claude for advice...",
+    "aiGreeting": "Hello! What kind of occasion are you dressing for today? ✨",
+    "aiError": "I couldn't generate a suggestion. Please try again."
   },
 
   "stats": {

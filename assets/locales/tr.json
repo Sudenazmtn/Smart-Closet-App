@@ -105,7 +105,9 @@
     "aiLabel": "Yapay Zeka Önerisi",
     "claudeSays": "Claude diyor ki:",
     "save": "Kombini Kaydet",
-    "askPlaceholder": "Claude'a danış..."
+    "askPlaceholder": "Claude'a danış...",
+    "aiGreeting": "Merhaba! Bugün ne tür bir etkinlik için giyiniyorsun? ✨",
+    "aiError": "Bir öneri oluşturamadım. Lütfen tekrar dene."
   },
 
   "stats": {

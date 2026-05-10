@@ -68,6 +68,9 @@ GoogleService-Info.plist
 "backend/instance/"
 "backend/*.db"
 "backend/python"
-backend/instance/ 
-backend/venv/ 
-backend/__pycache__/ 
+backend/instance/
+backend/venv/
+backend/__pycache__/
+
+# Claude Code
+.claude/
