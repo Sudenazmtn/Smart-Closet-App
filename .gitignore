@@ -74,3 +74,6 @@ backend/__pycache__/
 
 # Claude Code
 .claude/
+
+# ML model binary
+backend/app/ai/model/*.pkl

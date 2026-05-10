@@ -119,19 +119,34 @@ def score_item(item, event_type: str, temperature: int) -> float:
  
  
 def score_outfit(items: list, event_type: str, temperature: int) -> float:
-    """Scores a full outfit combination."""
+    """
+    Kombin skorunu hesapla.
+
+    Önce ML modelini dener (app/ai/model/outfit_scorer.pkl).
+    Model yoksa veya hata oluşursa kural tabanlı skorlamaya fallback yapar.
+    """
     if not items:
         return 0.0
- 
+
+    # ── Birincil: ML tabanlı skor ─────────────────────────────────────────────
+    try:
+        from app.ai.ml_scorer import score_outfit_ml
+        ml_score = score_outfit_ml(items, event_type, temperature)
+        if ml_score is not None:
+            return ml_score
+    except Exception:
+        pass  # model yüklenemediyse sessizce devam et
+
+    # ── Fallback: kural tabanlı skor ──────────────────────────────────────────
     individual = sum(score_item(i, event_type, temperature) for i in items) / len(items)
- 
+
     color_scores = []
     for i in range(len(items)):
         for j in range(i + 1, len(items)):
             color_scores.append(color_score(items[i].color, items[j].color))
- 
+
     color_avg = sum(color_scores) / len(color_scores) if color_scores else 0.5
- 
+
     return round((individual * 0.6) + (color_avg * 0.4), 3)
 
 
