@@ -68,7 +68,7 @@ class OutfitProvider extends ChangeNotifier {
     } catch (e) {
       _messages = [
         ..._messages,
-        ChatMessageModel(sender: MessageSender.ai, text: '🔴 $e'),
+        ChatMessageModel(sender: MessageSender.ai, text: aiErrorText),
       ];
       _setError(e.toString());
     }
