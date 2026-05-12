@@ -122,6 +122,14 @@ class ClothingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String? firstImageForCategory(String filter) {
+  try {
+    return _items.firstWhere((item) => item.category == filter).imageUrl;
+  } catch (_) {
+    return null;
+  }
+}
+
   // ── Private helpers ───────────────────────────────────────────────────────
   void _setLoading() {
     _status = ClothingStatus.loading;

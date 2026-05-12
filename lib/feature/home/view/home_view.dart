@@ -73,12 +73,16 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                       style: AppTextStyles.headingSmall,
                     ),
                     const SizedBox(height: 12),
-                    HomeWardrobeCategories(
-                      categories: homeCategories,
-                      onCategoryTap: (filter) {
-                        context.go(AppRoutes.wardrobe);
-                      },
+
+                    Consumer<ClothingProvider>(
+                      builder: (context, clothing, _) => HomeWardrobeCategories(
+                        categories: buildCategories(clothing),
+                        onCategoryTap: (filter){
+                          context.go(AppRoutes.wardrobe);
+                        },
+                      ),
                     ),
+                    
 
                     const SizedBox(height: 24),
 

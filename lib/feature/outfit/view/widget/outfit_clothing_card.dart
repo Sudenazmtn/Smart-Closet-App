@@ -5,6 +5,7 @@ import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 import 'package:smart_closet_app/product/utils/extension/clothing_category_ext.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 
 class OutfitClothingCard extends StatelessWidget {
   const OutfitClothingCard({super.key, required this.item});
@@ -29,8 +30,8 @@ class OutfitClothingCard extends StatelessWidget {
                   ? ClipRRect(
                       borderRadius: AppRadius.allS,
                       child: Image.network(
-                        item.imageUrl!,
-                        fit: BoxFit.cover,
+                        '${ApiService.baseUrl}${item.imageUrl!}',
+                        fit: BoxFit.contain,
                         errorBuilder: (_, __, ___) =>
                             _EmojiContent(item: item),
                       ),

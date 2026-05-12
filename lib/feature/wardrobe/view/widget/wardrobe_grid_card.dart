@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/product/data/model/clothing_model.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 import 'package:smart_closet_app/product/utils/extension/clothing_category_ext.dart';
 
@@ -22,8 +23,9 @@ class WardrobeGridCard extends StatelessWidget {
       onLongPress: onLongPress,
       child: Container(
         decoration: BoxDecoration(
-          // Görsel varsa beyaz, yoksa kategori rengi
-          color: item.imageUrl != null ? Colors.white : item.categoryColor,
+          
+          // Görsel varsa şeffaf, yoksa kategori rengi
+          color: item.imageUrl != null ? Colors.transparent : item.categoryColor,
           borderRadius: BorderRadius.circular(16),
         ),
         child: item.imageUrl != null
@@ -54,10 +56,11 @@ class _NetworkImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) =>
-            _EmojiContent(emoji: fallbackEmoji, name: name),
+        '${ApiService.baseUrl}$imageUrl',
+        fit: BoxFit.contain,
+        errorBuilder: (_,__,___) =>
+          _EmojiContent(emoji: fallbackEmoji, name: name)
+        
       ),
     );
   }

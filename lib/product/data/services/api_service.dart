@@ -10,14 +10,15 @@ class ApiService {
   // Web (Chrome) → localhost
   // Android emülatör → 10.0.2.2
   // Fiziksel cihaz → bilgisayarın yerel IP'si
-  static final String _baseUrl = kIsWeb
+  static final String baseUrl = kIsWeb
       ? 'http://localhost:5000'
       : 'http://172.20.10.2:5000';
+      //: 'http://192.168.1.121:5000';
 
   late final Dio _dio =
       Dio(
           BaseOptions(
-            baseUrl: _baseUrl,
+            baseUrl: baseUrl,
             connectTimeout: const Duration(seconds: 10),
             receiveTimeout: const Duration(seconds: 10),
             headers: {'Content-Type': 'application/json'},
