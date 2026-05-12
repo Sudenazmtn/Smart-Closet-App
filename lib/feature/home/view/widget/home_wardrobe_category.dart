@@ -8,12 +8,14 @@ class HomeCategoryData {
     required this.emoji,
     required this.color,
     required this.filter,
+    this.imageUrl,
   });
 
   final String label;
   final String emoji;
   final Color color;
   final String filter;
+  final String? imageUrl;
 }
 
 class HomeWardrobeCategories extends StatelessWidget {
@@ -37,6 +39,7 @@ class HomeWardrobeCategories extends StatelessWidget {
               emoji: cat.emoji,
               color: cat.color,
               onTap: () => onCategoryTap(cat.filter),
+              imageUrl: cat.imageUrl,
             ),
           )
           .toList(),

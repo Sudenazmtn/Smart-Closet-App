@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 
 class HomeCategoryCard extends StatelessWidget {
   const HomeCategoryCard({
@@ -8,12 +9,14 @@ class HomeCategoryCard extends StatelessWidget {
     required this.emoji,
     required this.color,
     required this.onTap,
+    this.imageUrl,
   });
 
   final String label;
   final String emoji;
   final Color color;
   final VoidCallback onTap;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +28,24 @@ class HomeCategoryCard extends StatelessWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: color,
+              color: imageUrl != null ? AppColors.accentLight : color,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Center(
-              child: Text(emoji, style: const TextStyle(fontSize: 30)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: imageUrl != null
+                  ? Image.network(
+                      '${ApiService.baseUrl}$imageUrl',
+                      width: 72,
+                      height: 72,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_,__,___) =>
+                          Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
+                    )
+                  : Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
             ),
           ),
+          
           const SizedBox(height: 6),
           Text(
             label,
