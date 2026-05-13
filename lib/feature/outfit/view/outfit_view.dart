@@ -121,8 +121,9 @@ class _MessageList extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: AppSizes.xxs),
                     child: OutfitSuggestionRow(
-                      items   : msg.suggestedItems!,
-                      styleTip: msg.styleTip,
+                      items          : msg.suggestedItems!,
+                      styleTip       : msg.styleTip,
+                      destinationCity: msg.destinationCity,
                     ),
                   ),
                   const SizedBox(height: AppSizes.s),

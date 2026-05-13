@@ -16,17 +16,19 @@ import os
 import logging
 from typing import Optional
 
-logger = logging.getLogger(__name__)
+try:
+    import pandas as pd
+    _PANDAS_AVAILABLE = True
+except ImportError:
+    _PANDAS_AVAILABLE = False
 
-# ── Model yolu ────────────────────────────────────────────────────────────────
+logger = logging.getLogger(__name__)
 
 BASE_DIR   = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(BASE_DIR, "model", "outfit_scorer.pkl")
 
-# ── Lazy-load: model sadece ilk çağrıda yüklenir ─────────────────────────────
-
 _pipeline = None
-_model_available = None   # None = henüz kontrol edilmedi
+_model_available = None
 
 
 def _load_model():
@@ -51,8 +53,6 @@ def _load_model():
         _model_available = False
         return False
 
-
-# ── Renk normalizasyon eşlemesi ───────────────────────────────────────────────
 
 _COLOR_NORMALIZE = {
     "siyah": "black", "beyaz": "white", "gri": "gray",
@@ -88,8 +88,6 @@ def _norm(value: str, mapping: dict) -> str:
     return mapping.get(v, v)
 
 
-# ── Ana fonksiyon ─────────────────────────────────────────────────────────────
-
 def score_outfit_ml(
     items: list,
     event_type: str,
@@ -109,16 +107,13 @@ def score_outfit_ml(
     float (0.0 – 1.0) veya model yüklenemediyse None
     """
     if not _load_model():
-        return None   # fallback: rule-based kullanılacak
-
-    # ── Outfit parçalarını grupla ─────────────────────────────────────────────
+        return None
     top    = _find_item(items, {"t-shirt","shirt","blouse","sweater","hoodie",
                                  "blazer","dress","cardigan","tank-top","polo"})
     bottom = _find_item(items, {"jeans","trousers","shorts","skirt","leggings","sweatpants"})
     shoes  = _find_item(items, {"sneakers","heels","boots","loafers","sandals","oxfords"})
 
     if top is None:
-        # En az bir üst parça yoksa fallback
         return None
 
     top_cat    = _norm(top.category,    _CAT_NORMALIZE)
@@ -129,7 +124,8 @@ def score_outfit_ml(
     shoe_color = _norm(shoes.color,     _COLOR_NORMALIZE) if shoes else "black"
     occasion   = _norm(event_type,      _OCCASION_NORMALIZE)
 
-    import pandas as pd
+    if not _PANDAS_AVAILABLE:
+        return None
     X = pd.DataFrame([{
         "top":         top_cat,
         "top_color":   top_color,
@@ -149,8 +145,6 @@ def score_outfit_ml(
         return None
 
 
-# ── Yardımcı: kategori kümesine göre parça bul ───────────────────────────────
-
 def _find_item(items: list, category_set: set):
     for item in items:
         cat = item.category.lower().strip()
@@ -159,8 +153,6 @@ def _find_item(items: list, category_set: set):
                 return item
     return None
 
-
-# ── Model durumunu kontrol et ─────────────────────────────────────────────────
 
 def is_model_available() -> bool:
     return _load_model()

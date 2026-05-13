@@ -51,17 +51,18 @@ class OutfitProvider extends ChangeNotifier {
     _setLoading();
     try {
       final aiResponse = await _repository.sendChatMessage(
-        userText   : userText,
+        userText: userText,
         temperature: temperature,
         weatherDesc: weatherDescription,
       );
       _messages = [
         ..._messages,
         ChatMessageModel(
-          sender        : MessageSender.ai,
-          text          : aiResponse.message,
+          sender: MessageSender.ai,
+          text: aiResponse.message,
           suggestedItems: aiResponse.items.isNotEmpty ? aiResponse.items : null,
-          styleTip      : aiResponse.styleTip,
+          styleTip: aiResponse.styleTip,
+          destinationCity: aiResponse.destinationCity,
         ),
       ];
       _setSuccess();
@@ -74,13 +75,11 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── Chat sıfırla ──────────────────────────────────────────────────────────
   void clearChat(String greeting) {
     _messages = [ChatMessageModel(sender: MessageSender.ai, text: greeting)];
     notifyListeners();
   }
 
-  // ── Kombinleri yükle ──────────────────────────────────────────────────────
   Future<void> loadOutfits({bool? isFavorite}) async {
     _setLoading();
     try {
@@ -91,7 +90,6 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── Kombin kaydet ─────────────────────────────────────────────────────────
   Future<void> saveOutfit({
     required List<int> itemIds,
     String? name,
@@ -113,7 +111,6 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── Favori toggle ─────────────────────────────────────────────────────────
   Future<void> toggleFavorite(int outfitId) async {
     try {
       final updated = await _repository.toggleFavorite(outfitId);
@@ -127,7 +124,6 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── Kombin sil ────────────────────────────────────────────────────────────
   Future<void> deleteOutfit(int outfitId) async {
     _setLoading();
     try {
@@ -139,7 +135,6 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── İstatistikleri yükle ──────────────────────────────────────────────────
   Future<void> loadStats() async {
     _setLoading();
     try {
@@ -150,7 +145,6 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── Kullanıcı çıkışında tüm state'i temizle ──────────────────────────────
   void resetState() {
     _status = OutfitStatus.idle;
     _errorMessage = null;
@@ -160,7 +154,6 @@ class OutfitProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── Reset ─────────────────────────────────────────────────────────────────
   void resetStatus() {
     _status = OutfitStatus.idle;
     _errorMessage = null;

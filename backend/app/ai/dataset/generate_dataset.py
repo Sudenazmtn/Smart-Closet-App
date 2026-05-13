@@ -22,8 +22,6 @@ import os
 random.seed(42)
 np.random.seed(42)
 
-# ── Kıyafet kategorileri ──────────────────────────────────────────────────────
-
 TOPS = [
     "t-shirt", "shirt", "blouse", "sweater", "hoodie",
     "blazer", "dress", "cardigan", "tank-top", "polo",
@@ -42,7 +40,6 @@ COLORS = [
 OCCASIONS    = ["casual", "formal", "date", "business", "sport", "party"]
 TEMPERATURES = [5, 10, 15, 20, 25, 30]
 
-# ── Etkinlik – kategori uyum tablosu (genişletilmiş) ─────────────────────────
 
 EVENT_CAT_SCORE: dict[str, dict[str, float]] = {
     "casual": {
@@ -102,7 +99,6 @@ EVENT_CAT_SCORE: dict[str, dict[str, float]] = {
     },
 }
 
-# ── Renk uyumluluk tablosu (genişletilmiş) ───────────────────────────────────
 
 COLOR_COMPAT: dict[tuple, float] = {
     ("white",    "black"):     1.00,
@@ -182,7 +178,6 @@ COLOR_COMPAT: dict[tuple, float] = {
     ("yellow",   "gray"):      0.60,
 }
 
-# ── Sıcaklık – kategori uyum tablosu ─────────────────────────────────────────
 
 TEMP_CAT_SCORE: dict[str, dict[str, float]] = {
     "hot": {   # >= 25 °C
@@ -228,8 +223,6 @@ TEMP_CAT_SCORE: dict[str, dict[str, float]] = {
 }
 
 
-# ── Yardımcı fonksiyonlar ─────────────────────────────────────────────────────
-
 def _temp_band(temp: int) -> str:
     if temp >= 25: return "hot"
     if temp >= 15: return "warm"
@@ -239,7 +232,7 @@ def _temp_band(temp: int) -> str:
 
 def _color_compat(c1: str, c2: str) -> float:
     if c1 == c2:
-        return 0.40  # aynı renk = monokrom, kabul edilebilir ama sıkıcı
+        return 0.40
     score = COLOR_COMPAT.get((c1, c2)) or COLOR_COMPAT.get((c2, c1))
     return score if score is not None else 0.50
 
@@ -289,48 +282,42 @@ def compute_score(
     event_avg = sum(event_scores) / len(event_scores)
     temp_avg  = sum(temp_scores)  / len(temp_scores)
     color_avg = sum(color_pairs)  / len(color_pairs) if color_pairs else 0.50
-
-    # Ağırlıklı ortalama: etkinlik uyumu > sıcaklık > renk uyumu
     score = (event_avg * 0.45) + (temp_avg * 0.35) + (color_avg * 0.20)
 
-    # Küçük rastlantısallık (gerçek hayatı simüle eder)
     noise = np.random.uniform(-0.03, 0.03)
     return float(min(1.0, max(0.0, round(score + noise, 4))))
 
-
-# ── Veri seti üretimi ─────────────────────────────────────────────────────────
-
-def generate(n_per_occasion: int = 120) -> pd.DataFrame:
+def generate(n_per_occasion: int = 200) -> pd.DataFrame:
     rows = []
 
     for occasion in OCCASIONS:
         for _ in range(n_per_occasion):
-            top         = random.choice(TOPS)
-            top_color   = random.choice(COLORS)
-            bottom      = random.choice(BOTTOMS)
-            bottom_color= random.choice(COLORS)
-            shoes       = random.choice(SHOES)
-            shoes_color = random.choice(COLORS)
-            temperature = random.choice(TEMPERATURES)
+            top          = random.choice(TOPS)
+            top_color    = random.choice(COLORS)
+            bottom       = random.choice(BOTTOMS)
+            bottom_color = random.choice(COLORS)
+            shoes        = random.choice(SHOES)
+            shoes_color  = random.choice(COLORS)
+            temperature  = random.choice(TEMPERATURES)
 
             score = compute_score(
                 top, top_color, bottom, bottom_color,
                 shoes, shoes_color, occasion, temperature,
             )
             rows.append({
-                "top":         top,
-                "top_color":   top_color,
-                "bottom":      bottom,
-                "bottom_color":bottom_color,
-                "shoes":       shoes,
-                "shoes_color": shoes_color,
-                "occasion":    occasion,
-                "temperature": temperature,
-                "score":       score,
+                "top":          top,
+                "top_color":    top_color,
+                "bottom":       bottom,
+                "bottom_color": bottom_color,
+                "shoes":        shoes,
+                "shoes_color":  shoes_color,
+                "occasion":     occasion,
+                "temperature":  temperature,
+                "score":        score,
             })
 
-    # Uç senaryolar: kasıtlı olarak iyi ve kötü örnekler ekle
     rows += _edge_cases()
+    rows += _destination_scenarios()
 
     df = pd.DataFrame(rows).sample(frac=1, random_state=42).reset_index(drop=True)
     print(f"[Dataset] {len(df)} satır üretildi.")
@@ -388,7 +375,67 @@ def _edge_cases() -> list[dict]:
     return rows
 
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+def _destination_scenarios() -> list[dict]:
+    """
+    Seyahat/destinasyon bazlı gerçekçi senaryolar.
+    Farklı şehir hava sıcaklıklarına göre iyi ve kötü kombinler.
+    """
+    # (top, top_color, bottom, bottom_color, shoes, shoes_color, occasion, temp, score)
+    scenarios = [
+        # Soğuk şehir (Erzurum, 0–5°C) → iş toplantısı
+        ("sweater", "navy",  "trousers", "black",  "boots",   "black",  "business",  3, 0.93),
+        ("blazer",  "gray",  "trousers", "black",  "boots",   "brown",  "business",  3, 0.91),
+        ("hoodie",  "black", "jeans",    "black",  "sneakers","white",  "business",  3, 0.22),
+
+        # Sıcak şehir (Antalya, 30°C) → günlük
+        ("t-shirt", "white", "shorts",   "beige",  "sandals", "white",  "casual",   30, 0.95),
+        ("blouse",  "blue",  "skirt",    "white",  "sandals", "beige",  "casual",   30, 0.93),
+        ("sweater", "black", "jeans",    "black",  "boots",   "black",  "casual",   30, 0.08),
+
+        # Ilıman şehir (İstanbul, 18°C) → randevu
+        ("blouse",  "white", "trousers", "navy",   "heels",   "black",  "date",     18, 0.94),
+        ("dress",   "burgundy","jeans",  "none",   "heels",   "black",  "date",     18, 0.95),
+        ("hoodie",  "gray",  "sweatpants","black", "sneakers","white",  "date",     18, 0.12),
+
+        # Yağmurlu İstanbul (12°C) → günlük
+        ("cardigan","navy",  "jeans",    "black",  "boots",   "black",  "casual",   12, 0.92),
+        ("hoodie",  "olive", "jeans",    "black",  "sneakers","white",  "casual",   12, 0.88),
+        ("tank-top","white", "shorts",   "blue",   "sandals", "white",  "casual",   12, 0.15),
+
+        # Ankara kış (5°C) → iş toplantısı
+        ("blazer",  "black", "trousers", "gray",   "oxfords", "black",  "business",  5, 0.94),
+        ("sweater", "beige", "trousers", "black",  "boots",   "brown",  "business",  5, 0.89),
+        ("t-shirt", "white", "shorts",   "blue",   "sneakers","white",  "business",  5, 0.04),
+
+        # İzmir yaz (28°C) → parti
+        ("dress",   "red",   "jeans",    "none",   "heels",   "gold",   "party",    28, 0.91),
+        ("blouse",  "black", "skirt",    "black",  "heels",   "black",  "party",    28, 0.90),
+        ("sweater", "gray",  "jeans",    "black",  "boots",   "black",  "party",    28, 0.14),
+
+        # Seyahat spor (25°C, dağ yürüyüşü)
+        ("t-shirt", "olive", "shorts",   "khaki",  "sneakers","gray",   "sport",    25, 0.94),
+        ("tank-top","gray",  "leggings", "black",  "sneakers","white",  "sport",    25, 0.95),
+        ("blazer",  "navy",  "trousers", "black",  "heels",   "black",  "sport",    25, 0.05),
+
+        # Dubai sıcak (38°C) → iş
+        ("shirt",   "white", "trousers", "beige",  "loafers", "beige",  "business", 35, 0.85),
+        ("blouse",  "white", "trousers", "white",  "sandals", "white",  "business", 35, 0.80),
+        ("sweater", "black", "jeans",    "black",  "boots",   "black",  "business", 35, 0.03),
+
+        # Paris ilkbahar (16°C) → randevu
+        ("cardigan","beige", "jeans",    "blue",   "loafers", "brown",  "date",     16, 0.91),
+        ("blouse",  "white", "trousers", "navy",   "heels",   "nude",   "date",     16, 0.93),
+        ("hoodie",  "gray",  "sweatpants","gray",  "sneakers","white",  "date",     16, 0.10),
+    ]
+
+    rows = []
+    for top, tc, bot, bc, sh, sc, occ, temp, score in scenarios:
+        rows.append(dict(
+            top=top, top_color=tc, bottom=bot, bottom_color=bc,
+            shoes=sh, shoes_color=sc, occasion=occ, temperature=temp, score=score,
+        ))
+    return rows
+
 
 if __name__ == "__main__":
     df = generate(n_per_occasion=120)

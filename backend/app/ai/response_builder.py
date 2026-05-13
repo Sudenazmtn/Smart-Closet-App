@@ -1,5 +1,3 @@
-# app/ai/response_builder.py
-
 import random
 
 OPENING_TEMPLATES = {
@@ -35,6 +33,40 @@ OPENING_TEMPLATES = {
     ],
 }
 
+# Destinasyon şehri olan yanıt şablonları
+DESTINATION_OPENING_TEMPLATES = {
+    "casual": [
+        "{city} gezisi için rahat ve şık bir kombin!",
+        "{city}'de günlük dolaşım için mükemmel bir seçim.",
+        "{city} için hafif ve şık — işte önerim!",
+    ],
+    "formal": [
+        "{city}'deki resmi etkinlik için zarif bir kombin.",
+        "{city} yolculuğu için cilalı ve profesyonel bir bakış.",
+        "{city}'de etkileyici görünmek için bu kombini seç.",
+    ],
+    "date": [
+        "{city}'de {occasion_detail} için hem şık hem rahat bu kombin!",
+        "{city}'deki randevu için muhteşem görüneceksin.",
+        "{city} yolculuğu + {occasion_detail} — bu kombin biçilmiş kaftan!",
+    ],
+    "business": [
+        "{city}'deki {occasion_detail} için profesyonel ve özgüvenli bir bakış.",
+        "{city} iş seyahati için keskin ve bakımlı bir kombin.",
+        "{city}'e iş için gidiyorsun — bu kombin seni hazırlıyor!",
+    ],
+    "sport": [
+        "{city}'deki aktivite için konforlu ve şık bir spor kombini!",
+        "{city} için hareket etmeye hazır bir görünüm.",
+        "{city} macerası için pratik ve şık seçimler.",
+    ],
+    "party": [
+        "{city}'deki {occasion_detail} için göz alıcı bir kombin!",
+        "{city} eğlencesi için canlı ve cesur bir bakış.",
+        "{city}'de sahne al — bu kombini giyerdim!",
+    ],
+}
+
 WEATHER_NOTES = {
     "hot":          "Bugün oldukça sıcak, bu yüzden hafif ve nefes alan parçalar seçtim.",
     "warm":         "Hava sıcak ve güzel — bu kombin için mükemmel bir gün.",
@@ -50,6 +82,15 @@ WEATHER_NOTES = {
     "clear":        "Açık bir gün — harika bir kombin için mükemmel hava.",
     "overcast":     "Gri bir gök, ama kombin her şeyi aydınlatacak.",
     "thunderstorm": "Fırtınalı hava — pratik ama şık bir kombin hazırladım.",
+    "az bulutlu":   "Az bulutlu ve güzel bir hava seni bekliyor.",
+    "parçalı bulutlu": "Parçalı bulutlu — katmanlı bir kombin iyi gider.",
+    "kapalı":       "Gökyüzü kapalı ama kombin parlak olacak!",
+    "hafif yağmur": "Hafif yağmur ihtimali var — buna göre seçtim.",
+    "yağmurlu":     "Yağmurlu hava için pratik ve şık parçalar seçtim.",
+    "karlı":        "Kar var — sıcak tutan ama şık bir kombin!",
+    "sisli":        "Sisli bir hava — serin olabilir, katmanlı giyinmek iyi olur.",
+    "sıcak":        "Sıcak hava — hafif ve nefes alan parçalar seçtim.",
+    "soğuk":        "Soğuk hava — seni sıcak tutacak bir kombin hazırladım.",
 }
 
 STYLE_TIPS = {
@@ -92,57 +133,83 @@ FALLBACK_RESPONSES = [
 ]
 
 
-def build_response(recommendation: dict, user_message: str) -> dict:
+def build_response(
+    recommendation: dict,
+    user_message: str,
+    destination_city: str | None = None,
+) -> dict:
     if "error" in recommendation:
         return {
-            "message":   random.choice(FALLBACK_RESPONSES),
-            "outfit":    [],
-            "score":     0,
-            "style_tip": None,
+            "message":          random.choice(FALLBACK_RESPONSES),
+            "outfit":           [],
+            "score":            0,
+            "style_tip":        None,
+            "destination_city": destination_city,
         }
 
     occasion     = recommendation.get("event_type", "casual")
     weather_desc = recommendation.get("weather", "clear").lower()
     outfit_items = recommendation.get("outfit", [])
     score        = recommendation.get("score", 0)
+    temperature  = recommendation.get("temperature", 18)
 
     occasion_detail = _extract_occasion_detail(user_message, occasion)
 
-    templates = OPENING_TEMPLATES.get(occasion, OPENING_TEMPLATES["casual"])
-    opening   = random.choice(templates).format(occasion_detail=occasion_detail)
-
-    weather_note = _get_weather_note(weather_desc)
-    message = opening
-    if weather_note:
-        message += f" {weather_note}"
+    # Destinasyon şehri varsa şehir bazlı şablon kullan
+    if destination_city:
+        templates = DESTINATION_OPENING_TEMPLATES.get(
+            occasion, DESTINATION_OPENING_TEMPLATES["casual"]
+        )
+        opening = random.choice(templates).format(
+            city=destination_city,
+            occasion_detail=occasion_detail,
+        )
+        # Şehir + sıcaklık bilgisi ekle
+        temp_note = _temp_note(temperature)
+        weather_note = _get_weather_note(weather_desc)
+        message = opening
+        if temp_note:
+            message += f" {temp_note}"
+        if weather_note:
+            message += f" {weather_note}"
+    else:
+        templates = OPENING_TEMPLATES.get(occasion, OPENING_TEMPLATES["casual"])
+        opening   = random.choice(templates).format(occasion_detail=occasion_detail)
+        weather_note = _get_weather_note(weather_desc)
+        message = opening
+        if weather_note:
+            message += f" {weather_note}"
 
     tips      = STYLE_TIPS.get(occasion, STYLE_TIPS["casual"])
     style_tip = random.choice(tips)
 
     return {
-        "message":   message,
-        "outfit":    outfit_items,
-        "score":     score,
-        "style_tip": style_tip,
+        "message":          message,
+        "outfit":           outfit_items,
+        "score":            score,
+        "style_tip":        style_tip,
+        "destination_city": destination_city,
     }
 
 
 def build_greeting() -> dict:
     return {
-        "message":   "Merhaba! Bugün ne tür bir etkinlik için giyiniyorsun? ✨",
-        "outfit":    [],
-        "score":     None,
-        "style_tip": None,
+        "message":          "Merhaba! Bugün nereye gidiyorsun ya da ne tür bir etkinlik için giyiniyorsun? ✨",
+        "outfit":           [],
+        "score":            None,
+        "style_tip":        None,
+        "destination_city": None,
     }
 
 
 def build_clarification() -> dict:
     return {
-        "message":   "Gardırobuna henüz kıyafet eklemedin. "
-                     "Önce birkaç parça ekle, sonra sana kombin önereyim! 👗",
-        "outfit":    [],
-        "score":     None,
-        "style_tip": None,
+        "message":          "Gardırobuna henüz kıyafet eklemedin. "
+                            "Önce birkaç parça ekle, sonra sana kombin önereyim! 👗",
+        "outfit":           [],
+        "score":            None,
+        "style_tip":        None,
+        "destination_city": None,
     }
 
 
@@ -152,29 +219,34 @@ def _extract_occasion_detail(message: str, occasion: str) -> str:
     msg = message.lower()
 
     detail_map = {
-        "kahve":      "kahve buluşması",
-        "coffee":     "kahve buluşması",
+        "kahve":        "kahve buluşması",
+        "coffee":       "kahve buluşması",
         "akşam yemeği": "akşam yemeği",
-        "dinner":     "akşam yemeği",
-        "öğle":       "öğle yemeği",
-        "lunch":      "öğle yemeği",
-        "brunch":     "brunch",
-        "mülakat":    "iş mülakatı",
-        "interview":  "iş mülakatı",
-        "düğün":      "düğün",
-        "wedding":    "düğün",
-        "mezuniyet":  "mezuniyet töreni",
-        "graduation": "mezuniyet töreni",
-        "doğum günü": "doğum günü partisi",
-        "birthday":   "doğum günü partisi",
-        "konser":     "konser",
-        "concert":    "konser",
-        "spor":       "spor aktivitesi",
-        "gym":        "spor salonu",
-        "koşu":       "koşu",
-        "running":    "koşu",
-        "yoga":       "yoga",
-        "date":       "randevu",
+        "dinner":       "akşam yemeği",
+        "öğle":         "öğle yemeği",
+        "lunch":        "öğle yemeği",
+        "brunch":       "brunch",
+        "mülakat":      "iş mülakatı",
+        "interview":    "iş mülakatı",
+        "düğün":        "düğün",
+        "wedding":      "düğün",
+        "mezuniyet":    "mezuniyet töreni",
+        "graduation":   "mezuniyet töreni",
+        "doğum günü":   "doğum günü partisi",
+        "birthday":     "doğum günü partisi",
+        "konser":       "konser",
+        "concert":      "konser",
+        "spor":         "spor aktivitesi",
+        "gym":          "spor salonu",
+        "koşu":         "koşu",
+        "running":      "koşu",
+        "yoga":         "yoga",
+        "date":         "randevu",
+        "toplantı":     "iş toplantısı",
+        "meeting":      "iş toplantısı",
+        "sunum":        "sunum",
+        "presentation": "sunum",
+        "iş gezisi":    "iş seyahati",
     }
 
     for keyword, detail in detail_map.items():
@@ -197,3 +269,15 @@ def _get_weather_note(weather_desc: str) -> str | None:
         if key in weather_desc:
             return note
     return None
+
+
+def _temp_note(temperature: int) -> str | None:
+    if temperature >= 28:
+        return f"Orada hava {temperature}°C — oldukça sıcak, hafif giyinmeyi öneririm."
+    if temperature >= 20:
+        return f"Orada hava {temperature}°C — ılıman ve güzel."
+    if temperature >= 12:
+        return f"Orada hava {temperature}°C — serin, bir kat fazla almak iyi olabilir."
+    if temperature >= 0:
+        return f"Orada hava {temperature}°C — soğuk, kalın giyinmeyi unutma!"
+    return f"Orada hava {temperature}°C — çok soğuk, iyi havalandırın!"
