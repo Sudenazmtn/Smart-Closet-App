@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify, current_app
 from app import db
 from app.models.user import User
 from app.models.clothing_item import ClothingItem
-from app.ai.occasion_parser import parse_occasion
+from app.ai.occasion_parser import parse_occasion, parse_destination_city
 from app.ai.recommender import get_recommendation
 from app.ai.response_builder import build_response, build_greeting, build_clarification
 from app.api.weather_routes import fetch_weather
@@ -19,6 +19,29 @@ def _get_user():
     if not user:
         return None, jsonify({'error': 'User not found'}), 404
     return user, None, None
+
+
+def _fetch_city_weather(city: str, api_key: str) -> dict | None:
+    """OpenWeather API'den şehir adına göre hava durumu çeker."""
+    try:
+        import requests
+        url = "https://api.openweathermap.org/data/2.5/weather"
+        resp = requests.get(url, params={
+            "q":     city,
+            "appid": api_key,
+            "units": "metric",
+            "lang":  "tr",
+        }, timeout=5)
+        if resp.status_code != 200:
+            return None
+        data = resp.json()
+        return {
+            "temperature": round(data["main"]["temp"]),
+            "description": data["weather"][0]["description"],
+            "city":        data["name"],
+        }
+    except Exception:
+        return None
 
 
 @chat_bp.route('/greet', methods=['GET'])
@@ -37,7 +60,6 @@ def message():
     latitude     = data.get('latitude')
     longitude    = data.get('longitude')
 
-    # Flutter'dan doğrudan hava durumu verisi gelebilir
     temperature_override = data.get('temperature')
     weather_override     = data.get('weather_desc')
 
@@ -47,21 +69,28 @@ def message():
     occasion    = parse_occasion(user_message)
     weather     = 'mild weather'
     temperature = 18
+    destination_city = None
 
-    # 1. Öncelik: lat/lon → backend hava durumu API'si
-    if latitude and longitude:
+    api_key = current_app.config.get('WEATHER_API_KEY')
+
+    city = parse_destination_city(user_message)
+    if city and api_key:
+        city_weather = _fetch_city_weather(city, api_key)
+        if city_weather:
+            temperature      = city_weather['temperature']
+            weather          = city_weather['description']
+            destination_city = city_weather['city']
+
+    elif latitude and longitude:
         try:
-            api_key      = current_app.config.get('WEATHER_API_KEY')
             weather_data = fetch_weather(float(latitude), float(longitude), api_key)
             temperature  = weather_data['temperature']
             weather      = weather_data['description']
         except Exception:
-            # lat/lon başarısız → Flutter'dan gelen veriye düş
             if temperature_override is not None:
                 temperature = int(temperature_override)
                 weather     = weather_override or 'mild weather'
 
-    # 2. Öncelik: Flutter'dan gelen hava durumu (WeatherProvider)
     elif temperature_override is not None:
         temperature = int(temperature_override)
         weather     = weather_override or 'mild weather'
@@ -78,8 +107,9 @@ def message():
     )
 
     response = build_response(
-        recommendation=recommendation,
-        user_message=user_message,
+        recommendation   = recommendation,
+        user_message     = user_message,
+        destination_city = destination_city,
     )
 
     return jsonify(response), 200

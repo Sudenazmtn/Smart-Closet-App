@@ -14,7 +14,7 @@ class OutfitClothingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: AppSizes.maxiS + AppSizes.xl,
+      width: AppSizes.maxiS + AppSizes.xxl,
       child: Column(
         children: [
           Expanded(
@@ -43,7 +43,7 @@ class OutfitClothingCard extends StatelessWidget {
           Text(
             item.name,
             style: AppTextStyles.bodySmall,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),

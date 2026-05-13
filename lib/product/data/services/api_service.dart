@@ -12,15 +12,15 @@ class ApiService {
   // Fiziksel cihaz → bilgisayarın yerel IP'si
   static final String baseUrl = kIsWeb
       ? 'http://localhost:5000'
-      : 'http://172.20.10.2:5000';
+      : 'http://127.0.0.1:5000';
       //: 'http://192.168.1.121:5000';
 
   late final Dio _dio =
       Dio(
           BaseOptions(
             baseUrl: baseUrl,
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
+            connectTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
             headers: {'Content-Type': 'application/json'},
           ),
         )
