@@ -7,13 +7,20 @@ class ApiService {
 
   static final ApiService instance = ApiService._();
 
-  // Web (Chrome) → localhost
-  // Android emülatör → 10.0.2.2
-  // Fiziksel cihaz → bilgisayarın yerel IP'si
-  static final String baseUrl = kIsWeb
-      ? 'http://localhost:5000'
-      : 'http://127.0.0.1:5000';
-      //: 'http://192.168.1.121:5000';
+  /// Öncelik sırası:
+  ///   1. --dart-define=BASE_URL=http://...  (her ortam için önerilen)
+  ///   2. Web (Chrome)      → http://localhost:5000
+  ///   3. Android emülatör  → http://10.0.2.2:5000
+  ///
+  /// Fiziksel cihazda çalıştırırken:
+  ///   flutter run --dart-define=BASE_URL=http://10.45.76.72:5000
+  static const String _envUrl = String.fromEnvironment('BASE_URL');
+
+  static String get baseUrl {
+    if (_envUrl.isNotEmpty) return _envUrl;
+    if (kIsWeb) return 'http://localhost:5000';
+    return 'http://10.0.2.2:5000'; // Android emülatör
+  }
 
   late final Dio _dio =
       Dio(
@@ -26,7 +33,7 @@ class ApiService {
         )
         ..interceptors.addAll([
           _AuthInterceptor(),
-          LogInterceptor(requestBody: true, responseBody: true),
+          if (kDebugMode) LogInterceptor(requestBody: true, responseBody: true),
         ]);
 
   Dio get dio => _dio;
@@ -66,13 +73,15 @@ class _AuthInterceptor extends Interceptor {
     }
     switch (err.type) {
       case DioExceptionType.connectionTimeout:
-        return 'Connection timed out.';
+        return 'Sunucuya bağlanılamadı, zaman aşımı.';
       case DioExceptionType.receiveTimeout:
-        return 'Server took too long to respond.';
+        return 'Sunucu yanıt vermedi, tekrar dene.';
       case DioExceptionType.connectionError:
-        return 'No internet connection.';
+        return 'Sunucuya ulaşılamıyor. Backend çalışıyor mu?';
+      case DioExceptionType.badResponse:
+        return 'Sunucudan hatalı yanıt geldi (${err.response?.statusCode}).';
       default:
-        return 'Something went wrong.';
+        return 'Bir hata oluştu, tekrar dene.';
     }
   }
 }
