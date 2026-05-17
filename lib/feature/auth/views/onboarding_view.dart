@@ -7,7 +7,33 @@ import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
-import 'widget/clothing_tile.dart';
+// ── Onboarding'e özel küçük widget'lar ────────────────────────────────────────
+
+class _ClothingTileData {
+  const _ClothingTileData({required this.emoji, required this.color});
+  final String emoji;
+  final Color color;
+}
+
+class _ClothingTile extends StatelessWidget {
+  const _ClothingTile({required this.data});
+  final _ClothingTileData data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: data.color,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Center(
+        child: Text(data.emoji, style: const TextStyle(fontSize: 36)),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -22,13 +48,13 @@ class _OnboardingViewState extends State<OnboardingView>
   late Animation<double> _fadeIn;
   late Animation<Offset> _slideUp;
 
-  static const List<ClothingTileData> _items = [
-    ClothingTileData(emoji: '👚', color: Color(0xFFF5C5C5)),
-    ClothingTileData(emoji: '👗', color: Color(0xFFBDD8C0)),
-    ClothingTileData(emoji: '👜', color: Color(0xFFB8CEDD)),
-    ClothingTileData(emoji: '👖', color: Color(0xFFB8CEDD)),
-    ClothingTileData(emoji: '👠', color: Color(0xFFF5C5C5)),
-    ClothingTileData(emoji: '🧣', color: Color(0xFFBDD8C0)),
+  static const List<_ClothingTileData> _items = [
+    _ClothingTileData(emoji: '👚', color: Color(0xFFF5C5C5)),
+    _ClothingTileData(emoji: '👗', color: Color(0xFFBDD8C0)),
+    _ClothingTileData(emoji: '👜', color: Color(0xFFB8CEDD)),
+    _ClothingTileData(emoji: '👖', color: Color(0xFFB8CEDD)),
+    _ClothingTileData(emoji: '👠', color: Color(0xFFF5C5C5)),
+    _ClothingTileData(emoji: '🧣', color: Color(0xFFBDD8C0)),
   ];
 
   @override
@@ -81,7 +107,7 @@ class _OnboardingViewState extends State<OnboardingView>
         ),
         child: AspectRatio(
           aspectRatio: 1,
-          child: ClothingTile(data: _items[index]),
+          child: _ClothingTile(data: _items[index]),
         ),
       ),
     );

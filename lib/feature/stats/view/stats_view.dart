@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_bar.dart';
 import 'package:smart_closet_app/feature/stats/view/mixin/stats_mixin.dart';
 import 'package:smart_closet_app/feature/stats/view/widget/stats_most_worn_item.dart';
 import 'package:smart_closet_app/feature/stats/view/widget/stats_never_worn_item.dart';
@@ -125,7 +124,6 @@ class _StatsViewState extends State<StatsView> with StatsMixin {
                 },
               ),
             ),
-            const AppBottomNavBar(currentIndex: 1),
           ],
         ),
       ),
