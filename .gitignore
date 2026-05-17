@@ -52,7 +52,6 @@ app.*.map.json
 __pycache__/
 *.pyc
 *.pyo
-venv/
 .venv/
 backend/uploads/
 
@@ -69,7 +68,6 @@ GoogleService-Info.plist
 "backend/*.db"
 "backend/python"
 backend/instance/
-backend/venv/
 backend/__pycache__/
 
 # Claude Code
