@@ -1,446 +1,236 @@
 """
-generate_dataset.py
--------------------
-Kombin veri seti üretici.
+generate_dataset.py  v2
+-----------------------
+6000 satirlik gercekci kombin egitim seti uretir.
 
-Fashion domain bilgisini kullanarak ~700 etiketli örnek üretir ve
-outfit_data.csv dosyasına kaydeder.
+Satirlar: top, top_color, bottom, bottom_color, shoes, shoes_color,
+          occasion, temperature, feels_like, weather_type, season_match, score
 
-Her satır bir 3-parçalı kombini (üst + alt + ayakkabı) temsil eder.
-Hedef (score): 0.0 – 1.0 arasında bir float.
-
-Çalıştır:
+Calistir:
     cd backend
     python -m app.ai.dataset.generate_dataset
 """
 
-import random
+from __future__ import annotations
+import os, random
 import numpy as np
 import pandas as pd
-import os
 
 random.seed(42)
 np.random.seed(42)
 
-TOPS = [
-    "t-shirt", "shirt", "blouse", "sweater", "hoodie",
-    "blazer", "dress", "cardigan", "tank-top", "polo",
-]
-BOTTOMS = [
-    "jeans", "trousers", "shorts", "skirt", "leggings", "sweatpants",
-]
-SHOES = [
-    "sneakers", "heels", "boots", "loafers", "sandals", "oxfords",
-]
-COLORS = [
-    "white", "black", "navy", "gray", "beige",
-    "blue", "red", "green", "brown", "pink",
-    "yellow", "burgundy", "olive",
-]
-OCCASIONS    = ["casual", "formal", "date", "business", "sport", "party"]
-TEMPERATURES = [5, 10, 15, 20, 25, 30]
+TOPS    = ["t-shirt","shirt","blouse","sweater","hoodie","blazer","dress","cardigan","tank-top","polo"]
+BOTTOMS = ["jeans","trousers","shorts","skirt","leggings","sweatpants"]
+SHOES   = ["sneakers","heels","boots","loafers","sandals","oxfords"]
+COLORS  = ["white","black","navy","gray","beige","blue","red","green","brown","pink","yellow","burgundy","purple","orange"]
+OCCASIONS     = ["casual","formal","date","business","sport","party"]
+WEATHER_TYPES = ["sunny","cloudy","rain","snow"]
 
-
-EVENT_CAT_SCORE: dict[str, dict[str, float]] = {
-    "casual": {
-        "t-shirt": 1.0,  "jeans": 1.0,    "sneakers": 1.0,
-        "hoodie":  0.90, "shorts": 0.90,  "skirt": 0.75,
-        "dress":   0.70, "cardigan": 0.80,"polo": 0.80,
-        "leggings":0.80, "sandals": 0.80, "tank-top": 0.85,
-        "sweatpants":0.70,"boots": 0.70,  "blouse": 0.70,
-        "sweater": 0.80, "loafers": 0.80, "blazer": 0.40,
-        "trousers":0.60, "heels": 0.30,  "oxfords": 0.50,
-    },
-    "formal": {
-        "shirt":   1.0,  "blazer": 1.0,   "trousers": 1.0,
-        "heels":   1.0,  "dress": 0.90,   "blouse": 0.90,
-        "oxfords": 1.0,  "loafers": 0.80, "cardigan": 0.60,
-        "skirt":   0.80, "polo": 0.60,    "boots": 0.60,
-        "sweater": 0.50, "t-shirt": 0.20, "jeans": 0.30,
-        "sneakers":0.10, "hoodie": 0.0,   "shorts": 0.0,
-        "tank-top":0.10, "sweatpants":0.0,"leggings": 0.20,
-        "sandals": 0.30,
-    },
-    "date": {
-        "dress":   1.0,  "heels": 0.90,   "blouse": 0.90,
-        "skirt":   0.85, "shirt": 0.80,   "blazer": 0.80,
-        "trousers":0.70, "oxfords": 0.70, "jeans": 0.70,
-        "boots":   0.70, "cardigan": 0.70,"polo": 0.60,
-        "sneakers":0.50, "shorts": 0.40,  "sandals": 0.60,
-        "sweater": 0.60, "hoodie": 0.30,  "leggings": 0.40,
-        "t-shirt": 0.50, "tank-top": 0.50,"sweatpants": 0.10,
-    },
-    "business": {
-        "shirt":   1.0,  "blazer": 1.0,   "trousers": 1.0,
-        "heels":   0.80, "blouse": 0.90,  "dress": 0.90,
-        "oxfords": 0.90, "loafers": 0.80, "polo": 0.70,
-        "cardigan":0.60, "skirt": 0.70,   "boots": 0.60,
-        "sweater": 0.50, "jeans": 0.50,   "t-shirt": 0.40,
-        "sneakers":0.30, "shorts": 0.10,  "hoodie": 0.10,
-        "tank-top":0.20, "sweatpants":0.0,"leggings": 0.30,
-    },
-    "sport": {
-        "t-shirt": 1.0,  "shorts": 1.0,   "sneakers": 1.0,
-        "leggings":1.0,  "tank-top": 1.0, "sweatpants": 0.90,
-        "hoodie":  0.80, "sandals": 0.30, "jeans": 0.30,
-        "dress":   0.20, "blazer": 0.0,   "trousers": 0.20,
-        "heels":   0.0,  "skirt": 0.30,   "shirt": 0.40,
-        "oxfords": 0.0,  "boots": 0.20,   "cardigan": 0.30,
-        "polo":    0.50, "blouse": 0.30,  "sweater": 0.40,
-    },
-    "party": {
-        "dress":   1.0,  "heels": 1.0,    "blouse": 0.80,
-        "blazer":  0.80, "shirt": 0.70,   "skirt": 0.90,
-        "jeans":   0.60, "boots": 0.70,   "oxfords": 0.60,
-        "tank-top":0.60, "cardigan": 0.50,"sneakers": 0.40,
-        "hoodie":  0.10, "shorts": 0.30,  "sweatpants": 0.0,
-        "trousers":0.60, "sandals": 0.50, "polo": 0.50,
-        "t-shirt": 0.40, "sweater": 0.50, "leggings": 0.30,
-    },
+_TOP_W = {
+    "summer": {"t-shirt":5,"tank-top":4,"blouse":3,"polo":2,"shirt":2,"dress":3,"hoodie":0,"sweater":0,"blazer":1,"cardigan":1},
+    "winter": {"sweater":5,"hoodie":4,"blazer":3,"cardigan":3,"shirt":2,"blouse":2,"dress":1,"t-shirt":1,"tank-top":0,"polo":1},
+    "spring": {"shirt":4,"blouse":4,"t-shirt":3,"polo":3,"cardigan":3,"dress":3,"blazer":2,"hoodie":2,"sweater":2,"tank-top":1},
+    "fall":   {"sweater":4,"blazer":4,"shirt":3,"hoodie":3,"cardigan":3,"blouse":2,"t-shirt":2,"dress":1,"tank-top":0,"polo":2},
+}
+_BOT_W = {
+    "summer": {"shorts":5,"skirt":4,"jeans":3,"leggings":2,"trousers":2,"sweatpants":0},
+    "winter": {"jeans":4,"trousers":4,"leggings":4,"sweatpants":3,"skirt":1,"shorts":0},
+    "spring": {"jeans":4,"trousers":3,"skirt":3,"shorts":2,"leggings":2,"sweatpants":1},
+    "fall":   {"jeans":5,"trousers":4,"leggings":3,"skirt":2,"shorts":1,"sweatpants":2},
+}
+_SHOE_W = {
+    "summer": {"sandals":5,"sneakers":4,"loafers":3,"heels":2,"boots":0,"oxfords":1},
+    "winter": {"boots":5,"sneakers":3,"loafers":2,"oxfords":2,"heels":1,"sandals":0},
+    "spring": {"sneakers":4,"loafers":4,"sandals":2,"boots":2,"heels":2,"oxfords":2},
+    "fall":   {"boots":4,"sneakers":4,"loafers":3,"oxfords":3,"heels":2,"sandals":0},
+}
+_OCC_TOP_BIAS = {
+    "casual":{"t-shirt":4,"hoodie":3,"polo":2},
+    "formal":{"shirt":4,"blazer":4,"dress":3,"blouse":3},
+    "date":  {"dress":4,"blouse":3,"shirt":2},
+    "business":{"shirt":4,"blazer":4,"blouse":3},
+    "sport": {"t-shirt":5,"tank-top":4,"hoodie":2},
+    "party": {"dress":5,"blouse":3,"blazer":2},
+}
+_OCC_COLOR_BIAS = {
+    "casual":  {"white":3,"navy":3,"gray":3,"black":2,"blue":2},
+    "formal":  {"black":4,"navy":3,"white":3,"gray":2,"burgundy":2},
+    "date":    {"burgundy":3,"black":3,"navy":2,"red":2,"pink":2},
+    "business":{"navy":4,"gray":3,"black":3,"white":3,"beige":2},
+    "sport":   {"black":3,"gray":3,"navy":2,"blue":2,"white":2},
+    "party":   {"black":3,"red":3,"burgundy":2,"pink":2,"purple":2},
 }
 
+def _wc(w: dict) -> str:
+    keys  = list(w.keys())
+    probs = np.array([w[k] for k in keys], dtype=float)
+    probs = probs / probs.sum()
+    return np.random.choice(keys, p=probs)
 
-COLOR_COMPAT: dict[tuple, float] = {
-    ("white",    "black"):     1.00,
-    ("white",    "navy"):      1.00,
-    ("white",    "blue"):      0.90,
-    ("white",    "gray"):      0.90,
-    ("white",    "beige"):     0.85,
-    ("white",    "red"):       0.80,
-    ("white",    "green"):     0.70,
-    ("white",    "brown"):     0.70,
-    ("white",    "olive"):     0.70,
-    ("white",    "burgundy"):  0.80,
-    ("black",    "gray"):      1.00,
-    ("black",    "white"):     1.00,
-    ("black",    "red"):       0.85,
-    ("black",    "navy"):      0.70,
-    ("black",    "beige"):     0.80,
-    ("black",    "burgundy"):  0.90,
-    ("black",    "olive"):     0.75,
-    ("black",    "pink"):      0.70,
-    ("black",    "yellow"):    0.65,
-    ("black",    "brown"):     0.70,
-    ("navy",     "white"):     1.00,
-    ("navy",     "beige"):     0.90,
-    ("navy",     "gray"):      0.85,
-    ("navy",     "burgundy"):  0.85,
-    ("navy",     "olive"):     0.75,
-    ("navy",     "red"):       0.70,
-    ("navy",     "brown"):     0.70,
-    ("gray",     "white"):     1.00,
-    ("gray",     "black"):     1.00,
-    ("gray",     "navy"):      0.90,
-    ("gray",     "blue"):      0.80,
-    ("gray",     "burgundy"):  0.80,
-    ("gray",     "pink"):      0.75,
-    ("gray",     "beige"):     0.80,
-    ("beige",    "white"):     0.90,
-    ("beige",    "navy"):      0.90,
-    ("beige",    "brown"):     0.85,
-    ("beige",    "olive"):     0.85,
-    ("beige",    "burgundy"):  0.80,
-    ("beige",    "gray"):      0.80,
-    ("blue",     "white"):     0.90,
-    ("blue",     "gray"):      0.80,
-    ("blue",     "beige"):     0.80,
-    ("blue",     "navy"):      0.50,
-    ("brown",    "beige"):     1.00,
-    ("brown",    "white"):     0.80,
-    ("brown",    "navy"):      0.75,
-    ("brown",    "olive"):     0.85,
-    ("brown",    "gray"):      0.75,
-    ("olive",    "beige"):     0.85,
-    ("olive",    "white"):     0.80,
-    ("olive",    "navy"):      0.80,
-    ("olive",    "brown"):     0.85,
-    ("olive",    "gray"):      0.75,
-    ("burgundy", "navy"):      0.85,
-    ("burgundy", "gray"):      0.80,
-    ("burgundy", "beige"):     0.80,
-    ("burgundy", "black"):     0.90,
-    ("burgundy", "white"):     0.85,
-    ("red",      "white"):     0.85,
-    ("red",      "black"):     0.85,
-    ("red",      "navy"):      0.70,
-    ("red",      "gray"):      0.70,
-    ("pink",     "white"):     0.85,
-    ("pink",     "gray"):      0.75,
-    ("pink",     "navy"):      0.70,
-    ("pink",     "black"):     0.75,
-    ("green",    "white"):     0.75,
-    ("green",    "beige"):     0.75,
-    ("green",    "navy"):      0.70,
-    ("green",    "brown"):     0.70,
-    ("yellow",   "white"):     0.75,
-    ("yellow",   "navy"):      0.70,
-    ("yellow",   "black"):     0.70,
-    ("yellow",   "gray"):      0.60,
+def _season(t: int) -> str:
+    if t >= 23: return "summer"
+    if t >= 13: return "spring"
+    if t >= 4:  return "fall"
+    return "winter"
+
+def _feels_like(t: int, wt: str) -> int:
+    if wt == "snow":   return t + random.randint(-8, -3)
+    if wt in ("rain","storm"): return t + random.randint(-5, -1)
+    if wt == "sunny" and t >= 22: return t + random.randint(1, 5)
+    return t + random.randint(-2, 2)
+
+def _season_match(top: str, bot: str, shoe: str, t: int) -> float:
+    s = _season(t)
+    sc = []
+    if s == "summer":
+        sc.append(1.0 if top in ("t-shirt","tank-top","blouse","polo","dress") else
+                  0.85 if top in ("shirt",) else 0.5 if top in ("cardigan",) else
+                  0.2 if top in ("sweater","hoodie") else 0.6)
+    elif s == "winter":
+        sc.append(1.0 if top in ("sweater","hoodie","blazer","cardigan") else
+                  0.7 if top in ("shirt","blouse","polo") else
+                  0.2 if top in ("t-shirt","tank-top") else 0.6)
+    else:
+        sc.append(1.0 if top in ("shirt","blouse","polo","cardigan","blazer") else
+                  0.85 if top in ("t-shirt","hoodie","sweater","dress") else 0.7)
+    if s == "summer":
+        sc.append(1.0 if bot in ("shorts","skirt") else 0.7 if bot in ("jeans","leggings") else 0.4)
+    elif s == "winter":
+        sc.append(1.0 if bot in ("jeans","trousers","leggings","sweatpants") else 0.1 if bot == "shorts" else 0.7)
+    else:
+        sc.append(0.8)
+    if s == "summer":
+        sc.append(1.0 if shoe in ("sandals","sneakers") else 0.75 if shoe in ("loafers","heels") else 0.2 if shoe == "boots" else 0.6)
+    elif s == "winter":
+        sc.append(1.0 if shoe == "boots" else 0.8 if shoe in ("sneakers","loafers","oxfords") else 0.05 if shoe == "sandals" else 0.6)
+    else:
+        sc.append(0.8)
+    return round(sum(sc) / len(sc), 3)
+
+_CCOMPAT: dict[frozenset, float] = {
+    frozenset({"black","white"}):1.0, frozenset({"black","gray"}):1.0,
+    frozenset({"black","red"}):0.9,   frozenset({"black","burgundy"}):0.9,
+    frozenset({"black","beige"}):0.8, frozenset({"black","blue"}):0.8,
+    frozenset({"white","navy"}):1.0,  frozenset({"white","blue"}):1.0,
+    frozenset({"white","gray"}):0.95, frozenset({"white","red"}):0.85,
+    frozenset({"white","beige"}):0.85,frozenset({"white","burgundy"}):0.85,
+    frozenset({"gray","navy"}):0.90,  frozenset({"gray","burgundy"}):0.85,
+    frozenset({"gray","blue"}):0.85,  frozenset({"gray","beige"}):0.85,
+    frozenset({"navy","beige"}):1.0,  frozenset({"navy","burgundy"}):0.90,
+    frozenset({"navy","red"}):0.80,   frozenset({"beige","brown"}):1.0,
+    frozenset({"beige","burgundy"}):0.90, frozenset({"brown","burgundy"}):0.85,
+    frozenset({"blue","orange"}):0.80,frozenset({"green","brown"}):0.85,
+    frozenset({"red","burgundy"}):0.40,frozenset({"red","pink"}):0.35,
+    frozenset({"red","orange"}):0.35, frozenset({"pink","orange"}):0.40,
+    frozenset({"yellow","orange"}):0.45,
 }
 
+def _cpair(c1: str, c2: str) -> float:
+    if c1 == c2: return 0.65
+    return _CCOMPAT.get(frozenset({c1, c2}), 0.55)
 
-TEMP_CAT_SCORE: dict[str, dict[str, float]] = {
-    "hot": {   # >= 25 °C
-        "t-shirt":    1.0, "tank-top":   1.0, "shorts": 1.0,
-        "sandals":    1.0, "dress":      0.90,"skirt":  0.90,
-        "blouse":     0.80,"polo":       0.80,"jeans":  0.50,
-        "sneakers":   0.70,"sweater":    0.10,"hoodie": 0.0,
-        "cardigan":   0.20,"blazer":     0.30,"trousers":0.50,
-        "boots":      0.10,"leggings":   0.20,"sweatpants":0.0,
-        "shirt":      0.60,"oxfords":    0.50,"loafers":0.65,
-        "heels":      0.60,
-    },
-    "warm": {  # 15 – 24 °C
-        "t-shirt":    1.0, "jeans":      1.0, "sneakers":1.0,
-        "dress":      0.90,"blouse":     0.90,"shorts":  0.80,
-        "sandals":    0.75,"polo":       0.90,"shirt":   0.90,
-        "cardigan":   0.70,"skirt":      0.85,"blazer":  0.80,
-        "trousers":   0.90,"boots":      0.70,"loafers": 0.90,
-        "heels":      0.90,"sweater":    0.50,"hoodie":  0.40,
-        "leggings":   0.70,"oxfords":    0.85,"sweatpants":0.30,
-        "tank-top":   0.85,
-    },
-    "cool": {  # 8 – 14 °C
-        "sweater":    1.0, "hoodie":     0.90,"jeans":   1.0,
-        "blazer":     0.90,"cardigan":   0.95,"boots":   1.0,
-        "trousers":   0.90,"shirt":      0.80,"loafers": 0.80,
-        "oxfords":    0.80,"sneakers":   0.85,"heels":   0.65,
-        "dress":      0.50,"blouse":     0.60,"skirt":   0.50,
-        "t-shirt":    0.50,"shorts":     0.10,"sandals": 0.0,
-        "tank-top":   0.10,"sweatpants": 0.70,"polo":    0.70,
-        "leggings":   0.90,
-    },
-    "cold": {  # < 8 °C
-        "sweater":    1.0, "hoodie":     0.90,"boots":   1.0,
-        "trousers":   1.0, "jeans":      0.90,"cardigan":0.85,
-        "blazer":     0.70,"leggings":   0.90,"oxfords": 0.70,
-        "sneakers":   0.70,"shirt":      0.60,"sweatpants":0.80,
-        "t-shirt":    0.20,"shorts":     0.0, "sandals": 0.0,
-        "dress":      0.20,"skirt":      0.20,"tank-top":0.0,
-        "heels":      0.40,"blouse":     0.30,"polo":    0.50,
-        "loafers":    0.50,
-    },
-}
+def _score(top, tc, bot, bc, shoe, sc, occ, t, fl, wt, sm) -> float:
+    E_TOP = {
+        "casual":  {"t-shirt":1.0,"hoodie":0.9,"polo":0.85,"dress":0.7,"blouse":0.75,"shirt":0.8,"cardigan":0.8,"blazer":0.4,"sweater":0.8,"tank-top":0.85},
+        "formal":  {"shirt":1.0,"blazer":1.0,"blouse":0.9,"dress":0.9,"sweater":0.5,"cardigan":0.6,"t-shirt":0.2,"hoodie":0.0,"polo":0.6,"tank-top":0.1},
+        "date":    {"dress":1.0,"blouse":0.9,"shirt":0.8,"blazer":0.75,"sweater":0.7,"cardigan":0.65,"t-shirt":0.4,"hoodie":0.3,"polo":0.55,"tank-top":0.5},
+        "business":{"shirt":1.0,"blazer":1.0,"blouse":0.9,"dress":0.9,"polo":0.7,"cardigan":0.7,"sweater":0.6,"t-shirt":0.4,"hoodie":0.1,"tank-top":0.2},
+        "sport":   {"t-shirt":1.0,"tank-top":1.0,"hoodie":0.7,"polo":0.6,"shirt":0.3,"blouse":0.1,"dress":0.1,"blazer":0.0,"sweater":0.15,"cardigan":0.2},
+        "party":   {"dress":1.0,"blouse":0.8,"blazer":0.8,"shirt":0.7,"t-shirt":0.3,"hoodie":0.1,"sweater":0.2,"cardigan":0.4,"polo":0.4,"tank-top":0.5},
+    }
+    E_BOT = {
+        "casual":  {"jeans":1.0,"shorts":0.9,"leggings":0.8,"skirt":0.75,"trousers":0.65,"sweatpants":0.7},
+        "formal":  {"trousers":1.0,"skirt":0.85,"jeans":0.3,"shorts":0.0,"leggings":0.4,"sweatpants":0.0},
+        "date":    {"jeans":0.75,"skirt":0.9,"trousers":0.8,"shorts":0.5,"leggings":0.5,"sweatpants":0.1},
+        "business":{"trousers":1.0,"skirt":0.75,"jeans":0.5,"leggings":0.5,"shorts":0.0,"sweatpants":0.0},
+        "sport":   {"shorts":1.0,"leggings":1.0,"sweatpants":0.9,"jeans":0.2,"trousers":0.1,"skirt":0.1},
+        "party":   {"skirt":1.0,"jeans":0.65,"trousers":0.6,"shorts":0.3,"leggings":0.35,"sweatpants":0.0},
+    }
+    E_SHOE = {
+        "casual":  {"sneakers":1.0,"sandals":0.85,"loafers":0.8,"boots":0.7,"heels":0.35,"oxfords":0.55},
+        "formal":  {"heels":1.0,"oxfords":1.0,"loafers":0.8,"boots":0.65,"sneakers":0.15,"sandals":0.25},
+        "date":    {"heels":0.9,"boots":0.8,"loafers":0.7,"sandals":0.75,"sneakers":0.55,"oxfords":0.75},
+        "business":{"oxfords":0.95,"heels":0.85,"loafers":0.85,"boots":0.75,"sneakers":0.35,"sandals":0.30},
+        "sport":   {"sneakers":1.0,"sandals":0.25,"boots":0.2,"loafers":0.1,"heels":0.0,"oxfords":0.0},
+        "party":   {"heels":1.0,"boots":0.75,"sandals":0.7,"loafers":0.55,"sneakers":0.25,"oxfords":0.6},
+    }
 
+    def _tf(cat, feels):
+        heavy  = {"sweater","hoodie","blazer","cardigan","boots"}
+        light  = {"t-shirt","tank-top","shorts","skirt","sandals","dress"}
+        if cat in heavy:
+            return 0.1 if feels>=26 else 0.5 if feels>=18 else 0.8 if feels>=10 else 1.0
+        elif cat in light:
+            return 1.0 if feels>=26 else 0.85 if feels>=18 else 0.55 if feels>=10 else 0.2 if feels>=2 else 0.0
+        else:
+            return 0.75 if feels>=26 else 1.0 if feels>=18 else 0.95 if feels>=10 else 0.70 if feels>=2 else 0.5
 
-def _temp_band(temp: int) -> str:
-    if temp >= 25: return "hot"
-    if temp >= 15: return "warm"
-    if temp >= 8:  return "cool"
-    return "cold"
+    ev  = (E_TOP.get(occ,E_TOP["casual"]).get(top,0.5) +
+           E_BOT.get(occ,E_BOT["casual"]).get(bot,0.5) +
+           E_SHOE.get(occ,E_SHOE["casual"]).get(shoe,0.5)) / 3
+    tmp = (_tf(top,fl) + _tf(bot,fl) + _tf(shoe,fl)) / 3
+    col = (_cpair(tc,bc) + _cpair(tc,sc) + _cpair(bc,sc)) / 3
 
+    wp = 0.0
+    if wt in ("rain","storm"):
+        if tc in ("white","beige") or bc in ("white","beige"): wp += 0.10
+        if shoe == "sandals": wp += 0.25
+        if bot in ("shorts","skirt"): wp += 0.15
+    elif wt == "snow":
+        if shoe == "sandals": wp += 0.40
+        if bot == "shorts":   wp += 0.35
+        if top in ("t-shirt","tank-top") and fl <= 5: wp += 0.30
 
-def _color_compat(c1: str, c2: str) -> float:
-    if c1 == c2:
-        return 0.40
-    score = COLOR_COMPAT.get((c1, c2)) or COLOR_COMPAT.get((c2, c1))
-    return score if score is not None else 0.50
+    raw = ev*0.35 + tmp*0.25 + col*0.25 + max(0,1-wp)*0.10 + sm*0.05
+    return float(np.clip(raw + np.random.normal(0, 0.025), 0.0, 1.0))
 
-
-def _event_score(cat: str, occasion: str) -> float:
-    table = EVENT_CAT_SCORE.get(occasion, EVENT_CAT_SCORE["casual"])
-    if cat in table:
-        return table[cat]
-    for key, val in table.items():
-        if key in cat or cat in key:
-            return val
-    return 0.50
-
-
-def _temp_score(cat: str, temp: int) -> float:
-    band  = _temp_band(temp)
-    table = TEMP_CAT_SCORE.get(band, {})
-    if cat in table:
-        return table[cat]
-    for key, val in table.items():
-        if key in cat or cat in key:
-            return val
-    return 0.50
-
-
-def compute_score(
-    top: str, top_color: str,
-    bottom: str, bottom_color: str,
-    shoes: str, shoes_color: str,
-    occasion: str, temperature: int,
-) -> float:
-    """Bir kombin için 0–1 arası skor hesapla."""
-    items = [
-        (top,    top_color),
-        (bottom, bottom_color),
-        (shoes,  shoes_color),
-    ]
-
-    event_scores = [_event_score(cat, occasion) for cat, _ in items]
-    temp_scores  = [_temp_score(cat, temperature) for cat, _ in items]
-    color_pairs  = [
-        _color_compat(items[i][1], items[j][1])
-        for i in range(len(items))
-        for j in range(i + 1, len(items))
-    ]
-
-    event_avg = sum(event_scores) / len(event_scores)
-    temp_avg  = sum(temp_scores)  / len(temp_scores)
-    color_avg = sum(color_pairs)  / len(color_pairs) if color_pairs else 0.50
-    score = (event_avg * 0.45) + (temp_avg * 0.35) + (color_avg * 0.20)
-
-    noise = np.random.uniform(-0.03, 0.03)
-    return float(min(1.0, max(0.0, round(score + noise, 4))))
-
-def generate(n_per_occasion: int = 200) -> pd.DataFrame:
+def generate(n: int = 6000) -> pd.DataFrame:
     rows = []
+    occ_cycle = OCCASIONS * (n // len(OCCASIONS) + 1)
+    random.shuffle(occ_cycle)
 
-    for occasion in OCCASIONS:
-        for _ in range(n_per_occasion):
-            top          = random.choice(TOPS)
-            top_color    = random.choice(COLORS)
-            bottom       = random.choice(BOTTOMS)
-            bottom_color = random.choice(COLORS)
-            shoes        = random.choice(SHOES)
-            shoes_color  = random.choice(COLORS)
-            temperature  = random.choice(TEMPERATURES)
+    for i in range(n):
+        occ  = occ_cycle[i]
+        temp = int(np.random.choice(
+            [2,5,8,10,12,15,18,20,22,25,28,32],
+            p=[0.04,0.06,0.07,0.08,0.08,0.10,0.10,0.10,0.10,0.10,0.09,0.08]
+        ))
+        season = _season(temp)
+        wt     = random.choice(["sunny","sunny","cloudy","rain"] if temp>5 else ["snow","cloudy","rain","cloudy"])
+        fl     = _feels_like(temp, wt)
 
-            score = compute_score(
-                top, top_color, bottom, bottom_color,
-                shoes, shoes_color, occasion, temperature,
-            )
-            rows.append({
-                "top":          top,
-                "top_color":    top_color,
-                "bottom":       bottom,
-                "bottom_color": bottom_color,
-                "shoes":        shoes,
-                "shoes_color":  shoes_color,
-                "occasion":     occasion,
-                "temperature":  temperature,
-                "score":        score,
-            })
+        tw = dict(_TOP_W[season])
+        for k, v in _OCC_TOP_BIAS.get(occ, {}).items():
+            tw[k] = tw.get(k, 1) + v
+        top = _wc(tw)
 
-    rows += _edge_cases()
-    rows += _destination_scenarios()
+        bot  = "none" if top == "dress" else _wc(_BOT_W[season])
+        shoe = _wc(_SHOE_W[season])
 
-    df = pd.DataFrame(rows).sample(frac=1, random_state=42).reset_index(drop=True)
-    print(f"[Dataset] {len(df)} satır üretildi.")
+        cw = dict(_OCC_COLOR_BIAS.get(occ, {}))
+        for c in COLORS:
+            if c not in cw: cw[c] = 1
+        tc = _wc(cw)
+        bc = _wc(cw) if bot != "none" else "none"
+        sc = _wc(cw)
+
+        sm    = _season_match(top, bot if bot != "none" else top, shoe, temp)
+        score = _score(top, tc, bot if bot != "none" else top,
+                       bc if bc != "none" else tc, shoe, sc, occ, temp, fl, wt, sm)
+
+        rows.append({"top":top,"top_color":tc,
+                     "bottom":bot if bot!="none" else "none",
+                     "bottom_color":bc if bc!="none" else "none",
+                     "shoes":shoe,"shoes_color":sc,
+                     "occasion":occ,"temperature":temp,
+                     "feels_like":fl,"weather_type":wt,
+                     "season_match":round(sm,3),"score":round(score,3)})
+
+    df = pd.DataFrame(rows)
+    print(f"[Dataset] {len(df)} satir uretildi. Skor ort: {df['score'].mean():.3f}")
     return df
 
-
-def _edge_cases() -> list[dict]:
-    """
-    Modelin kenar durumları öğrenmesi için el ile etiketlenmiş örnekler.
-    Yüksek skor (iyi kombin) ve düşük skor (kötü kombin) içerir.
-    """
-    good = [
-        # Klasik formel
-        ("shirt", "white", "trousers", "black", "heels",   "black",  "formal",   20, 0.96),
-        ("blazer","navy",  "trousers", "gray",  "oxfords", "black",  "business", 18, 0.95),
-        ("dress", "black", "jeans",    "none",  "heels",   "black",  "date",     20, 0.94),
-        # Rahat kombin
-        ("t-shirt","white","jeans",    "blue",  "sneakers","white",  "casual",   22, 0.93),
-        ("hoodie","gray",  "jeans",    "black", "sneakers","white",  "casual",   15, 0.91),
-        # Spor
-        ("t-shirt","black","leggings", "black", "sneakers","white",  "sport",    20, 0.95),
-        ("tank-top","gray","shorts",   "black", "sneakers","gray",   "sport",    28, 0.96),
-        # Parti
-        ("dress", "red",   "jeans",    "none",  "heels",   "black",  "party",    20, 0.94),
-        ("blazer","black", "jeans",    "black", "heels",   "black",  "party",    18, 0.90),
-    ]
-    bad = [
-        # Yanlış etkinlik
-        ("hoodie","black", "sweatpants","gray", "sneakers","white",  "formal",   18, 0.08),
-        ("t-shirt","white","shorts",    "blue", "sandals", "brown",  "formal",   25, 0.05),
-        # Renk uyumsuzluğu
-        ("t-shirt","yellow","jeans",   "red",  "sneakers","green",  "casual",   20, 0.30),
-        ("shirt",  "pink", "trousers", "orange","heels",  "purple", "business", 18, 0.12),
-        # Sıcaklık uyumsuzluğu
-        ("sweater","black","trousers", "black","boots",   "black",  "sport",    30, 0.15),
-        ("shorts", "white","jeans",    "none", "sandals", "white",  "formal",    5, 0.06),
-        # Karma kötü
-        ("hoodie","brown", "shorts",   "red",  "heels",   "yellow", "date",     10, 0.10),
-        ("tank-top","pink","leggings", "green","heels",   "blue",   "business", 22, 0.08),
-    ]
-
-    rows = []
-    for g in good:
-        top, tc, bot, bc, sh, sc, occ, temp, score = g
-        rows.append(dict(
-            top=top, top_color=tc, bottom=bot, bottom_color=bc,
-            shoes=sh, shoes_color=sc, occasion=occ, temperature=temp, score=score,
-        ))
-    for b in bad:
-        top, tc, bot, bc, sh, sc, occ, temp, score = b
-        rows.append(dict(
-            top=top, top_color=tc, bottom=bot, bottom_color=bc,
-            shoes=sh, shoes_color=sc, occasion=occ, temperature=temp, score=score,
-        ))
-    return rows
-
-
-def _destination_scenarios() -> list[dict]:
-    """
-    Seyahat/destinasyon bazlı gerçekçi senaryolar.
-    Farklı şehir hava sıcaklıklarına göre iyi ve kötü kombinler.
-    """
-    # (top, top_color, bottom, bottom_color, shoes, shoes_color, occasion, temp, score)
-    scenarios = [
-        # Soğuk şehir (Erzurum, 0–5°C) → iş toplantısı
-        ("sweater", "navy",  "trousers", "black",  "boots",   "black",  "business",  3, 0.93),
-        ("blazer",  "gray",  "trousers", "black",  "boots",   "brown",  "business",  3, 0.91),
-        ("hoodie",  "black", "jeans",    "black",  "sneakers","white",  "business",  3, 0.22),
-
-        # Sıcak şehir (Antalya, 30°C) → günlük
-        ("t-shirt", "white", "shorts",   "beige",  "sandals", "white",  "casual",   30, 0.95),
-        ("blouse",  "blue",  "skirt",    "white",  "sandals", "beige",  "casual",   30, 0.93),
-        ("sweater", "black", "jeans",    "black",  "boots",   "black",  "casual",   30, 0.08),
-
-        # Ilıman şehir (İstanbul, 18°C) → randevu
-        ("blouse",  "white", "trousers", "navy",   "heels",   "black",  "date",     18, 0.94),
-        ("dress",   "burgundy","jeans",  "none",   "heels",   "black",  "date",     18, 0.95),
-        ("hoodie",  "gray",  "sweatpants","black", "sneakers","white",  "date",     18, 0.12),
-
-        # Yağmurlu İstanbul (12°C) → günlük
-        ("cardigan","navy",  "jeans",    "black",  "boots",   "black",  "casual",   12, 0.92),
-        ("hoodie",  "olive", "jeans",    "black",  "sneakers","white",  "casual",   12, 0.88),
-        ("tank-top","white", "shorts",   "blue",   "sandals", "white",  "casual",   12, 0.15),
-
-        # Ankara kış (5°C) → iş toplantısı
-        ("blazer",  "black", "trousers", "gray",   "oxfords", "black",  "business",  5, 0.94),
-        ("sweater", "beige", "trousers", "black",  "boots",   "brown",  "business",  5, 0.89),
-        ("t-shirt", "white", "shorts",   "blue",   "sneakers","white",  "business",  5, 0.04),
-
-        # İzmir yaz (28°C) → parti
-        ("dress",   "red",   "jeans",    "none",   "heels",   "gold",   "party",    28, 0.91),
-        ("blouse",  "black", "skirt",    "black",  "heels",   "black",  "party",    28, 0.90),
-        ("sweater", "gray",  "jeans",    "black",  "boots",   "black",  "party",    28, 0.14),
-
-        # Seyahat spor (25°C, dağ yürüyüşü)
-        ("t-shirt", "olive", "shorts",   "khaki",  "sneakers","gray",   "sport",    25, 0.94),
-        ("tank-top","gray",  "leggings", "black",  "sneakers","white",  "sport",    25, 0.95),
-        ("blazer",  "navy",  "trousers", "black",  "heels",   "black",  "sport",    25, 0.05),
-
-        # Dubai sıcak (38°C) → iş
-        ("shirt",   "white", "trousers", "beige",  "loafers", "beige",  "business", 35, 0.85),
-        ("blouse",  "white", "trousers", "white",  "sandals", "white",  "business", 35, 0.80),
-        ("sweater", "black", "jeans",    "black",  "boots",   "black",  "business", 35, 0.03),
-
-        # Paris ilkbahar (16°C) → randevu
-        ("cardigan","beige", "jeans",    "blue",   "loafers", "brown",  "date",     16, 0.91),
-        ("blouse",  "white", "trousers", "navy",   "heels",   "nude",   "date",     16, 0.93),
-        ("hoodie",  "gray",  "sweatpants","gray",  "sneakers","white",  "date",     16, 0.10),
-    ]
-
-    rows = []
-    for top, tc, bot, bc, sh, sc, occ, temp, score in scenarios:
-        rows.append(dict(
-            top=top, top_color=tc, bottom=bot, bottom_color=bc,
-            shoes=sh, shoes_color=sc, occasion=occ, temperature=temp, score=score,
-        ))
-    return rows
-
-
 if __name__ == "__main__":
-    df = generate(n_per_occasion=120)
-    out_path = os.path.join(os.path.dirname(__file__), "outfit_data.csv")
-    df.to_csv(out_path, index=False)
-    print(f"[Dataset] Kaydedildi → {out_path}")
-    print(df.describe())
-    print(df["occasion"].value_counts())
+    out = os.path.join(os.path.dirname(__file__), "outfit_data.csv")
+    generate(6000).to_csv(out, index=False)
+    print(f"Kaydedildi: {out}")

@@ -4,7 +4,6 @@ import anthropic
 
 _client = anthropic.Anthropic(api_key=os.getenv('CLAUDE_API_KEY'))
 
-
 def get_outfit_suggestion(
     wardrobe: str,
     event_type: str,
