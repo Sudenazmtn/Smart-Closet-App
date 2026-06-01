@@ -35,7 +35,6 @@ class ProfileView extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // ── Header ───────────────────────────────────────────────
                     Container(
                       width: double.infinity,
                       color: AppColors.primary,
@@ -97,7 +96,6 @@ class ProfileView extends StatelessWidget {
                       ),
                     ),
 
-                    // ── Menü ─────────────────────────────────────────────────
                     Padding(
                       padding: AppPaddings.allL,
                       child: Column(
@@ -134,7 +132,6 @@ class ProfileView extends StatelessWidget {
 
                           const SizedBox(height: AppSizes.m),
 
-                          // Sign Out butonu
                           SizedBox(
                             width: double.infinity,
                             height: AppSizes.maxiS - AppSizes.xxs,
@@ -170,7 +167,6 @@ class ProfileView extends StatelessWidget {
   }
 
   Future<void> _onSignOut(BuildContext context) async {
-    // Tüm kullanıcıya özel state'i temizle
     context.read<ClothingProvider>().resetState();
     context.read<OutfitProvider>().resetState();
 
@@ -181,8 +177,6 @@ class ProfileView extends StatelessWidget {
     }
   }
 }
-
-// ── Menu item ─────────────────────────────────────────────────────────────────
 
 class _MenuItem extends StatelessWidget {
   const _MenuItem({

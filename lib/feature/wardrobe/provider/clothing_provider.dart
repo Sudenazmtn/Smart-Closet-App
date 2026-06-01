@@ -13,7 +13,6 @@ class ClothingProvider extends ChangeNotifier {
   String? _errorMessage;
   String _selectedFilter = 'all';
 
-  // ── Getters ───────────────────────────────────────────────────────────────
   ClothingStatus get status => _status;
   List<ClothingModel> get items => _items;
   String? get errorMessage => _errorMessage;
@@ -21,7 +20,9 @@ class ClothingProvider extends ChangeNotifier {
   String get selectedFilter => _selectedFilter;
   int get totalItems => _items.length;
 
-  int get neverWornCount => _items.where((i) => i.wearCount == 0).length;
+  int get neverWornCount  => _items.where((i) => i.wearCount == 0).length;
+  int get favoriteCount   => _items.where((i) => i.isFavorite).length;
+  List<ClothingModel> get favorites => _items.where((i) => i.isFavorite).toList();
 
   List<ClothingModel> get mostWorn {
     final worn = _items.where((i) => i.wearCount > 0).toList();
@@ -29,7 +30,6 @@ class ClothingProvider extends ChangeNotifier {
     return worn.take(5).toList();
   }
 
-  // ── Filter değiştir ───────────────────────────────────────────────────────
   Future<void> changeFilter(String filter) async {
     _selectedFilter = filter;
     notifyListeners();
@@ -37,7 +37,6 @@ class ClothingProvider extends ChangeNotifier {
     await loadClothes(category: category);
   }
 
-  // ── Tüm kıyafetleri yükle ─────────────────────────────────────────────────
   Future<void> loadClothes({
     String? category,
     String? season,
@@ -56,7 +55,6 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
-  // ── Kıyafet ekle ──────────────────────────────────────────────────────────
   Future<void> addClothing({
     required String name,
     required String category,
@@ -80,7 +78,6 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
-  // ── Kıyafet sil ───────────────────────────────────────────────────────────
   Future<void> deleteClothing(int id) async {
     _setLoading();
     try {
@@ -92,7 +89,6 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
-  // ── Giyildi olarak işaretle ───────────────────────────────────────────────
   Future<void> markAsWorn(int id) async {
     try {
       final updated = await _repository.markAsWorn(id);
@@ -106,7 +102,6 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
-  // ── Kullanıcı çıkışında tüm state'i temizle ──────────────────────────────
   void resetState() {
     _status = ClothingStatus.idle;
     _errorMessage = null;
@@ -115,7 +110,6 @@ class ClothingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ── Reset ─────────────────────────────────────────────────────────────────
   void resetStatus() {
     _status = ClothingStatus.idle;
     _errorMessage = null;
@@ -130,7 +124,6 @@ class ClothingProvider extends ChangeNotifier {
   }
 }
 
-  // ── Private helpers ───────────────────────────────────────────────────────
   void _setLoading() {
     _status = ClothingStatus.loading;
     _errorMessage = null;

@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  // ── Primary ───────────────────────────────────────────────────────────────
   static const Color primary = Color(0xFF1C1917); // espresso — butonlar, header
   static const Color primaryLight = Color(
     0xFF2C2825,
   ); // koyu kahve — dark kart bg
   static const Color primaryMid = Color(0xFF3C3530); // border dark modda
 
-  // ── Accent / Gold ─────────────────────────────────────────────────────────
   static const Color accent = Color(
     0xFFD4B483,
   ); // muted gold — CTA, badge, aktif
@@ -21,12 +19,10 @@ class AppColors {
     0xFFF5F0E8,
   ); // krem — card bg, input bg
 
-  // ── Background ────────────────────────────────────────────────────────────
   static const Color background = Color(0xFFF7EAC8);
   static const Color backgroundSecondary = Color(0xFFF5F5F4); // input, chip bg
   static const Color backgroundCard = Color(0xFFFFFFFF); // beyaz kart
 
-  // ── Surface / Tinted Backgrounds ──────────────────────────────────────────
   static const Color surfaceCream = Color(
     0xFFF5F0E8,
   ); // krem — weather pill, stat bg
@@ -44,7 +40,6 @@ class AppColors {
   ); // lavanta tint — kıyafet kart
   static const Color surfaceAmber = Color(0xFFFEF3C7); // amber — goal/uyarı bg
 
-  // ── Text ──────────────────────────────────────────────────────────────────
   static const Color textPrimary = Color(0xFF1C1917); // ana metin
   static const Color textSecondary = Color(0xFF57534E); // ikincil metin
   static const Color textMuted = Color(
@@ -61,23 +56,19 @@ class AppColors {
     0xFF92703A,
   ); // krem bg üzerindeki altın metin
 
-  // ── Border ────────────────────────────────────────────────────────────────
   static const Color border = Color(0xFFE7E5E4); // input, kart border
   static const Color borderMid = Color(0xFFD6CFC7); // chip border
   static const Color borderDark = Color(0xFF3C3530); // dark modda border
 
-  // ── Status ────────────────────────────────────────────────────────────────
   static const Color error = Color(0xFFA32D2D); // hata — kırmızı
   static const Color errorLight = Color(0xFFFCA5A5); // hata border (sign out)
   static const Color success = Color(0xFF3B6D11); // başarı — yeşil
   static const Color warning = Color(0xFFD97706); // uyarı — amber
   static const Color warningLight = Color(0xFFFEF3C7); // uyarı bg
 
-  // ── Match Badge ───────────────────────────────────────────────────────────
   static const Color matchBadge = Color(0xFFD4B483); // %92 match badge bg
   static const Color matchBadgeText = Color(0xFF1C1917); // match badge text
 
-  // ── Bottom Nav ────────────────────────────────────────────────────────────
   static const Color navBackground = Color(0xFFFAFAF9); // light nav bg
   static const Color navBackgroundDark = Color(
     0xFF1C1917,
@@ -85,7 +76,6 @@ class AppColors {
   static const Color navActive = Color(0xFFD4B483); // aktif tab gold dot
   static const Color navInactive = Color(0xFF78716C); // pasif tab
 
-  // ── Category Icon Backgrounds ─────────────────────────────────────────────
   static const Color iconBgOrange = Color(0xFFF5F0E8); // edit profile icon
   static const Color iconBgRed = Color(0xFFFEE2E2); // notifications icon
   static const Color iconBgGreen = Color(0xFFD1FAE5); // location icon

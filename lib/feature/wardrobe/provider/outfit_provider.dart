@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/product/data/model/chat_message_model.dart';
+import 'package:smart_closet_app/product/data/model/clothing_model.dart';
 import 'package:smart_closet_app/product/data/model/outfit_model.dart';
 import 'package:smart_closet_app/product/data/model/stats_model.dart';
 import 'package:smart_closet_app/product/data/repositories/outfit_repository.dart';
@@ -16,7 +17,6 @@ class OutfitProvider extends ChangeNotifier {
   String? _errorMessage;
   List<ChatMessageModel> _messages = [];
 
-  // ── Getters ───────────────────────────────────────────────────────────────
   OutfitStatus get status => _status;
   List<OutfitModel> get outfits => _outfits;
   StatsModel? get stats => _stats;
@@ -27,7 +27,31 @@ class OutfitProvider extends ChangeNotifier {
   List<OutfitModel> get favorites =>
       _outfits.where((o) => o.isFavorite).toList();
 
-  // ── Chat başlat ───────────────────────────────────────────────────────────
+  List<dynamic> get lastAiItems {
+    for (final msg in _messages.reversed) {
+      if (msg.suggestedItems != null && msg.suggestedItems!.isNotEmpty) {
+        return msg.suggestedItems!;
+      }
+    }
+    return [];
+  }
+
+  String? get lastAiNote {
+    for (final msg in _messages.reversed) {
+      if (msg.styleTip != null) return msg.styleTip;
+    }
+    return null;
+  }
+
+  double? get lastAiScore {
+    for (final msg in _messages.reversed) {
+      if (msg.suggestedItems != null && msg.suggestedItems!.isNotEmpty) {
+        return msg.score;
+      }
+    }
+    return null;
+  }
+
   void initChat(String greeting) {
     if (_messages.isEmpty) {
       _messages = [ChatMessageModel(sender: MessageSender.ai, text: greeting)];
@@ -35,7 +59,6 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
-  // ── Mesaj gönder + kural tabanlı AI yanıt al ─────────────────────────────
   Future<void> sendMessage({
     required String userText,
     required String aiErrorText,
@@ -48,12 +71,17 @@ class OutfitProvider extends ChangeNotifier {
     ];
     notifyListeners();
 
+    // Son önerilen kıyafet ID'lerini dışla — farklı kombin üretilsin
+    final lastItems = lastAiItems.whereType<ClothingModel>().toList();
+    final excludeIds = lastItems.map((i) => i.id).toList();
+
     _setLoading();
     try {
       final aiResponse = await _repository.sendChatMessage(
         userText: userText,
         temperature: temperature,
         weatherDesc: weatherDescription,
+        excludeItemIds: excludeIds.isNotEmpty ? excludeIds : null,
       );
       _messages = [
         ..._messages,
@@ -63,6 +91,7 @@ class OutfitProvider extends ChangeNotifier {
           suggestedItems: aiResponse.items.isNotEmpty ? aiResponse.items : null,
           styleTip: aiResponse.styleTip,
           destinationCity: aiResponse.destinationCity,
+          score: aiResponse.score,
         ),
       ];
       _setSuccess();

@@ -79,7 +79,6 @@ CITY_MAP = {
     "kapadokya": "Goreme",
     "pamukkale": "Pamukkale",
     "efes": "Selcuk",
-    # Uluslararası şehirler
     "paris": "Paris",
     "london": "London",
     "londra": "London",
@@ -95,14 +94,12 @@ CITY_MAP = {
     "tokyo": "Tokyo",
 }
 
-
 def parse_occasion(message: str) -> str:
     msg = message.lower()
     for occasion, keywords in OCCASION_KEYWORD.items():
         if any(keyword in msg for keyword in keywords):
             return occasion
     return "casual"
-
 
 def parse_destination_city(message: str) -> str | None:
     """

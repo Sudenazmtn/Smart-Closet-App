@@ -33,7 +33,6 @@ OPENING_TEMPLATES = {
     ],
 }
 
-# Destinasyon şehri olan yanıt şablonları
 DESTINATION_OPENING_TEMPLATES = {
     "casual": [
         "{city} gezisi için rahat ve şık bir kombin!",
@@ -132,7 +131,6 @@ FALLBACK_RESPONSES = [
     "Bu etkinlik için gardırobunda birkaç parça daha gerekiyor. Alışveriş zamanı mı?",
 ]
 
-
 def build_response(
     recommendation: dict,
     user_message: str,
@@ -155,7 +153,6 @@ def build_response(
 
     occasion_detail = _extract_occasion_detail(user_message, occasion)
 
-    # Destinasyon şehri varsa şehir bazlı şablon kullan
     if destination_city:
         templates = DESTINATION_OPENING_TEMPLATES.get(
             occasion, DESTINATION_OPENING_TEMPLATES["casual"]
@@ -164,7 +161,6 @@ def build_response(
             city=destination_city,
             occasion_detail=occasion_detail,
         )
-        # Şehir + sıcaklık bilgisi ekle
         temp_note = _temp_note(temperature)
         weather_note = _get_weather_note(weather_desc)
         message = opening
@@ -191,7 +187,6 @@ def build_response(
         "destination_city": destination_city,
     }
 
-
 def build_greeting() -> dict:
     return {
         "message":          "Merhaba! Bugün nereye gidiyorsun ya da ne tür bir etkinlik için giyiniyorsun? ✨",
@@ -200,7 +195,6 @@ def build_greeting() -> dict:
         "style_tip":        None,
         "destination_city": None,
     }
-
 
 def build_clarification() -> dict:
     return {
@@ -211,9 +205,6 @@ def build_clarification() -> dict:
         "style_tip":        None,
         "destination_city": None,
     }
-
-
-# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _extract_occasion_detail(message: str, occasion: str) -> str:
     msg = message.lower()
@@ -263,13 +254,11 @@ def _extract_occasion_detail(message: str, occasion: str) -> str:
     }
     return defaults.get(occasion, occasion)
 
-
 def _get_weather_note(weather_desc: str) -> str | None:
     for key, note in WEATHER_NOTES.items():
         if key in weather_desc:
             return note
     return None
-
 
 def _temp_note(temperature: int) -> str | None:
     if temperature >= 28:

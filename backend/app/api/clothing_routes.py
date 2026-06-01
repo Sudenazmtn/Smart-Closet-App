@@ -12,10 +12,8 @@ clothing_bp = Blueprint('clothing', __name__)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
-
 def _allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 def _get_user():
     uid = request.headers.get('X-Firebase-UID')
@@ -25,7 +23,6 @@ def _get_user():
     if not user:
         return None, jsonify({'error': 'User not found'}), 404
     return user, None, None
-
 
 @clothing_bp.route('/', methods=['GET'])
 def get_clothes():
@@ -45,7 +42,6 @@ def get_clothes():
     items = query.order_by(ClothingItem.created_at.desc()).all()
     return jsonify({'items': [i.to_dict() for i in items], 'count': len(items)}), 200
 
-
 @clothing_bp.route('/<int:item_id>', methods=['GET'])
 def get_clothing_item(item_id):
     user, err, code = _get_user()
@@ -57,7 +53,6 @@ def get_clothing_item(item_id):
         return jsonify({'error': 'Item not found'}), 404
 
     return jsonify({'item': item.to_dict()}), 200
-
 
 @clothing_bp.route('/', methods=['POST'])
 def add_clothing():
@@ -96,7 +91,6 @@ def add_clothing():
 
     return jsonify({'message': 'Clothing item added successfully', 'item': item.to_dict()}), 201
 
-
 @clothing_bp.route('/<int:item_id>', methods=['PUT'])
 def update_clothing(item_id):
     user, err, code = _get_user()
@@ -115,7 +109,6 @@ def update_clothing(item_id):
 
     db.session.commit()
     return jsonify({'message': 'Updated successfully', 'item': item.to_dict()}), 200
-
 
 @clothing_bp.route('/<int:item_id>', methods=['DELETE'])
 def delete_clothing(item_id):

@@ -4,7 +4,6 @@ import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
-/// Filtre chip verisi
 class WardrobeFilterItem {
   const WardrobeFilterItem({required this.label, required this.value});
 

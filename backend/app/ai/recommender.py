@@ -1,134 +1,177 @@
-from itertools import product
-from .outfit_scorer import score_outfit, score_item
+"""
+recommender.py  v2
+------------------
+Kullanicinin gardrobundan en iyi kombini sece motor.
+feels_like ve weather_type destekli.
+"""
 
-TOP_CATEGORIES    = {"t-shirt", "shirt", "blouse", "sweater", "hoodie",
-                     "blazer", "jacket", "coat", "dress", "top", "cardigan"}
-BOTTOM_CATEGORIES = {"jeans", "trousers", "shorts", "skirt", "leggings", "pants"}
-SHOE_CATEGORIES   = {"sneakers", "heels", "boots", "loafers", "sandals", "shoes"}
+from __future__ import annotations
+from itertools import product as iterproduct
 
+from .outfit_scorer import (
+    score_outfit, score_item, get_weather_type,
+    season_match_score, weather_type_score,
+)
+
+TOP_CATEGORIES    = {"t-shirt","shirt","blouse","sweater","hoodie","blazer",
+                     "jacket","coat","dress","top","tops","cardigan","outerwear","outer"}
+BOTTOM_CATEGORIES = {"jeans","trousers","shorts","skirt","leggings",
+                     "pants","bottom","bottoms"}
+SHOE_CATEGORIES   = {"sneakers","heels","boots","loafers","sandals","shoes"}
+
+_MAX_CANDIDATES = 400
 
 def _categorize(items: list) -> dict:
-    groups = {"top": [], "bottom": [], "shoes": [], "other": []}
+    groups: dict[str, list] = {"top":[],"bottom":[],"shoes":[],"other":[]}
     for item in items:
         cat = item.category.lower()
-        if any(c in cat for c in TOP_CATEGORIES):
-            groups["top"].append(item)
-        elif any(c in cat for c in BOTTOM_CATEGORIES):
-            groups["bottom"].append(item)
-        elif any(c in cat for c in SHOE_CATEGORIES):
-            groups["shoes"].append(item)
-        else:
-            groups["other"].append(item)
+        if any(c in cat for c in TOP_CATEGORIES):         groups["top"].append(item)
+        elif any(c in cat for c in BOTTOM_CATEGORIES):    groups["bottom"].append(item)
+        elif any(c in cat for c in SHOE_CATEGORIES):      groups["shoes"].append(item)
+        else:                                             groups["other"].append(item)
     return groups
 
+def _season_filter(items: list, feels_like: int) -> list:
+    def _keep(item) -> bool:
+        s = (item.season or "all").lower()
+        if s == "all": return True
+        if feels_like >= 23 and s == "winter": return False
+        if feels_like <= 3  and s == "summer": return False
+        return True
+    filtered = [i for i in items if _keep(i)]
+    return filtered if filtered else items
 
-def _season_filter(items: list, temperature: int) -> list:
-    if temperature >= 22:
-        return [i for i in items if i.season.lower() != "winter"]
-    elif temperature <= 8:
-        return [i for i in items if i.season.lower() != "summer"]
+def _weather_filter(items: list, weather_type: str) -> list:
+    if weather_type in ("rain","storm"):
+        filtered = [i for i in items
+                    if not (i.category.lower() == "sandals"
+                            and i.color.lower() in ("white","beige"))]
+        return filtered if filtered else items
+    if weather_type == "snow":
+        filtered = [i for i in items
+                    if i.category.lower() not in ("sandals","shorts")]
+        return filtered if filtered else items
     return items
 
+def _pre_sort(items: list, event_type: str, temperature: int,
+              feels_like: int, weather_type: str) -> list:
+    return sorted(items,
+                  key=lambda i: score_item(i, event_type, temperature, feels_like, weather_type),
+                  reverse=True)
 
-def _weather_filter(items: list, weather: str) -> list:
-    if "rain" in weather.lower() or "drizzle" in weather.lower():
-        return [i for i in items if i.color.lower() not in {"white", "beige"}]
-    return items
-
-
-def get_recommendation(wardrobe: list, event_type: str,
-                        weather: str, temperature: int) -> dict:
-  
+def get_recommendation(
+    wardrobe:         list,
+    event_type:       str,
+    weather:          str,
+    temperature:      int,
+    feels_like:       int | None       = None,
+    weather_type:     str | None       = None,
+    exclude_item_ids: list[int] | None = None,
+) -> dict:
     if not wardrobe:
         return {"error": "Wardrobe is empty"}
 
-    
-    filtered = _season_filter(wardrobe, temperature)
-    filtered = _weather_filter(filtered, weather)
+    fl  = feels_like   if feels_like   is not None else temperature
+    wt  = weather_type if weather_type is not None else get_weather_type(weather)
+    excl = set(exclude_item_ids or [])
 
-    if not filtered:
-        filtered = wardrobe
+    filtered = _season_filter(wardrobe, fl)
+    filtered = _weather_filter(filtered, wt)
 
-    
     groups  = _categorize(filtered)
-    tops    = groups["top"]    or filtered
-    bottoms = groups["bottom"] or []
-    shoes   = groups["shoes"]  or []
+    tops    = _pre_sort(groups["top"]    or filtered, event_type, temperature, fl, wt)[:12]
+    bottoms = _pre_sort(groups["bottom"] or [],        event_type, temperature, fl, wt)[:10]
+    shoes   = _pre_sort(groups["shoes"]  or [],        event_type, temperature, fl, wt)[:8]
 
-    
-    candidates     = []
+    candidates: list[list] = []
     dresses        = [i for i in tops if "dress" in i.category.lower()]
     non_dress_tops = [i for i in tops if "dress" not in i.category.lower()]
 
-    
     for dress in dresses:
-        if shoes:
-            for shoe in shoes:
-                candidates.append([dress, shoe])
-        else:
-            candidates.append([dress])
+        candidates.append([dress] + ([shoes[0]] if shoes else []))
 
-    
     if non_dress_tops and bottoms:
-        for top, bottom in product(non_dress_tops, bottoms):
+        for top, bottom in iterproduct(non_dress_tops, bottoms):
             if shoes:
                 for shoe in shoes:
                     candidates.append([top, bottom, shoe])
+                    if len(candidates) >= _MAX_CANDIDATES: break
             else:
                 candidates.append([top, bottom])
+            if len(candidates) >= _MAX_CANDIDATES: break
     elif non_dress_tops:
-        for top in non_dress_tops:
-            candidates.append([top])
+        candidates += [[t] for t in non_dress_tops]
 
-    
-    best_score  = -1.0
-    best_outfit = []
-
+    # Tüm kombinasyonları skorla ve sırala
+    scored_candidates = []
     for combo in candidates:
-        s = score_outfit(combo, event_type, temperature)
-        if s > best_score:
-            best_score  = s
-            best_outfit = combo
+        s = score_outfit(combo, event_type, temperature, fl, wt)
+        scored_candidates.append((s, combo))
+    scored_candidates.sort(key=lambda x: -x[0])
 
-    
+    # Önce dışlanan kıyafetleri içermeyen kombinasyonları dene
+    best_score  = -1.0
+    best_outfit: list = []
+
+    for s, combo in scored_candidates:
+        combo_ids = {item.id for item in combo}
+        if excl and combo_ids & excl:
+            continue  # Bu kombinasyonda dışlanan kıyafet var, atla
+        best_score  = s
+        best_outfit = combo
+        break
+
+    # Hepsi dışlanmışsa en yüksek skorluyu al (gardırop çok küçük)
+    if not best_outfit and scored_candidates:
+        best_score, best_outfit = scored_candidates[0]
+
     if not best_outfit:
-        scored      = sorted(filtered,
-                             key=lambda i: score_item(i, event_type, temperature),
-                             reverse=True)
+        scored      = _pre_sort(filtered, event_type, temperature, fl, wt)
         best_outfit = scored[:3]
-        best_score  = score_outfit(best_outfit, event_type, temperature)
+        best_score  = score_outfit(best_outfit, event_type, temperature, fl, wt)
 
     return {
-        "outfit":      [item.to_dict() for item in best_outfit],
-        "score":       best_score,
-        "event_type":  event_type,
-        "temperature": temperature,
-        "weather":     weather,
-        "note":        _generate_note(best_outfit, event_type, temperature, weather),
+        "outfit":       [item.to_dict() for item in best_outfit],
+        "score":        round(best_score, 3),
+        "event_type":   event_type,
+        "temperature":  temperature,
+        "feels_like":   fl,
+        "weather":      weather,
+        "weather_type": wt,
+        "note":         _generate_note(best_outfit, event_type, fl, wt),
     }
 
+_TEMP_TIPS = {
+    "freeze": "Dondurucu soguk — kalin katmanlar zorunlu.",
+    "cold":   "Soguk hava — kalin bir mont tercih edildi.",
+    "mild":   "Iliman hava icin dengeli bir kombin.",
+    "warm":   "Sicak hava — hafif parcalar one cikti.",
+    "hot":    "Cok sicak — en ince secenekler secildi.",
+}
+_WEATHER_TIPS = {
+    "rain":"Yagmurlu hava — koyu renkler ve bot one cikti.",
+    "storm":"Firtinali hava — pratik ve dayanikli parcalar.",
+    "snow":"Karli hava — sicak tutan parcalar onceliklendi.",
+    "windy":"Ruzgarli hava — etek ve elbiseden kacinildi.",
+    "sunny":"Gunes var — aydinlik ve hafif bir kombin.",
+    "cloudy":"",
+}
+_EVENT_TIPS = {
+    "formal":"Resmi etkinlik icin zarif ve sik.",
+    "sport":"Spor icin konforlu ve esnek.",
+    "date":"Randevu icin hem sik hem rahat.",
+    "business":"Is ortami icin profesyonel ve bakimli.",
+    "casual":"Gunluk kullanim icin rahat ve zahmetsiz.",
+    "party":"Parti icin eglenceli ve cesur.",
+}
 
-def _generate_note(items: list, event_type: str,
-                   temperature: int, weather: str) -> str:
+def _generate_note(items: list, event_type: str, feels_like: int, weather_type: str) -> str:
     names = ", ".join(i.name for i in items)
-    tips  = []
-
-    if temperature >= 25:
-        tips.append("Light and breathable choices for the heat.")
-    elif temperature <= 8:
-        tips.append("Cold weather — consider layering up.")
-
-    if "rain" in weather.lower():
-        tips.append("Watch out for the rain.")
-
-    event_tips = {
-        "formal":   "Clean and elegant for the formal occasion.",
-        "sport":    "Comfortable and flexible for your workout.",
-        "date":     "Stylish yet comfortable for your date.",
-        "business": "Professional and polished for the workplace.",
-        "casual":   "Relaxed and easy for a casual day.",
-        "party":    "Fun and vibrant for the party.",
-    }
-    tips.append(event_tips.get(event_type.lower(), ""))
-
-    return f"{names}. " + " ".join(t for t in tips if t)
+    if feels_like >= 26:   tk = "hot"
+    elif feels_like >= 18: tk = "warm"
+    elif feels_like >= 10: tk = "mild"
+    elif feels_like >= 2:  tk = "cold"
+    else:                  tk = "freeze"
+    parts = [_TEMP_TIPS.get(tk,""), _WEATHER_TIPS.get(weather_type,""),
+             _EVENT_TIPS.get(event_type.lower(),"")]
+    return f"{names}. {' '.join(p for p in parts if p)}".strip()

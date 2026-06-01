@@ -4,10 +4,8 @@ from app.models.user import User
 
 auth_bp = Blueprint('auth', __name__)
 
-
 def _get_uid():
     return request.headers.get('X-Firebase-UID')
-
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -26,7 +24,6 @@ def register():
     if existing:
         return jsonify({'message': 'User already exists', 'user': existing.to_dict()}), 200
 
-
     if User.query.filter_by(email=email).first():
         return jsonify({'error': 'Email already in use'}), 409
 
@@ -35,7 +32,6 @@ def register():
     db.session.commit()
 
     return jsonify({'message': 'User registered successfully', 'user': user.to_dict()}), 201
-
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -57,8 +53,6 @@ def login():
         db.session.commit()
 
     return jsonify({'message': 'Login successful', 'user': user.to_dict()}), 200
-
-
 
 @auth_bp.route('/me', methods=['GET'])
 def me():

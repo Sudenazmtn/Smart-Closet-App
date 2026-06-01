@@ -3,7 +3,6 @@
   "appTagline": "Yapay Zeka Gardırobun",
   "appSlogan": "Bilinçli giy.",
   "appSloganSub": "Gardırobuna, havaya ve güne göre kişiselleştirilmiş yapay zeka kombin önerileri.",
-
   "auth": {
     "getStarted": "Başla",
     "signIn": "Giriş Yap",
@@ -24,7 +23,6 @@
     "rememberedPassword": "Hatırladın mı?",
     "securityNote": "Verileriniz şifrelenerek güvenli bir şekilde saklanmaktadır."
   },
-
   "field": {
     "fullName": "Ad Soyad",
     "email": "E-posta",
@@ -37,14 +35,12 @@
     "hintEmailAddress": "E-posta adresin",
     "hintItemName": "örn. Bej keten palto"
   },
-
   "validation": {
     "required": "{field} boş bırakılamaz.",
     "emailInvalid": "Lütfen geçerli bir e-posta adresi gir.",
     "passwordShort": "Şifre en az 8 karakter olmalıdır.",
     "passwordMismatch": "Şifreler eşleşmiyor."
   },
-
   "home": {
     "goodMorning": "Günaydın,",
     "goodAfternoon": "İyi öğleden sonralar,",
@@ -54,9 +50,11 @@
     "sectionWardrobe": "Gardırobum",
     "sectionOutfit": "Bugünün Kombini",
     "viewAll": "Tümünü gör",
-    "matchPercent": "%{} uyum"
+    "matchPercent": "%{} uyum",
+    "matchLabel": "Uyum",
+    "quickAi": "AI'dan\nKombin Al",
+    "quickAdd": "Kıyafet\nEkle"
   },
-
   "wardrobe": {
     "title": "Gardırobum",
     "itemCount": "{} parça",
@@ -68,7 +66,6 @@
     "filterShoes": "Ayakkabılar",
     "filterBags": "Çantalar"
   },
-
   "addItem": {
     "title": "Parça Ekle",
     "save": "Gardıroba Ekle",
@@ -79,7 +76,6 @@
     "fieldSeason": "Mevsim",
     "fieldColor": "Renk"
   },
-
   "season": {
     "spring": "İlkbahar",
     "summer": "Yaz",
@@ -87,7 +83,6 @@
     "winter": "Kış",
     "all": "Tüm Mevsimler"
   },
-
   "color": {
     "beige": "Bej",
     "black": "Siyah",
@@ -95,7 +90,6 @@
     "navy": "Lacivert",
     "red": "Kırmızı"
   },
-
   "outfit": {
     "title": "Bugünün görünümü",
     "eventCasual": "Günlük",
@@ -109,7 +103,6 @@
     "aiGreeting": "Merhaba! Bugün ne tür bir etkinlik için giyiniyorsun? ✨",
     "aiError": "Bir öneri oluşturamadım. Lütfen tekrar dene."
   },
-
   "stats": {
     "title": "İstatistikler",
     "overview": "Genel Bakış",
@@ -122,7 +115,6 @@
     "neverWorn": "Hiç giyilmeyen parçalar",
     "neverWornSub": "İncelemek için dokun"
   },
-
   "profile": {
     "title": "Profilim",
     "editButton": "Profili Düzenle",
@@ -137,14 +129,12 @@
     "menuPrivacy": "Gizlilik & Güvenlik",
     "menuPrivacySub": "Verilerini yönet"
   },
-
   "nav": {
     "home": "Ana Sayfa",
     "wardrobe": "Gardırop",
     "ai": "Yapay Zeka",
     "profile": "Profil"
   },
-
   "error": {
     "general": "Bir hata oluştu. Lütfen tekrar dene.",
     "noInternet": "İnternet bağlantısı yok.",
@@ -153,13 +143,11 @@
     "weakPassword": "Şifre çok zayıf.",
     "userNotFound": "Bu e-posta adresiyle kayıtlı hesap bulunamadı."
   },
-
   "success": {
     "resetEmailSent": "Sıfırlama e-postası gönderildi. Gelen kutunu kontrol et.",
     "itemAdded": "Parça gardıroba eklendi.",
     "outfitSaved": "Kombin kaydedildi."
   },
-
   "common": {
     "cancel": "İptal",
     "delete": "Sil",

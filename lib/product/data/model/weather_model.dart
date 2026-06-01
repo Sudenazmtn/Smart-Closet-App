@@ -20,15 +20,22 @@ class WeatherModel {
   final int humidity;
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
+    final temp      = (json['temperature'] as num?)?.round() ?? 0;
+    final feelsLike = (json['feels_like']  as num?)?.round() ?? 0;
+    final windSpeed = (json['wind_speed']  as num?)?.round() ?? 0;
+    final humidity  = (json['humidity']    as num?)?.round() ?? 0;
+
     return WeatherModel(
-      city: json['city'] as String,
-      temperature: json['temperature'] as int,
-      feelsLike: json['feels_like'] as int,
-      description: json['description'] as String,
-      iconCode: json['icon_code'] as String,
-      outfitTip: json['outfit_tip'] as String,
-      windSpeed: json['wind_speed'] as int,
-      humidity: json['humidity'] as int,
+      city:        (json['city']        as String?) ?? '',
+      temperature: temp,
+      feelsLike:   feelsLike,
+      description: (json['description'] as String?) ?? '',
+      iconCode:    (json['icon_code']   as String?) ?? '',
+      outfitTip:   (json['outfit_tip']  as String?) ?? '',
+      windSpeed:   windSpeed,
+      humidity:    humidity,
     );
   }
+
+  bool get isValid => temperature != 0 || description.isNotEmpty;
 }

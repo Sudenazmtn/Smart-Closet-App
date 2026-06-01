@@ -3,8 +3,6 @@ import requests
 
 weather_bp = Blueprint('weather', __name__)
 
-
-# ── GET /weather/ ─────────────────────────────────────────────────────────────
 @weather_bp.route('/', methods=['GET'])
 def get_weather():
     uid = request.headers.get('X-Firebase-UID')
@@ -48,7 +46,6 @@ def get_weather():
         return jsonify({'error': 'Weather service timed out'}), 504
     except requests.exceptions.RequestException as e:
         return jsonify({'error': str(e)}), 502
-
 
 def _outfit_tip(temperature: int, description: str) -> str:
     desc = description.lower()

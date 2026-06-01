@@ -7,19 +7,12 @@ class ApiService {
 
   static final ApiService instance = ApiService._();
 
-  /// Öncelik sırası:
-  ///   1. --dart-define=BASE_URL=http://...  (her ortam için önerilen)
-  ///   2. Web (Chrome)      → http://localhost:5000
-  ///   3. Android emülatör  → http://10.0.2.2:5000
-  ///
-  /// Fiziksel cihazda çalıştırırken:
-  ///   flutter run --dart-define=BASE_URL=http://10.45.76.72:5000
   static const String _envUrl = String.fromEnvironment('BASE_URL');
 
   static String get baseUrl {
     if (_envUrl.isNotEmpty) return _envUrl;
     if (kIsWeb) return 'http://localhost:5000';
-    return 'http://10.0.2.2:5000'; // Android emülatör
+    return 'http://localhost:5000';
   }
 
   late final Dio _dio =
@@ -28,7 +21,6 @@ class ApiService {
             baseUrl: baseUrl,
             connectTimeout: const Duration(seconds: 30),
             receiveTimeout: const Duration(seconds: 30),
-            headers: {'Content-Type': 'application/json'},
           ),
         )
         ..interceptors.addAll([

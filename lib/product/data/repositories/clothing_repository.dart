@@ -58,7 +58,6 @@ class ClothingRepository {
     final response = await _dio.post(
       '/clothes/',
       data: formData,
-      options: Options(headers: {'Content-Type': 'multipart/form-data'}),
     );
 
     return ClothingModel.fromJson(

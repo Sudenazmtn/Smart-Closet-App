@@ -40,7 +40,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
                 const AuthLogoHeader(),
                 const SizedBox(height: 32),
 
-                // ── Kart ──────────────────────────────────────────────────
                 Container(
                   padding: EdgeInsets.all(AppSizes.xl),
                   decoration: BoxDecoration(
@@ -63,7 +62,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
                       ),
                       const SizedBox(height: 24),
 
-                      // Email
                       Text(
                         LocaleKeys.fieldEmail.tr(),
                         style: AppTextStyles.labelLarge,
@@ -88,7 +86,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
 
                       const SizedBox(height: 16),
 
-                      // Şifre
                       Text(
                         LocaleKeys.fieldPassword.tr(),
                         style: AppTextStyles.labelLarge,
@@ -115,7 +112,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
                         },
                       ),
 
-                      // Şifremi unuttum
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
@@ -136,7 +132,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
 
                       const SizedBox(height: 8),
 
-                      // Sign In butonu
                       Consumer<AuthProvider>(
                         builder: (context, auth, _) => SizedBox(
                           height: 52,
@@ -171,7 +166,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
 
                       const SizedBox(height: 16),
 
-                      // Güvenlik notu
                       Container(
                         padding: EdgeInsets.all(AppSizes.s),
                         decoration: BoxDecoration(
@@ -201,7 +195,6 @@ class _SignInViewState extends State<SignInView> with SignInMixin {
 
                 const SizedBox(height: 24),
 
-                // Alt link
                 AuthBottomLink(
                   question: LocaleKeys.authDontHaveAccount.tr(),
                   actionText: LocaleKeys.authSignUp.tr(),

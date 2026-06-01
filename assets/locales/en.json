@@ -3,7 +3,6 @@
   "appTagline": "Your AI Wardrobe",
   "appSlogan": "Dress with intention.",
   "appSloganSub": "AI-powered outfit suggestions tailored to your wardrobe, weather, and day.",
-
   "auth": {
     "getStarted": "Get Started",
     "signIn": "Sign In",
@@ -24,7 +23,6 @@
     "rememberedPassword": "Remembered it?",
     "securityNote": "Your data is encrypted and stored securely."
   },
-
   "field": {
     "fullName": "Full name",
     "email": "Email",
@@ -37,14 +35,12 @@
     "hintEmailAddress": "Your email address",
     "hintItemName": "e.g. Beige linen coat"
   },
-
   "validation": {
     "required": "{field} is required.",
     "emailInvalid": "Please enter a valid email address.",
     "passwordShort": "Password must be at least 8 characters.",
     "passwordMismatch": "Passwords do not match."
   },
-
   "home": {
     "goodMorning": "Good morning,",
     "goodAfternoon": "Good afternoon,",
@@ -54,9 +50,11 @@
     "sectionWardrobe": "My Wardrobe",
     "sectionOutfit": "Today's Outfit",
     "viewAll": "View all",
-    "matchPercent": "{}% match"
+    "matchPercent": "{}% match",
+    "matchLabel": "Match",
+    "quickAi": "Get AI\nOutfit",
+    "quickAdd": "Add\nClothing"
   },
-
   "wardrobe": {
     "title": "My Wardrobe",
     "itemCount": "{} items",
@@ -68,7 +66,6 @@
     "filterShoes": "Shoes",
     "filterBags": "Bags"
   },
-
   "addItem": {
     "title": "Add Item",
     "save": "Add to Wardrobe",
@@ -79,7 +76,6 @@
     "fieldSeason": "Season",
     "fieldColor": "Color"
   },
-
   "season": {
     "spring": "Spring",
     "summer": "Summer",
@@ -87,7 +83,6 @@
     "winter": "Winter",
     "all": "All"
   },
-
   "color": {
     "beige": "Beige",
     "black": "Black",
@@ -95,7 +90,6 @@
     "navy": "Navy",
     "red": "Red"
   },
-
   "outfit": {
     "title": "Today's look",
     "eventCasual": "Casual",
@@ -109,7 +103,6 @@
     "aiGreeting": "Hello! What kind of occasion are you dressing for today? ✨",
     "aiError": "I couldn't generate a suggestion. Please try again."
   },
-
   "stats": {
     "title": "Statistics",
     "overview": "Overview",
@@ -122,7 +115,6 @@
     "neverWorn": "Items never worn",
     "neverWornSub": "Tap to review"
   },
-
   "profile": {
     "title": "My Profile",
     "editButton": "Edit Profile",
@@ -137,14 +129,12 @@
     "menuPrivacy": "Privacy & Security",
     "menuPrivacySub": "Manage your data"
   },
-
   "nav": {
     "home": "Home",
     "wardrobe": "Wardrobe",
     "ai": "AI",
     "profile": "Profile"
   },
-
   "error": {
     "general": "Something went wrong. Please try again.",
     "noInternet": "No internet connection.",
@@ -153,13 +143,11 @@
     "weakPassword": "Password is too weak.",
     "userNotFound": "No account found with this email."
   },
-
   "success": {
     "resetEmailSent": "Reset email sent. Check your inbox.",
     "itemAdded": "Item added to wardrobe.",
     "outfitSaved": "Outfit saved."
   },
-
   "common": {
     "cancel": "Cancel",
     "delete": "Delete",

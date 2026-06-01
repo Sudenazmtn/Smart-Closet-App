@@ -8,7 +8,6 @@ from app.models.clothing_item import ClothingItem
 
 outfit_bp = Blueprint('outfit', __name__)
 
-
 def _get_user():
     uid = request.headers.get('X-Firebase-UID')
     if not uid:
@@ -18,8 +17,6 @@ def _get_user():
         return None, jsonify({'error': 'User not found'}), 404
     return user, None, None
 
-
-# ── GET /outfit/ ──────────────────────────────────────────────────────────────
 @outfit_bp.route('/', methods=['GET'])
 def get_outfits():
     user, err, code = _get_user()
@@ -33,8 +30,6 @@ def get_outfits():
     outfits = query.order_by(Outfit.created_at.desc()).all()
     return jsonify({'outfits': [o.to_dict() for o in outfits], 'count': len(outfits)}), 200
 
-
-# ── POST /outfit/suggest ──────────────────────────────────────────────────────
 @outfit_bp.route('/suggest', methods=['POST'])
 def suggest_outfit():
     user, err, code = _get_user()
@@ -67,8 +62,6 @@ def suggest_outfit():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
-# ── POST /outfit/save ─────────────────────────────────────────────────────────
 @outfit_bp.route('/save', methods=['POST'])
 def save_outfit():
     user, err, code = _get_user()
@@ -104,8 +97,6 @@ def save_outfit():
 
     return jsonify({'message': 'Outfit saved successfully', 'outfit': outfit.to_dict()}), 201
 
-
-# ── PATCH /outfit/<id>/favorite ───────────────────────────────────────────────
 @outfit_bp.route('/<int:outfit_id>/favorite', methods=['PATCH'])
 def toggle_favorite(outfit_id):
     user, err, code = _get_user()
@@ -121,8 +112,6 @@ def toggle_favorite(outfit_id):
 
     return jsonify({'is_favorite': outfit.is_favorite, 'outfit': outfit.to_dict()}), 200
 
-
-# ── DELETE /outfit/<id> ───────────────────────────────────────────────────────
 @outfit_bp.route('/<int:outfit_id>', methods=['DELETE'])
 def delete_outfit(outfit_id):
     user, err, code = _get_user()
@@ -137,8 +126,6 @@ def delete_outfit(outfit_id):
     db.session.commit()
     return jsonify({'message': 'Outfit deleted successfully'}), 200
 
-
-# ── GET /outfit/stats ─────────────────────────────────────────────────────────
 @outfit_bp.route('/stats', methods=['GET'])
 def get_stats():
     user, err, code = _get_user()

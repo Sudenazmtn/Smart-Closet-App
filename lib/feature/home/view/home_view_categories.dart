@@ -1,8 +1,5 @@
 part of 'home_view.dart';
 
-/// HomeView'ın bir parçası.
-/// Kategori listesi burada tanımlı — view dosyasını şişirmez.
-/// homeCategories, HomeView'ın scope'unda doğrudan erişilebilir.
 List<HomeCategoryData> buildCategories(ClothingProvider clothing) => [
   HomeCategoryData(
     label: LocaleKeys.wardrobeFilterTops.tr(),

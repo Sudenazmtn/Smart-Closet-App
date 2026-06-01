@@ -19,7 +19,6 @@ class AuthProvider extends ChangeNotifier {
   User? _firebaseUser;
   UserModel? _backendUser;
 
-  // ── Getters ───────────────────────────────────────────────────────────────
   AuthStatus get status => _status;
   String? get errorMessage => _errorMessage;
   User? get currentUser => _firebaseUser;
@@ -27,12 +26,10 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _status == AuthStatus.loading;
   bool get isLoggedIn => _firebaseUser != null;
 
-  // ── Firebase auth state dinle ─────────────────────────────────────────────
   void _init() {
     _auth.authStateChanges().listen((user) async {
       _firebaseUser = user;
       if (user != null) {
-        // Firebase giriş yapıldıysa backend'e sync et
         _backendUser = await _repository.syncWithBackend(user);
       } else {
         _backendUser = null;
@@ -41,7 +38,6 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-  // ── Sign In ───────────────────────────────────────────────────────────────
   Future<void> signIn({required String email, required String password}) async {
     _setLoading();
     try {
@@ -51,7 +47,6 @@ class AuthProvider extends ChangeNotifier {
       );
       _firebaseUser = credential.user;
 
-      // Backend'e sync et
       if (_firebaseUser != null) {
         _backendUser = await _repository.syncWithBackend(_firebaseUser!);
       }
@@ -64,7 +59,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // ── Sign Up ───────────────────────────────────────────────────────────────
   Future<void> signUp({
     required String name,
     required String email,
@@ -79,7 +73,6 @@ class AuthProvider extends ChangeNotifier {
       await credential.user?.updateDisplayName(name);
       _firebaseUser = credential.user;
 
-      // Backend'e kaydet
       if (_firebaseUser != null) {
         _backendUser = await _repository.register(
           firebaseUid: _firebaseUser!.uid,
@@ -96,11 +89,9 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // ── Google Sign In ────────────────────────────────────────────────────────
   Future<void> signInWithGoogle() async {
     _setLoading();
     try {
-      // TODO: google_sign_in paketi eklenince tamamlanacak
       _setSuccess();
     } on FirebaseAuthException catch (e) {
       _setError(e.readableMessage);
@@ -109,7 +100,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // ── Forgot Password ───────────────────────────────────────────────────────
   Future<void> sendPasswordResetEmail(String email) async {
     _setLoading();
     try {
@@ -122,7 +112,6 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // ── Sign Out ──────────────────────────────────────────────────────────────
   Future<void> signOut() async {
     _setLoading();
     try {

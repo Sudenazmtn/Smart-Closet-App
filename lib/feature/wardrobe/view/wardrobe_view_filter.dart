@@ -1,7 +1,5 @@
 part of 'wardrobe_view.dart';
 
-/// WardrobeView'ın bir parçası.
-/// Filter listesi burada tanımlı — view dosyasını şişirmez.
 List<WardrobeFilterItem> get wardrobeFilters => [
       WardrobeFilterItem(label: LocaleKeys.wardrobeFilterAll.tr(), value: 'all'),
       WardrobeFilterItem(label: LocaleKeys.wardrobeFilterTops.tr(), value: 'tops'),
