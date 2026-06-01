@@ -225,10 +225,11 @@ _SEASON_RANGES = {
     "winter":(-20,10),"all":(-20,50),
 }
 
-def season_match_score(item_season: str, feels_like: int, weather_type: str = "cloudy") -> float:
-    lo, hi = _SEASON_RANGES.get(item_season.lower().strip(), (-20, 50))
+def season_match_score(item_season: str | None, feels_like: int, weather_type: str = "cloudy") -> float:
+    season = (item_season or "all").lower().strip()
+    lo, hi = _SEASON_RANGES.get(season, (-20, 50))
     if lo <= feels_like <= hi:
-        return 1.0 if item_season.lower() != "all" else 0.85
+        return 1.0 if season != "all" else 0.85
     dist = max(lo - feels_like, feels_like - hi)
     return round(max(0.0, 1.0 - min(dist / 15.0, 1.0)), 3)
 

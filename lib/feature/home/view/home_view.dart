@@ -146,7 +146,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
         Expanded(
           child: _ActionButton(
             icon: Icons.auto_awesome_rounded,
-            label: 'AI\'dan\nKombin Al',
+            label: LocaleKeys.homeQuickAi.tr(),
             color: AppColors.accent,
             textColor: AppColors.primary,
             onTap: () => context.go(AppRoutes.outfit),
@@ -156,7 +156,7 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
         Expanded(
           child: _ActionButton(
             icon: Icons.add_rounded,
-            label: 'Kıyafet\nEkle',
+            label: LocaleKeys.homeQuickAdd.tr(),
             color: AppColors.backgroundCard,
             textColor: AppColors.primary,
             onTap: () => context.push(AppRoutes.addClothing),

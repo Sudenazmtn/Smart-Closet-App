@@ -257,7 +257,7 @@ class _MatchBadge extends StatelessWidget {
         children: [
           Text('$percent%', style: const TextStyle(fontFamily: 'DMSans', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
           Text(
-            LocaleKeys.homeMatchPercent.tr().replaceAll('{}', '').replaceAll('%', '').trim(),
+            LocaleKeys.homeMatchLabel.tr(),
             style: const TextStyle(fontFamily: 'DMSans', fontSize: 10, color: Colors.white),
           ),
         ],

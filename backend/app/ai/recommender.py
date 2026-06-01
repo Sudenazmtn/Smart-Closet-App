@@ -33,7 +33,7 @@ def _categorize(items: list) -> dict:
 
 def _season_filter(items: list, feels_like: int) -> list:
     def _keep(item) -> bool:
-        s = item.season.lower()
+        s = (item.season or "all").lower()
         if s == "all": return True
         if feels_like >= 23 and s == "winter": return False
         if feels_like <= 3  and s == "summer": return False

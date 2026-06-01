@@ -50,6 +50,9 @@ class LocaleKeys {
   static const homeSectionOutfit = 'home.sectionOutfit';
   static const homeViewAll = 'home.viewAll';
   static const homeMatchPercent = 'home.matchPercent';
+  static const homeMatchLabel   = 'home.matchLabel';
+  static const homeQuickAi      = 'home.quickAi';
+  static const homeQuickAdd     = 'home.quickAdd';
 
   static const wardrobeTitle = 'wardrobe.title';
   static const wardrobeItemCount = 'wardrobe.itemCount';
