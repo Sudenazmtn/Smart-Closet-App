@@ -1,7 +1,6 @@
 from datetime import datetime
 from app import db
 
-
 class ClothingItem(db.Model):
     __tablename__ = 'clothing_items'
 

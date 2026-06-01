@@ -1,7 +1,6 @@
 from datetime import datetime
 from app import db
 
-
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -11,7 +10,6 @@ class User(db.Model):
     email        = db.Column(db.String(120), unique=True, nullable=False)
     created_at   = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # İlişkiler
     clothing_items = db.relationship(
         'ClothingItem', backref='owner', lazy=True,
         cascade='all, delete-orphan'
