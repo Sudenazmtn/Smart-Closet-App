@@ -30,9 +30,7 @@ class AuthRepository {
       '/auth/login',
       data: {
         'firebase_uid': firebaseUid,
-        // ignore: use_null_aware_elements
         if (name != null) 'name': name,
-        // ignore: use_null_aware_elements
         if (email != null) 'email': email,
       },
     );

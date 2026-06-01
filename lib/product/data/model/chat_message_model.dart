@@ -10,6 +10,7 @@ class ChatMessageModel {
     this.styleName,
     this.styleTip,
     this.destinationCity,
+    this.score,
   });
 
   final MessageSender sender;
@@ -18,6 +19,7 @@ class ChatMessageModel {
   final String? styleName;
   final String? styleTip;
   final String? destinationCity;
+  final double? score;
 }
 
 class ChatAiResponse {
@@ -42,9 +44,9 @@ class ChatAiResponse {
       items: outfitList
           .map((e) => ClothingModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      score: (json['score'] as num?)?.toDouble(),
-      styleTip: json['style_tip'] as String?,
-      destinationCity: json['destination_city'] as String?,
+      score:           (json['score']            as num?)?.toDouble(),
+      styleTip:        json['style_tip']          as String?,
+      destinationCity: json['destination_city']   as String?,
     );
   }
 }

@@ -34,11 +34,8 @@ class OutfitRepository {
       '/outfit/save',
       data: {
         'item_ids': itemIds,
-        // ignore: use_null_aware_elements
         if (name != null) 'name': name,
-        // ignore: use_null_aware_elements
         if (eventType != null) 'event_type': eventType,
-        // ignore: use_null_aware_elements
         if (aiNote != null) 'ai_note': aiNote,
       },
     );
@@ -63,20 +60,20 @@ class OutfitRepository {
     return StatsModel.fromJson(response.data as Map<String, dynamic>);
   }
 
-  /// Kural tabanlı AI — POST /chat/message
   Future<ChatAiResponse> sendChatMessage({
     required String userText,
     double? temperature,
     String? weatherDesc,
+    List<int>? excludeItemIds,
   }) async {
     final response = await _dio.post(
       '/chat/message',
       data: {
         'message': userText,
-        // ignore: use_null_aware_elements
         if (temperature != null) 'temperature': temperature.round(),
-        // ignore: use_null_aware_elements
         if (weatherDesc != null) 'weather_desc': weatherDesc,
+        if (excludeItemIds != null && excludeItemIds.isNotEmpty)
+          'exclude_item_ids': excludeItemIds,
       },
     );
     return ChatAiResponse.fromJson(response.data as Map<String, dynamic>);
