@@ -7,8 +7,6 @@ import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
-// ── Onboarding'e özel küçük widget'lar ────────────────────────────────────────
-
 class _ClothingTileData {
   const _ClothingTileData({required this.emoji, required this.color});
   final String emoji;
@@ -32,8 +30,6 @@ class _ClothingTile extends StatelessWidget {
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
 
 class OnboardingView extends StatefulWidget {
   const OnboardingView({super.key});
@@ -132,7 +128,6 @@ class _OnboardingViewState extends State<OnboardingView>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // ── Üst içerik ──────────────────────────────────
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -168,12 +163,10 @@ class _OnboardingViewState extends State<OnboardingView>
 
                             const SizedBox(height: 36),
 
-                            // GridView yerine Row + Expanded + AspectRatio
                             _buildGrid(),
                           ],
                         ),
 
-                        // ── Alt içerik ───────────────────────────────────
                         Column(
                           children: [
                             SizedBox(

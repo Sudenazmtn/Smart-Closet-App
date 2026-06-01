@@ -5,8 +5,6 @@ import 'package:smart_closet_app/feature/home/provider/weather_provider.dart';
 
 import '../../../wardrobe/provider/clothing_provider.dart';
 
-/// HomeView'ın initState ve veri yükleme
-/// sorumluluğunu taşır.
 mixin HomeMixin<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
@@ -44,7 +42,6 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
         lon: position.longitude,
       );
     } catch (_) {
-      // Konum alınamazsa İstanbul varsayılan
       if (!mounted) return;
       await context.read<WeatherProvider>().fetchWeather(
         lat: 41.0082,
@@ -53,7 +50,6 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  // Greeting saati
   String greeting(String morning, String afternoon, String evening) {
     final hour = DateTime.now().hour;
     if (hour < 12) return morning;

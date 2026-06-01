@@ -6,17 +6,12 @@ import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 class AppTheme {
   AppTheme._();
 
-  // =========================================================================
-  // LIGHT THEME
-  // =========================================================================
-
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       fontFamily: 'DMSans',
 
-      // ── Color Scheme ──────────────────────────────────────────────────────
       colorScheme: ColorScheme.light(
         primary: AppColors.primary,
         onPrimary: AppColors.textOnDark,
@@ -28,10 +23,8 @@ class AppTheme {
         onError: AppColors.textOnDark,
       ),
 
-      // ── Scaffold ──────────────────────────────────────────────────────────
       scaffoldBackgroundColor: AppColors.background,
 
-      // ── AppBar ────────────────────────────────────────────────────────────
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
@@ -47,7 +40,6 @@ class AppTheme {
         iconTheme: IconThemeData(color: AppColors.textPrimary, size: 22),
       ),
 
-      // ── Bottom Navigation Bar ─────────────────────────────────────────────
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: AppColors.navBackground,
         selectedItemColor: AppColors.primary,
@@ -66,7 +58,6 @@ class AppTheme {
         ),
       ),
 
-      // ── Elevated Button ───────────────────────────────────────────────────
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
@@ -81,7 +72,6 @@ class AppTheme {
         ),
       ),
 
-      // ── Outlined Button ───────────────────────────────────────────────────
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.textPrimary,
@@ -96,7 +86,6 @@ class AppTheme {
         ),
       ),
 
-      // ── Text Button ───────────────────────────────────────────────────────
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.accent,
@@ -107,7 +96,6 @@ class AppTheme {
         ),
       ),
 
-      // ── Input Decoration ──────────────────────────────────────────────────
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.backgroundSecondary,
@@ -139,7 +127,6 @@ class AppTheme {
         ),
       ),
 
-      // ── Card ──────────────────────────────────────────────────────────────
       cardTheme: CardThemeData(
         color: AppColors.backgroundCard,
         elevation: 0,
@@ -150,7 +137,6 @@ class AppTheme {
         margin: EdgeInsets.zero,
       ),
 
-      // ── Chip ──────────────────────────────────────────────────────────────
       chipTheme: ChipThemeData(
         backgroundColor: AppColors.backgroundCard,
         selectedColor: AppColors.accentLight,
@@ -161,17 +147,14 @@ class AppTheme {
         showCheckmark: false,
       ),
 
-      // ── Divider ───────────────────────────────────────────────────────────
       dividerTheme: const DividerThemeData(
         color: AppColors.border,
         thickness: 0.5,
         space: 0,
       ),
 
-      // ── Icon ──────────────────────────────────────────────────────────────
       iconTheme: const IconThemeData(color: AppColors.textMuted, size: 22),
 
-      // ── List Tile ─────────────────────────────────────────────────────────
       listTileTheme: const ListTileThemeData(
         contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 4),
         minLeadingWidth: 0,
@@ -180,19 +163,16 @@ class AppTheme {
         subtitleTextStyle: AppTextStyles.bodySmall,
       ),
 
-      // ── Text Selection ────────────────────────────────────────────────────
       textSelectionTheme: const TextSelectionThemeData(
         cursorColor: AppColors.accent,
         selectionColor: Color(0x40D4B483),
         selectionHandleColor: AppColors.accent,
       ),
 
-      // ── Progress Indicator ────────────────────────────────────────────────
       progressIndicatorTheme: const ProgressIndicatorThemeData(
         color: AppColors.accent,
       ),
 
-      // ── Snack Bar ─────────────────────────────────────────────────────────
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.primary,
         contentTextStyle: AppTextStyles.bodyMedium.copyWith(
@@ -203,10 +183,6 @@ class AppTheme {
       ),
     );
   }
-
-  // =========================================================================
-  // DARK APPBAR THEME — AI ekranı gibi koyu header'lı sayfalar için
-  // =========================================================================
 
   static const SystemUiOverlayStyle darkStatusBar = SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

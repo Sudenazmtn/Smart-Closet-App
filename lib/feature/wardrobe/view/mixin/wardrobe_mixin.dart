@@ -3,8 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../../provider/clothing_provider.dart';
 
-/// WardrobeView'ın initState ve veri yükleme
-/// sorumluluğunu taşır. View dosyasını temiz tutar.
 mixin WardrobeMixin<T extends StatefulWidget> on State<T> {
   @override
   void initState() {

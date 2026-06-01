@@ -1,13 +1,11 @@
 class LocaleKeys {
   LocaleKeys._();
 
-  // ── App ───────────────────────────────────────────────────────────────────
   static const appName = 'appName';
   static const appTagline = 'appTagline';
   static const appSlogan = 'appSlogan';
   static const appSloganSub = 'appSloganSub';
 
-  // ── Auth ──────────────────────────────────────────────────────────────────
   static const authGetStarted = 'auth.getStarted';
   static const authSignIn = 'auth.signIn';
   static const authSignInTitle = 'auth.signInTitle';
@@ -27,7 +25,6 @@ class LocaleKeys {
   static const authRememberedPassword = 'auth.rememberedPassword';
   static const authSecurityNote = 'auth.securityNote';
 
-  // ── Field ─────────────────────────────────────────────────────────────────
   static const fieldFullName = 'field.fullName';
   static const fieldEmail = 'field.email';
   static const fieldPassword = 'field.password';
@@ -39,13 +36,11 @@ class LocaleKeys {
   static const fieldHintEmailAddress = 'field.hintEmailAddress';
   static const fieldHintItemName = 'field.hintItemName';
 
-  // ── Validation ────────────────────────────────────────────────────────────
   static const validationRequired = 'validation.required';
   static const validationEmailInvalid = 'validation.emailInvalid';
   static const validationPasswordShort = 'validation.passwordShort';
   static const validationPasswordMismatch = 'validation.passwordMismatch';
 
-  // ── Home ──────────────────────────────────────────────────────────────────
   static const homeGoodMorning = 'home.goodMorning';
   static const homeGoodAfternoon = 'home.goodAfternoon';
   static const homeGoodEvening = 'home.goodEvening';
@@ -56,7 +51,6 @@ class LocaleKeys {
   static const homeViewAll = 'home.viewAll';
   static const homeMatchPercent = 'home.matchPercent';
 
-  // ── Wardrobe ──────────────────────────────────────────────────────────────
   static const wardrobeTitle = 'wardrobe.title';
   static const wardrobeItemCount = 'wardrobe.itemCount';
   static const wardrobeFilterAll = 'wardrobe.filterAll';
@@ -69,7 +63,6 @@ class LocaleKeys {
   static const outfitAiGreeting = 'outfit.aiGreeting';
   static const outfitAiError = 'outfit.aiError';
 
-  // ── Add Item ──────────────────────────────────────────────────────────────
   static const addItemTitle = 'addItem.title';
   static const addItemSave = 'addItem.save';
   static const addItemPhotoPrompt = 'addItem.photoPrompt';
@@ -79,21 +72,18 @@ class LocaleKeys {
   static const addItemFieldSeason = 'addItem.fieldSeason';
   static const addItemFieldColor = 'addItem.fieldColor';
 
-  // ── Season ────────────────────────────────────────────────────────────────
   static const seasonSpring = 'season.spring';
   static const seasonSummer = 'season.summer';
   static const seasonFall = 'season.fall';
   static const seasonWinter = 'season.winter';
   static const seasonAll = 'season.all';
 
-  // ── Color ─────────────────────────────────────────────────────────────────
   static const colorBeige = 'color.beige';
   static const colorBlack = 'color.black';
   static const colorWhite = 'color.white';
   static const colorNavy = 'color.navy';
   static const colorRed = 'color.red';
 
-  // ── Outfit ────────────────────────────────────────────────────────────────
   static const outfitTitle = 'outfit.title';
   static const outfitEventCasual = 'outfit.eventCasual';
   static const outfitEventWork = 'outfit.eventWork';
@@ -104,7 +94,6 @@ class LocaleKeys {
   static const outfitSave = 'outfit.save';
   static const outfitAskPlaceholder = 'outfit.askPlaceholder';
 
-  // ── Stats ─────────────────────────────────────────────────────────────────
   static const statsTitle = 'stats.title';
   static const statsOverview = 'stats.overview';
   static const statsPeriodWeek = 'stats.periodWeek';
@@ -116,7 +105,6 @@ class LocaleKeys {
   static const statsNeverWorn = 'stats.neverWorn';
   static const statsNeverWornSub = 'stats.neverWornSub';
 
-  // ── Profile ───────────────────────────────────────────────────────────────
   static const profileTitle = 'profile.title';
   static const profileEditButton = 'profile.editButton';
   static const profileStatItems = 'profile.statItems';
@@ -130,13 +118,11 @@ class LocaleKeys {
   static const profileMenuPrivacy = 'profile.menuPrivacy';
   static const profileMenuPrivacySub = 'profile.menuPrivacySub';
 
-  // ── Nav ───────────────────────────────────────────────────────────────────
   static const navHome = 'nav.home';
   static const navWardrobe = 'nav.wardrobe';
   static const navAi = 'nav.ai';
   static const navProfile = 'nav.profile';
 
-  // ── Error ─────────────────────────────────────────────────────────────────
   static const errorGeneral = 'error.general';
   static const errorNoInternet = 'error.noInternet';
   static const errorInvalidCredentials = 'error.invalidCredentials';
@@ -144,12 +130,10 @@ class LocaleKeys {
   static const errorWeakPassword = 'error.weakPassword';
   static const errorUserNotFound = 'error.userNotFound';
 
-  // ── Success ───────────────────────────────────────────────────────────────
   static const successResetEmailSent = 'success.resetEmailSent';
   static const successItemAdded = 'success.itemAdded';
   static const successOutfitSaved = 'success.outfitSaved';
 
-  // ── Common ────────────────────────────────────────────────────────────────
   static const commonCancel = 'common.cancel';
   static const commonDelete = 'common.delete';
   static const commonSave = 'common.save';

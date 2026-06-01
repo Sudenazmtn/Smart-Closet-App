@@ -39,7 +39,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                 const AuthLogoHeader(),
                 const SizedBox(height: 40),
 
-                // ── Kilit ikonu ───────────────────────────────────────────
                 Center(
                   child: Container(
                     width: 72,
@@ -56,7 +55,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
                 const SizedBox(height: 24),
 
-                // ── Başlık ────────────────────────────────────────────────
                 Text(
                   LocaleKeys.authForgotPasswordTitle.tr(),
                   textAlign: TextAlign.center,
@@ -71,7 +69,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
                 const SizedBox(height: 32),
 
-                // ── Email ─────────────────────────────────────────────────
                 Text('Email address', style: AppTextStyles.labelLarge),
                 const SizedBox(height: 8),
                 AuthFormField(
@@ -93,7 +90,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
                 const SizedBox(height: 20),
 
-                // ── Send Reset Link butonu ────────────────────────────────
                 Consumer<AuthProvider>(
                   builder: (context, auth, _) => SizedBox(
                     height: 52,
@@ -128,12 +124,10 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
                 const SizedBox(height: 28),
 
-                // ── Adımlar ───────────────────────────────────────────────
                 const _StepsList(),
 
                 const SizedBox(height: 32),
 
-                // ── Alt link ──────────────────────────────────────────────
                 AuthBottomLink(
                   question: LocaleKeys.authRememberedPassword.tr(),
                   actionText: LocaleKeys.authBackToSignIn.tr(),
@@ -151,8 +145,6 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
     );
   }
 }
-
-// ── Adımlar ───────────────────────────────────────────────────────────────────
 
 class _StepsList extends StatelessWidget {
   const _StepsList();

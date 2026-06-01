@@ -32,7 +32,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
     return Scaffold(
       body: Stack(
         children: [
-          // Arka plan
           Column(
             children: [
               Container(
@@ -43,7 +42,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
             ],
           ),
 
-          // İçerik
           SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.xl),
@@ -56,7 +54,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                     const AuthLogoHeader(),
                     const SizedBox(height: 32),
 
-                    // ── Beyaz kart ─────────────────────────────────────────
                     Container(
                       padding: EdgeInsets.all(AppSizes.l),
                       decoration: BoxDecoration(
@@ -66,7 +63,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          // Full Name
                           AuthFormField(
                             controller: nameController,
                             hintText: LocaleKeys.fieldFullName.tr(),
@@ -83,7 +79,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                           ),
                           const SizedBox(height: 10),
 
-                          // Email
                           AuthFormField(
                             controller: emailController,
                             hintText: LocaleKeys.fieldEmail.tr(),
@@ -102,7 +97,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                           ),
                           const SizedBox(height: 10),
 
-                          // Password
                           AuthFormField(
                             controller: passwordController,
                             hintText: LocaleKeys.fieldPassword.tr(),
@@ -125,7 +119,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                           ),
                           const SizedBox(height: 10),
 
-                          // Confirm Password
                           AuthFormField(
                             controller: confirmPasswordController,
                             hintText: LocaleKeys.fieldConfirmPassword.tr(),
@@ -149,7 +142,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                           ),
                           const SizedBox(height: 20),
 
-                          // Create Account butonu
                           Consumer<AuthProvider>(
                             builder: (context, auth, _) => SizedBox(
                               height: 50,
@@ -183,7 +175,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
                           ),
                           const SizedBox(height: 10),
 
-                          // Google butonu
                           AuthGoogleButton(
                             onTap: () => onGoogleSignIn(context),
                           ),
@@ -193,7 +184,6 @@ class _SignUpViewState extends State<SignUpView> with SignUpMixin {
 
                     const SizedBox(height: 20),
 
-                    // Alt link
                     AuthBottomLink(
                       question: LocaleKeys.authAlreadyHaveAccount.tr(),
                       actionText: LocaleKeys.authSignIn.tr(),

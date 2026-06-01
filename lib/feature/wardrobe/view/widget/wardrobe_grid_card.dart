@@ -24,7 +24,6 @@ class WardrobeGridCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           
-          // Görsel varsa şeffaf, yoksa kategori rengi
           color: item.imageUrl != null ? Colors.transparent : item.categoryColor,
           borderRadius: BorderRadius.circular(16),
         ),

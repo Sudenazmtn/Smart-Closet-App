@@ -22,7 +22,6 @@ class NavItemWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // İkon
           Icon(
             isActive ? item.activeIcon : item.icon,
             size: 24,
