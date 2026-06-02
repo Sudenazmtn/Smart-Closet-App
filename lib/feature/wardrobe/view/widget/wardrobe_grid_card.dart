@@ -57,7 +57,7 @@ class _NetworkImage extends StatelessWidget {
       child: Image.network(
         '${ApiService.baseUrl}$imageUrl',
         fit: BoxFit.contain,
-        errorBuilder: (_,__,___) =>
+        errorBuilder: (_, _, _) =>
           _EmojiContent(emoji: fallbackEmoji, name: name)
         
       ),

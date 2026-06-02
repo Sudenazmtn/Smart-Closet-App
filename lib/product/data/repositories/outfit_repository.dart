@@ -34,9 +34,9 @@ class OutfitRepository {
       '/outfit/save',
       data: {
         'item_ids': itemIds,
-        if (name != null) 'name': name,
-        if (eventType != null) 'event_type': eventType,
-        if (aiNote != null) 'ai_note': aiNote,
+        'name': ?name,
+        'event_type': ?eventType,
+        'ai_note': ?aiNote,
       },
     );
     return OutfitModel.fromJson(
@@ -70,8 +70,8 @@ class OutfitRepository {
       '/chat/message',
       data: {
         'message': userText,
-        if (temperature != null) 'temperature': temperature.round(),
-        if (weatherDesc != null) 'weather_desc': weatherDesc,
+        'temperature': ?temperature?.round(),
+        'weather_desc': ?weatherDesc,
         if (excludeItemIds != null && excludeItemIds.isNotEmpty)
           'exclude_item_ids': excludeItemIds,
       },

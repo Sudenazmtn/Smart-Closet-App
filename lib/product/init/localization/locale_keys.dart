@@ -24,6 +24,9 @@ class LocaleKeys {
   static const authBackToSignIn = 'auth.backToSignIn';
   static const authRememberedPassword = 'auth.rememberedPassword';
   static const authSecurityNote = 'auth.securityNote';
+  static const authResetStep1 = 'auth.resetStep1';
+  static const authResetStep2 = 'auth.resetStep2';
+  static const authResetStep3 = 'auth.resetStep3';
 
   static const fieldFullName = 'field.fullName';
   static const fieldEmail = 'field.email';

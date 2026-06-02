@@ -1,7 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:smart_closet_app/product/data/model/user_model.dart';
 import 'package:smart_closet_app/product/data/repositories/auth_repository.dart';
+import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/utils/enums/auth_status_enum.dart';
 import 'package:smart_closet_app/product/utils/extension/firebase_error_ext.dart';
 
@@ -53,9 +56,9 @@ class AuthProvider extends ChangeNotifier {
 
       _setSuccess();
     } on FirebaseAuthException catch (e) {
-      _setError(e.readableMessage);
+      _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(e.toString());
+      _setError(LocaleKeys.errorGeneral.tr());
     }
   }
 
@@ -83,20 +86,43 @@ class AuthProvider extends ChangeNotifier {
 
       _setSuccess();
     } on FirebaseAuthException catch (e) {
-      _setError(e.readableMessage);
+      _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(e.toString());
+      _setError(LocaleKeys.errorGeneral);
     }
   }
 
   Future<void> signInWithGoogle() async {
     _setLoading();
     try {
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        _status = AuthStatus.idle;
+        notifyListeners();
+        return;
+      }
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final userCredential = await _auth.signInWithCredential(credential);
+      _firebaseUser = userCredential.user;
+
+      if (_firebaseUser != null) {
+        _backendUser = await _repository.syncWithBackend(_firebaseUser!);
+        _backendUser ??= await _repository.register(
+          firebaseUid: _firebaseUser!.uid,
+          name: _firebaseUser!.displayName ?? '',
+          email: _firebaseUser!.email ?? '',
+        );
+      }
+
       _setSuccess();
     } on FirebaseAuthException catch (e) {
-      _setError(e.readableMessage);
+      _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(e.toString());
+      _setError(LocaleKeys.errorGeneral.tr());
     }
   }
 
@@ -106,9 +132,9 @@ class AuthProvider extends ChangeNotifier {
       await _auth.sendPasswordResetEmail(email: email);
       _setSuccess();
     } on FirebaseAuthException catch (e) {
-      _setError(e.readableMessage);
+      _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(e.toString());
+      _setError(LocaleKeys.errorGeneral.tr());
     }
   }
 

@@ -92,8 +92,10 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
   }
 
   Widget _buildHeader() {
-    final user = context.watch<AuthProvider>().currentUser;
-    final displayName = user?.displayName ?? 'there';
+    final authProvider = context.watch<AuthProvider>();
+    final displayName = authProvider.backendUser?.name.trim().isNotEmpty == true
+        ? authProvider.backendUser!.name
+        : authProvider.currentUser?.displayName ?? '';
     return HomeHeader(
       greeting: greeting(
         LocaleKeys.homeGoodMorning.tr(),
