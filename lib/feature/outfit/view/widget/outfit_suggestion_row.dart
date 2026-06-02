@@ -34,7 +34,7 @@ class OutfitSuggestionRow extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: items.length,
-            separatorBuilder: (_, __) => const SizedBox(width: AppSizes.xs),
+            separatorBuilder: (_, _) => const SizedBox(width: AppSizes.xs),
             itemBuilder: (_, i) => OutfitClothingCard(item: items[i]),
           ),
         ),

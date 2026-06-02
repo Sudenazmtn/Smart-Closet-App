@@ -213,7 +213,7 @@ class _ItemThumb extends StatelessWidget {
         child: Image.network(
           '${ApiService.baseUrl}${item.imageUrl}',
           width: 60, height: 60, fit: BoxFit.cover,
-          errorBuilder: (_, __, ___) => _EmojiThumb(item: item),
+          errorBuilder: (_, _, _) => _EmojiThumb(item: item),
         ),
       );
     }

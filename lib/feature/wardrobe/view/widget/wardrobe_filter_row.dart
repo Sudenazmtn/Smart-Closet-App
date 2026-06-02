@@ -31,7 +31,7 @@ class WardrobeFilterRow extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: AppSizes.l),
         itemCount: filters.length,
-        separatorBuilder: (_, __) => const SizedBox(width: AppSizes.xs),
+        separatorBuilder: (_, _) => const SizedBox(width: AppSizes.xs),
         itemBuilder: (context, index) {
           final filter = filters[index];
           final isActive = selectedValue == filter.value;

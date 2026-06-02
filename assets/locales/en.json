@@ -21,7 +21,10 @@
     "sendResetLink": "Send Reset Link",
     "backToSignIn": "Back to Sign In",
     "rememberedPassword": "Remembered it?",
-    "securityNote": "Your data is encrypted and stored securely."
+    "securityNote": "Your data is encrypted and stored securely.",
+    "resetStep1": "Check your inbox for an email from SmartCloset.",
+    "resetStep2": "Click the link to create a new password.",
+    "resetStep3": "Log in with your new password."
   },
   "field": {
     "fullName": "Full name",

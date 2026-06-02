@@ -32,7 +32,7 @@ class OutfitClothingCard extends StatelessWidget {
                       child: Image.network(
                         '${ApiService.baseUrl}${item.imageUrl!}',
                         fit: BoxFit.contain,
-                        errorBuilder: (_, __, ___) =>
+                        errorBuilder: (_, _, _) =>
                             _EmojiContent(item: item),
                       ),
                     )

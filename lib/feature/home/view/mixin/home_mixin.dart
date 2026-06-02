@@ -32,7 +32,7 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
       }
 
       final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low,
+        locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
       );
 
       if (!mounted) return;

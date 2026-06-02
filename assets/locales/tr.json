@@ -21,7 +21,10 @@
     "sendResetLink": "Sıfırlama Bağlantısı Gönder",
     "backToSignIn": "Girişe Dön",
     "rememberedPassword": "Hatırladın mı?",
-    "securityNote": "Verileriniz şifrelenerek güvenli bir şekilde saklanmaktadır."
+    "securityNote": "Verileriniz şifrelenerek güvenli bir şekilde saklanmaktadır.",
+    "resetStep1": "Gelen kutunu kontrol et, SmartCloset'ten bir e-posta gelecek.",
+    "resetStep2": "Yeni şifreni oluşturmak için bağlantıya tıkla.",
+    "resetStep3": "Yeni şifrenle giriş yap."
   },
   "field": {
     "fullName": "Ad Soyad",

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +34,8 @@ mixin SignUpMixin<T extends StatefulWidget> on State<T> {
   Future<void> onCreateAccount(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
     final auth = context.read<AuthProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final router = GoRouter.of(context);
     await auth.signUp(
       name: nameController.text.trim(),
       email: emailController.text.trim(),
@@ -40,25 +43,29 @@ mixin SignUpMixin<T extends StatefulWidget> on State<T> {
     );
     if (!mounted) return;
     if (auth.status == AuthStatus.success) {
-      context.go(AppRoutes.home);
+      router.go(AppRoutes.home);
     } else if (auth.status == AuthStatus.error) {
-      _showError(context, auth.errorMessage ?? '');
+      _showError(messenger, auth.errorMessage ?? '');
     }
   }
 
   Future<void> onGoogleSignIn(BuildContext context) async {
     final auth = context.read<AuthProvider>();
+    final messenger = ScaffoldMessenger.of(context);
+    final router = GoRouter.of(context);
     await auth.signInWithGoogle();
     if (!mounted) return;
     if (auth.status == AuthStatus.success) {
-      context.go(AppRoutes.home);
+      router.go(AppRoutes.home);
+    } else if (auth.status == AuthStatus.error) {
+      _showError(messenger, auth.errorMessage ?? '');
     }
   }
 
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
+  void _showError(ScaffoldMessengerState messenger, String messageKey) {
+    messenger.showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(messageKey.tr()),
         backgroundColor: const Color(0xFFA32D2D),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

@@ -69,7 +69,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 
                 const SizedBox(height: 32),
 
-                Text('Email address', style: AppTextStyles.labelLarge),
+                Text(LocaleKeys.fieldEmail.tr(), style: AppTextStyles.labelLarge),
                 const SizedBox(height: 8),
                 AuthFormField(
                   controller: emailController,
@@ -149,18 +149,17 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
 class _StepsList extends StatelessWidget {
   const _StepsList();
 
-  static const List<String> _steps = [
-    'Check your inbox for an email from SmartCloset.',
-    'Click the link to create a new password.',
-    'Log in with your new password.',
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final steps = [
+      LocaleKeys.authResetStep1.tr(),
+      LocaleKeys.authResetStep2.tr(),
+      LocaleKeys.authResetStep3.tr(),
+    ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(
-        _steps.length,
+        steps.length,
         (i) => Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: Row(
@@ -173,7 +172,7 @@ class _StepsList extends StatelessWidget {
                   color: AppColors.textSecondary,
                 ),
               ),
-              Expanded(child: Text(_steps[i], style: AppTextStyles.bodyMedium)),
+              Expanded(child: Text(steps[i], style: AppTextStyles.bodyMedium)),
             ],
           ),
         ),

@@ -30,8 +30,8 @@ class AuthRepository {
       '/auth/login',
       data: {
         'firebase_uid': firebaseUid,
-        if (name != null) 'name': name,
-        if (email != null) 'email': email,
+        'name': ?name,
+        'email': ?email,
       },
     );
     return UserModel.fromJson(response.data['user'] as Map<String, dynamic>);

@@ -39,7 +39,7 @@ class HomeCategoryCard extends StatelessWidget {
                       width: 72,
                       height: 72,
                       fit: BoxFit.contain,
-                      errorBuilder: (_,__,___) =>
+                      errorBuilder: (_, _, _) =>
                           Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
                     )
                   : Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
