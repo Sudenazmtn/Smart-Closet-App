@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -58,7 +57,7 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(LocaleKeys.errorGeneral.tr());
+      _setError(LocaleKeys.errorGeneral);
     }
   }
 
@@ -122,7 +121,7 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(LocaleKeys.errorGeneral.tr());
+      _setError(LocaleKeys.errorGeneral);
     }
   }
 
@@ -134,7 +133,7 @@ class AuthProvider extends ChangeNotifier {
     } on FirebaseAuthException catch (e) {
       _setError(e.readableMessageKey);
     } catch (e) {
-      _setError(LocaleKeys.errorGeneral.tr());
+      _setError(LocaleKeys.errorGeneral);
     }
   }
 
