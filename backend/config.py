@@ -15,7 +15,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
     CLAUDE_API_KEY  = os.getenv('CLAUDE_API_KEY')
     WEATHER_API_KEY = os.getenv('WEATHER_API_KEY')

@@ -1,16 +1,3 @@
-"""
-train.py  v2
-------------
-Kombin skorlama modelini egitir.
-
-Ozellikler:
-  Kategorik : top, top_color, bottom, bottom_color, shoes, shoes_color, occasion, weather_type
-  Sayisal   : temperature, feels_like, season_match
-
-Calistir:
-    cd backend
-    python -m app.ai.train
-"""
 
 import os
 import joblib

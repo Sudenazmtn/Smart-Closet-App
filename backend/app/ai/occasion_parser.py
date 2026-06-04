@@ -102,10 +102,6 @@ def parse_occasion(message: str) -> str:
     return "casual"
 
 def parse_destination_city(message: str) -> str | None:
-    """
-    Kullanıcı mesajından şehir/destinasyon adını çıkarır.
-    Örnek: "Ankara'ya iş toplantısına gidiyorum" → "Ankara"
-    """
     msg = message.lower()
     words = msg.replace("'", " ").replace(",", " ").replace(".", " ").split()
 
