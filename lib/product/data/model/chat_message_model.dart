@@ -44,9 +44,9 @@ class ChatAiResponse {
       items: outfitList
           .map((e) => ClothingModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      score:           (json['score']            as num?)?.toDouble(),
-      styleTip:        json['style_tip']          as String?,
-      destinationCity: json['destination_city']   as String?,
+      score: (json['score'] as num?)?.toDouble(),
+      styleTip: json['style_tip'] as String?,
+      destinationCity: json['destination_city'] as String?,
     );
   }
 }

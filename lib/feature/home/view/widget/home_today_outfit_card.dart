@@ -37,15 +37,11 @@ class HomeTodaysOutfitCard extends StatelessWidget {
                 .whereType<ClothingModel>()
                 .toList();
             final score = outfit.lastAiScore;
-            final tip   = outfit.lastAiNote;
+            final tip = outfit.lastAiNote;
 
             if (aiItems.isNotEmpty) {
               return _CardShell(
-                child: _OutfitContent(
-                  items: aiItems,
-                  score: score,
-                  tip: tip,
-                ),
+                child: _OutfitContent(items: aiItems, score: score, tip: tip),
               );
             }
 
@@ -61,7 +57,6 @@ class HomeTodaysOutfitCard extends StatelessWidget {
               );
             }
 
-            // Hiç giyilmemiş ama kıyafet var → son eklenenlerden göster
             final recent = clothing.items.take(3).toList();
             if (recent.isNotEmpty) {
               return _CardShell(
@@ -171,7 +166,10 @@ class _OutfitContent extends StatelessWidget {
             Expanded(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: items.take(3).map((i) => _ItemThumb(item: i)).toList(),
+                children: items
+                    .take(3)
+                    .map((i) => _ItemThumb(item: i))
+                    .toList(),
               ),
             ),
             if (score != null) ...[
@@ -182,7 +180,12 @@ class _OutfitContent extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         if (tip != null && tip!.isNotEmpty)
-          Text(tip!, style: AppTextStyles.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis)
+          Text(
+            tip!,
+            style: AppTextStyles.bodySmall,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          )
         else if (!isSuggestion)
           Text('En çok giydiğin parçalar', style: AppTextStyles.bodySmall),
         const SizedBox(height: 10),
@@ -212,7 +215,9 @@ class _ItemThumb extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Image.network(
           '${ApiService.baseUrl}${item.imageUrl}',
-          width: 60, height: 60, fit: BoxFit.cover,
+          width: 60,
+          height: 60,
+          fit: BoxFit.cover,
           errorBuilder: (_, _, _) => _EmojiThumb(item: item),
         ),
       );
@@ -228,7 +233,8 @@ class _EmojiThumb extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 60, height: 60,
+      width: 60,
+      height: 60,
       decoration: BoxDecoration(
         color: item.categoryColor,
         borderRadius: BorderRadius.circular(10),
@@ -255,10 +261,22 @@ class _MatchBadge extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('$percent%', style: const TextStyle(fontFamily: 'DMSans', fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white)),
+          Text(
+            '$percent%',
+            style: const TextStyle(
+              fontFamily: 'DMSans',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
           Text(
             LocaleKeys.homeMatchLabel.tr(),
-            style: const TextStyle(fontFamily: 'DMSans', fontSize: 10, color: Colors.white),
+            style: const TextStyle(
+              fontFamily: 'DMSans',
+              fontSize: 10,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
@@ -274,7 +292,10 @@ class _LoadingState extends StatelessWidget {
     return const Center(
       child: Padding(
         padding: EdgeInsets.all(16),
-        child: CircularProgressIndicator(color: AppColors.accent, strokeWidth: 2),
+        child: CircularProgressIndicator(
+          color: AppColors.accent,
+          strokeWidth: 2,
+        ),
       ),
     );
   }
