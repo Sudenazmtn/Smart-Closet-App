@@ -102,6 +102,21 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> toggleFavorite(int id) async {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index == -1) return;
+    _items[index] = _items[index].copyWith(isFavorite: !_items[index].isFavorite);
+    notifyListeners();
+    try {
+      final updated = await _repository.toggleFavorite(id);
+      _items[index] = updated;
+      notifyListeners();
+    } catch (e) {
+      _items[index] = _items[index].copyWith(isFavorite: !_items[index].isFavorite);
+      notifyListeners();
+    }
+  }
+
   void resetState() {
     _status = ClothingStatus.idle;
     _errorMessage = null;

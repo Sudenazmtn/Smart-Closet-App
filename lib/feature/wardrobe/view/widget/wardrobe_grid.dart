@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_closet_app/feature/wardrobe/provider/clothing_provider.dart';
 import 'package:smart_closet_app/product/data/model/clothing_model.dart';
 
 import 'wardrobe_grid_card.dart';
@@ -31,9 +33,9 @@ class WardrobeGrid extends StatelessWidget {
         return WardrobeGridCard(
           item: item,
           onTap: onItemTap != null ? () => onItemTap!(item) : null,
-          onLongPress: onItemLongPress != null
-              ? () => onItemLongPress!(item)
-              : null,
+          onLongPress: onItemLongPress != null ? () => onItemLongPress!(item) : null,
+          onFavoriteToggle: () =>
+              context.read<ClothingProvider>().toggleFavorite(item.id),
         );
       },
     );

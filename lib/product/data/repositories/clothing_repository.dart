@@ -94,4 +94,11 @@ class ClothingRepository {
       response.data['item'] as Map<String, dynamic>,
     );
   }
+
+  Future<ClothingModel> toggleFavorite(int id) async {
+    final response = await _dio.patch('/clothes/$id/favorite');
+    return ClothingModel.fromJson(
+      response.data['item'] as Map<String, dynamic>,
+    );
+  }
 }
