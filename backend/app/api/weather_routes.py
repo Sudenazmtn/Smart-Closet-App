@@ -16,7 +16,18 @@ def get_weather():
 
     api_key = current_app.config.get('WEATHER_API_KEY')
     if not api_key:
-        return jsonify({'error': 'Weather API key not configured'}), 500
+        city = _get_city_from_coords(lat, lon)
+        return jsonify({
+            'city': city,
+            'temperature': 20,
+            'feels_like': 20,
+            'humidity': 50,
+            'description': 'Weather unavailable',
+            'icon_code': '01d',
+            'icon_url': 'https://openweathermap.org/img/wn/01d@2x.png',
+            'wind_speed': 0,
+            'outfit_tip': _seasonal_outfit_tip(),
+        }), 200
 
     try:
         response = requests.get(
@@ -61,6 +72,32 @@ def _outfit_tip(temperature: int, description: str) -> str:
     if temperature >= 8:  return 'Cool day — wear a medium coat or sweater.'
     if temperature >= 0:  return 'Cold day — layer up with a warm coat and scarf.'
     return 'Very cold — heavy coat, gloves and a hat are essential.'
+
+def _seasonal_outfit_tip() -> str:
+    from datetime import datetime
+    month = datetime.now().month
+    if month in (12, 1, 2): return 'weather_tip_winter'
+    if month in (3, 4, 5):  return 'weather_tip_spring'
+    if month in (6, 7, 8):  return 'weather_tip_summer'
+    return 'weather_tip_autumn'
+
+def _get_city_from_coords(lat: str, lon: str) -> str:
+    if not lat or not lon:
+        return ''
+    try:
+        resp = requests.get(
+            'https://nominatim.openstreetmap.org/reverse',
+            params={'lat': lat, 'lon': lon, 'format': 'json'},
+            headers={'User-Agent': 'SmartClosetApp/1.0'},
+            timeout=5,
+        )
+        if resp.status_code == 200:
+            address = resp.json().get('address', {})
+            return (address.get('city') or address.get('town') or
+                    address.get('village') or address.get('county') or '')
+    except Exception:
+        pass
+    return ''
 
 def fetch_weather(lat: float, lon: float, api_key: str) -> dict:
     response = requests.get(

@@ -130,6 +130,20 @@ def delete_clothing(item_id):
     db.session.commit()
     return jsonify({'message': 'Deleted successfully'}), 200
 
+@clothing_bp.route('/<int:item_id>/favorite', methods=['PATCH'])
+def toggle_favorite(item_id):
+    user, err, code = _get_user()
+    if err:
+        return err, code
+
+    item = ClothingItem.query.filter_by(id=item_id, user_id=user.id).first()
+    if not item:
+        return jsonify({'error': 'Item not found'}), 404
+
+    item.is_favorite = not item.is_favorite
+    db.session.commit()
+    return jsonify({'item': item.to_dict()}), 200
+
 @clothing_bp.route('/<int:item_id>/wear', methods=['POST'])
 def mark_as_worn(item_id):
     user, err, code = _get_user()

@@ -1,15 +1,3 @@
-"""
-generate_dataset.py  v2
------------------------
-6000 satirlik gercekci kombin egitim seti uretir.
-
-Satirlar: top, top_color, bottom, bottom_color, shoes, shoes_color,
-          occasion, temperature, feels_like, weather_type, season_match, score
-
-Calistir:
-    cd backend
-    python -m app.ai.dataset.generate_dataset
-"""
 
 from __future__ import annotations
 import os, random
@@ -24,7 +12,7 @@ BOTTOMS = ["jeans","trousers","shorts","skirt","leggings","sweatpants"]
 SHOES   = ["sneakers","heels","boots","loafers","sandals","oxfords"]
 COLORS  = ["white","black","navy","gray","beige","blue","red","green","brown","pink","yellow","burgundy","purple","orange"]
 OCCASIONS     = ["casual","formal","date","business","sport","party"]
-WEATHER_TYPES = ["sunny","cloudy","rain","snow"]
+WEATHER_TYPES = ["sunny","cloudy","rain","snow","storm","windy"]
 
 _TOP_W = {
     "summer": {"t-shirt":5,"tank-top":4,"blouse":3,"polo":2,"shirt":2,"dress":3,"hoodie":0,"sweater":0,"blazer":1,"cardigan":1},
@@ -180,6 +168,9 @@ def _score(top, tc, bot, bc, shoe, sc, occ, t, fl, wt, sm) -> float:
         if shoe == "sandals": wp += 0.40
         if bot == "shorts":   wp += 0.35
         if top in ("t-shirt","tank-top") and fl <= 5: wp += 0.30
+    elif wt == "windy":
+        if bot in ("skirt","shorts"): wp += 0.20
+        if top in ("tank-top",):      wp += 0.10
 
     raw = ev*0.35 + tmp*0.25 + col*0.25 + max(0,1-wp)*0.10 + sm*0.05
     return float(np.clip(raw + np.random.normal(0, 0.025), 0.0, 1.0))
@@ -196,7 +187,7 @@ def generate(n: int = 6000) -> pd.DataFrame:
             p=[0.04,0.06,0.07,0.08,0.08,0.10,0.10,0.10,0.10,0.10,0.09,0.08]
         ))
         season = _season(temp)
-        wt     = random.choice(["sunny","sunny","cloudy","rain"] if temp>5 else ["snow","cloudy","rain","cloudy"])
+        wt     = random.choice(["sunny","sunny","cloudy","cloudy","rain","windy"] if temp>5 else ["snow","snow","cloudy","rain","storm","cloudy"])
         fl     = _feels_like(temp, wt)
 
         tw = dict(_TOP_W[season])

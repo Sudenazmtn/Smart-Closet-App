@@ -125,6 +125,18 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateDisplayName(String name) async {
+    _setLoading();
+    try {
+      await _firebaseUser?.updateDisplayName(name);
+      await _firebaseUser?.reload();
+      _firebaseUser = _auth.currentUser;
+      _setSuccess();
+    } catch (e) {
+      _setError(LocaleKeys.errorGeneral);
+    }
+  }
+
   Future<void> sendPasswordResetEmail(String email) async {
     _setLoading();
     try {

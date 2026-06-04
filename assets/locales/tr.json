@@ -100,9 +100,9 @@
     "eventSport": "Spor",
     "eventEvening": "Akşam",
     "aiLabel": "Yapay Zeka Önerisi",
-    "claudeSays": "Claude diyor ki:",
+    "claudeSays": "Stilist diyor ki:",
     "save": "Kombini Kaydet",
-    "askPlaceholder": "Claude'a danış...",
+    "askPlaceholder": "Kombin önerisi al...",
     "aiGreeting": "Merhaba! Bugün ne tür bir etkinlik için giyiniyorsun? ✨",
     "aiError": "Bir öneri oluşturamadım. Lütfen tekrar dene."
   },
@@ -130,8 +130,17 @@
     "menuNotificationsSub": "Günlük kombin hatırlatıcısı açık",
     "menuLocation": "Konum",
     "menuPrivacy": "Gizlilik & Güvenlik",
-    "menuPrivacySub": "Verilerini yönet"
+    "menuPrivacySub": "Verilerini yönet",
+    "editSheetTitle": "Profili Düzenle",
+    "editNameLabel": "Ad Soyad",
+    "editNameHint": "Adınızı girin",
+    "editSave": "Kaydet",
+    "editCancel": "İptal"
   },
+  "weather_tip_winter": "Kış soğuğu — kalın mont, atkı ve bot şart.",
+  "weather_tip_spring": "İlkbahar havası — hafif ceket veya hırka iyi bir seçim.",
+  "weather_tip_summer": "Sıcak yaz — ince, nefes alan kumaşlar ideal.",
+  "weather_tip_autumn": "Serin sonbahar — orta kalınlıkta mont veya katmanlı kombin.",
   "nav": {
     "home": "Ana Sayfa",
     "wardrobe": "Gardırop",

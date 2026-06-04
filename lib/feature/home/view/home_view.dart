@@ -57,8 +57,10 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                     _buildWeather(),
                     const SizedBox(height: 16),
 
-                    // ── Gardırop kategorileri ──────────────────────────────
-                    Text(LocaleKeys.homeSectionWardrobe.tr(), style: AppTextStyles.headingSmall),
+                    Text(
+                      LocaleKeys.homeSectionWardrobe.tr(),
+                      style: AppTextStyles.headingSmall,
+                    ),
                     const SizedBox(height: 12),
                     Consumer<ClothingProvider>(
                       builder: (context, clothing, _) => HomeWardrobeCategories(
@@ -68,13 +70,11 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                     ),
                     const SizedBox(height: 20),
 
-                    // ── Stats + Hızlı aksiyonlar ───────────────────────────
                     _buildStatsBar(),
                     const SizedBox(height: 16),
                     _buildQuickActions(),
                     const SizedBox(height: 24),
 
-                    // ── Bugünkü kombin ─────────────────────────────────────
                     Consumer<ClothingProvider>(
                       builder: (context, clothing, _) =>
                           HomeTodaysOutfitCard(isLoading: clothing.isLoading),
@@ -130,11 +130,23 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _StatChip(icon: Icons.checkroom_outlined,    label: '${clothing.totalItems}',    sub: 'parça'),
+              _StatChip(
+                icon: Icons.checkroom_outlined,
+                label: '${clothing.totalItems}',
+                sub: 'parça',
+              ),
               _Divider(),
-              _StatChip(icon: Icons.star_outline_rounded,  label: '${clothing.favoriteCount}', sub: 'favori'),
+              _StatChip(
+                icon: Icons.star_outline_rounded,
+                label: '${clothing.favoriteCount}',
+                sub: 'favori',
+              ),
               _Divider(),
-              _StatChip(icon: Icons.loop_rounded,          label: '${clothing.neverWornCount}',sub: 'giyilmedi'),
+              _StatChip(
+                icon: Icons.loop_rounded,
+                label: '${clothing.neverWornCount}',
+                sub: 'giyilmedi',
+              ),
             ],
           ),
         );
@@ -182,8 +194,23 @@ class _StatChip extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.accent, size: 18),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(fontFamily: 'DMSans', fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.textOnDark)),
-        Text(sub, style: TextStyle(fontFamily: 'DMSans', fontSize: 11, color: AppColors.textOnDark.withValues(alpha: 0.6))),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'DMSans',
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textOnDark,
+          ),
+        ),
+        Text(
+          sub,
+          style: TextStyle(
+            fontFamily: 'DMSans',
+            fontSize: 11,
+            color: AppColors.textOnDark.withValues(alpha: 0.6),
+          ),
+        ),
       ],
     );
   }
@@ -192,7 +219,11 @@ class _StatChip extends StatelessWidget {
 class _Divider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 36, color: AppColors.textOnDark.withValues(alpha: 0.15));
+    return Container(
+      width: 1,
+      height: 36,
+      color: AppColors.textOnDark.withValues(alpha: 0.15),
+    );
   }
 }
 
@@ -229,7 +260,12 @@ class _ActionButton extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               label,
-              style: TextStyle(fontFamily: 'DMSans', fontSize: 12, fontWeight: FontWeight.w600, color: textColor),
+              style: TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

@@ -1,11 +1,3 @@
-"""
-ml_scorer.py  v2
-----------------
-Egitilmis RandomForest modeli ile kombin skoru tahmin eder.
-Model yoksa kural tabanli sisteme fallback yapar.
-
-Yeni ozellikler: weather_type, feels_like, season_match
-"""
 
 from __future__ import annotations
 import os

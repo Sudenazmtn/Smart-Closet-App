@@ -71,7 +71,7 @@ class OutfitProvider extends ChangeNotifier {
     ];
     notifyListeners();
 
-    // Son önerilen kıyafet ID'lerini dışla — farklı kombin üretilsin
+    
     final lastItems = lastAiItems.whereType<ClothingModel>().toList();
     final excludeIds = lastItems.map((i) => i.id).toList();
 

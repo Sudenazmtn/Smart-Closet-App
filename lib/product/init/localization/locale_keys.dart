@@ -123,6 +123,11 @@ class LocaleKeys {
   static const profileMenuLocation = 'profile.menuLocation';
   static const profileMenuPrivacy = 'profile.menuPrivacy';
   static const profileMenuPrivacySub = 'profile.menuPrivacySub';
+  static const profileEditSheetTitle = 'profile.editSheetTitle';
+  static const profileEditNameLabel = 'profile.editNameLabel';
+  static const profileEditNameHint = 'profile.editNameHint';
+  static const profileEditSave = 'profile.editSave';
+  static const profileEditCancel = 'profile.editCancel';
 
   static const navHome = 'nav.home';
   static const navWardrobe = 'nav.wardrobe';

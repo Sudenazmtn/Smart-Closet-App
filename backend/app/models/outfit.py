@@ -7,10 +7,10 @@ class Outfit(db.Model):
     id          = db.Column(db.Integer, primary_key=True)
     user_id     = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name        = db.Column(db.String(100), nullable=True)
-    event_type  = db.Column(db.String(50),  nullable=True)  # casual, work, sport, evening
+    event_type  = db.Column(db.String(50),  nullable=True)
     ai_note     = db.Column(db.Text,        nullable=True)
     is_favorite = db.Column(db.Boolean, default=False)
-    items_json  = db.Column(db.Text,        nullable=True)   # "[1, 3, 7]"
+    items_json  = db.Column(db.Text,        nullable=True)
     created_at  = db.Column(db.DateTime, default=datetime.utcnow)
 
     def to_dict(self):

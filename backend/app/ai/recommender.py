@@ -1,9 +1,3 @@
-"""
-recommender.py  v2
-------------------
-Kullanicinin gardrobundan en iyi kombini sece motor.
-feels_like ve weather_type destekli.
-"""
 
 from __future__ import annotations
 from itertools import product as iterproduct
@@ -14,10 +8,10 @@ from .outfit_scorer import (
 )
 
 TOP_CATEGORIES    = {"t-shirt","shirt","blouse","sweater","hoodie","blazer",
-                     "jacket","coat","dress","top","tops","cardigan","outerwear","outer"}
+                     "jacket","coat","dress","top","tops","cardigan","outerwear","outer","polo","tank-top"}
 BOTTOM_CATEGORIES = {"jeans","trousers","shorts","skirt","leggings",
-                     "pants","bottom","bottoms"}
-SHOE_CATEGORIES   = {"sneakers","heels","boots","loafers","sandals","shoes"}
+                     "pants","bottom","bottoms","sweatpants"}
+SHOE_CATEGORIES   = {"sneakers","heels","boots","loafers","sandals","shoes","oxfords"}
 
 _MAX_CANDIDATES = 400
 
@@ -88,7 +82,13 @@ def get_recommendation(
     non_dress_tops = [i for i in tops if "dress" not in i.category.lower()]
 
     for dress in dresses:
-        candidates.append([dress] + ([shoes[0]] if shoes else []))
+        if len(candidates) >= _MAX_CANDIDATES: break
+        if shoes:
+            for shoe in shoes:
+                candidates.append([dress, shoe])
+                if len(candidates) >= _MAX_CANDIDATES: break
+        else:
+            candidates.append([dress])
 
     if non_dress_tops and bottoms:
         for top, bottom in iterproduct(non_dress_tops, bottoms):
@@ -102,26 +102,23 @@ def get_recommendation(
     elif non_dress_tops:
         candidates += [[t] for t in non_dress_tops]
 
-    # Tüm kombinasyonları skorla ve sırala
     scored_candidates = []
     for combo in candidates:
         s = score_outfit(combo, event_type, temperature, fl, wt)
         scored_candidates.append((s, combo))
     scored_candidates.sort(key=lambda x: -x[0])
 
-    # Önce dışlanan kıyafetleri içermeyen kombinasyonları dene
     best_score  = -1.0
     best_outfit: list = []
 
     for s, combo in scored_candidates:
         combo_ids = {item.id for item in combo}
         if excl and combo_ids & excl:
-            continue  # Bu kombinasyonda dışlanan kıyafet var, atla
+            continue
         best_score  = s
         best_outfit = combo
         break
 
-    # Hepsi dışlanmışsa en yüksek skorluyu al (gardırop çok küçük)
     if not best_outfit and scored_candidates:
         best_score, best_outfit = scored_candidates[0]
 

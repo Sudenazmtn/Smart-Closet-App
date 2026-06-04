@@ -10,30 +10,56 @@ class WardrobeGridCard extends StatelessWidget {
     required this.item,
     this.onTap,
     this.onLongPress,
+    this.onFavoriteToggle,
   });
 
   final ClothingModel item;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final VoidCallback? onFavoriteToggle;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       onLongPress: onLongPress,
-      child: Container(
-        decoration: BoxDecoration(
-          
-          color: item.imageUrl != null ? Colors.transparent : item.categoryColor,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: item.imageUrl != null
-            ? _NetworkImage(
-                imageUrl: item.imageUrl!,
-                fallbackEmoji: item.categoryEmoji,
-                name: item.name,
-              )
-            : _EmojiContent(emoji: item.categoryEmoji, name: item.name),
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: item.imageUrl != null ? Colors.transparent : item.categoryColor,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: item.imageUrl != null
+                ? _NetworkImage(
+                    imageUrl: item.imageUrl!,
+                    fallbackEmoji: item.categoryEmoji,
+                    name: item.name,
+                  )
+                : _EmojiContent(emoji: item.categoryEmoji, name: item.name),
+          ),
+          Positioned(
+            top: 6,
+            right: 6,
+            child: GestureDetector(
+              onTap: onFavoriteToggle,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.25),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  item.isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                  size: 16,
+                  color: item.isFavorite ? Colors.red : Colors.white,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -58,8 +84,7 @@ class _NetworkImage extends StatelessWidget {
         '${ApiService.baseUrl}$imageUrl',
         fit: BoxFit.contain,
         errorBuilder: (_, _, _) =>
-          _EmojiContent(emoji: fallbackEmoji, name: name)
-        
+            _EmojiContent(emoji: fallbackEmoji, name: name),
       ),
     );
   }

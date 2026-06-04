@@ -4,7 +4,6 @@ import anthropic
 
 _client: anthropic.Anthropic | None = None
 
-
 def _get_client() -> anthropic.Anthropic:
     global _client
     if _client is None:
@@ -13,7 +12,6 @@ def _get_client() -> anthropic.Anthropic:
             raise ValueError("CLAUDE_API_KEY environment variable is not set")
         _client = anthropic.Anthropic(api_key=api_key)
     return _client
-
 
 def generate_outfit_response(
     outfit_items:     list[dict],

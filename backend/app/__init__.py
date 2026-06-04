@@ -24,7 +24,7 @@ def create_app():
     import os
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-    from app.models import user, clothing_item, outfit  # noqa: F401
+    from app.models import user, clothing_item, outfit
 
     from app.api.auth_routes     import auth_bp
     from app.api.clothing_routes import clothing_bp
