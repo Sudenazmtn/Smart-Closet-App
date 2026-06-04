@@ -187,7 +187,7 @@ class _OutfitContent extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           )
         else if (!isSuggestion)
-          Text('En çok giydiğin parçalar', style: AppTextStyles.bodySmall),
+          Text(LocaleKeys.statsMostWorn.tr(), style: AppTextStyles.bodySmall),
         const SizedBox(height: 10),
         GestureDetector(
           onTap: () => context.go(AppRoutes.outfit),

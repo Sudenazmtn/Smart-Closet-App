@@ -474,7 +474,10 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     final newName = _nameController.text.trim();
-    await context.read<AuthProvider>().updateDisplayName(newName);
-    if (mounted) Navigator.of(context).pop();
+    final auth = context.read<AuthProvider>();
+    await auth.updateDisplayName(newName);
+    if (mounted && auth.errorMessage == null) {
+      Navigator.of(context).pop();
+    }
   }
 }

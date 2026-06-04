@@ -82,6 +82,7 @@ def get_recommendation(
     non_dress_tops = [i for i in tops if "dress" not in i.category.lower()]
 
     for dress in dresses:
+        if len(candidates) >= _MAX_CANDIDATES: break
         if shoes:
             for shoe in shoes:
                 candidates.append([dress, shoe])

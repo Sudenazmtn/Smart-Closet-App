@@ -76,15 +76,14 @@ def _outfit_tip(temperature: int, description: str) -> str:
 def _seasonal_outfit_tip() -> str:
     from datetime import datetime
     month = datetime.now().month
-    if month in (12, 1, 2):
-        return 'Cold winter weather — layer up with a warm coat, scarf and boots.'
-    if month in (3, 4, 5):
-        return 'Spring weather — a light jacket or cardigan is a smart choice.'
-    if month in (6, 7, 8):
-        return 'Warm summer weather — light, breathable fabrics are your best bet.'
-    return 'Cool autumn weather — a medium coat or layered outfit works well.'
+    if month in (12, 1, 2): return 'weather_tip_winter'
+    if month in (3, 4, 5):  return 'weather_tip_spring'
+    if month in (6, 7, 8):  return 'weather_tip_summer'
+    return 'weather_tip_autumn'
 
 def _get_city_from_coords(lat: str, lon: str) -> str:
+    if not lat or not lon:
+        return ''
     try:
         resp = requests.get(
             'https://nominatim.openstreetmap.org/reverse',
