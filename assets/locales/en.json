@@ -100,9 +100,9 @@
     "eventSport": "Sport",
     "eventEvening": "Evening",
     "aiLabel": "AI Recommendation",
-    "claudeSays": "Claude says:",
+    "claudeSays": "Stylist says:",
     "save": "Save Outfit",
-    "askPlaceholder": "Ask Claude for advice...",
+    "askPlaceholder": "Get an outfit suggestion...",
     "aiGreeting": "Hello! What kind of occasion are you dressing for today? ✨",
     "aiError": "I couldn't generate a suggestion. Please try again."
   },
@@ -130,7 +130,12 @@
     "menuNotificationsSub": "Daily outfit reminder on",
     "menuLocation": "Location",
     "menuPrivacy": "Privacy & Security",
-    "menuPrivacySub": "Manage your data"
+    "menuPrivacySub": "Manage your data",
+    "editSheetTitle": "Edit Profile",
+    "editNameLabel": "Full Name",
+    "editNameHint": "Enter your name",
+    "editSave": "Save",
+    "editCancel": "Cancel"
   },
   "nav": {
     "home": "Home",

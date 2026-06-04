@@ -100,9 +100,9 @@
     "eventSport": "Spor",
     "eventEvening": "Akşam",
     "aiLabel": "Yapay Zeka Önerisi",
-    "claudeSays": "Claude diyor ki:",
+    "claudeSays": "Stilist diyor ki:",
     "save": "Kombini Kaydet",
-    "askPlaceholder": "Claude'a danış...",
+    "askPlaceholder": "Kombin önerisi al...",
     "aiGreeting": "Merhaba! Bugün ne tür bir etkinlik için giyiniyorsun? ✨",
     "aiError": "Bir öneri oluşturamadım. Lütfen tekrar dene."
   },
@@ -130,7 +130,12 @@
     "menuNotificationsSub": "Günlük kombin hatırlatıcısı açık",
     "menuLocation": "Konum",
     "menuPrivacy": "Gizlilik & Güvenlik",
-    "menuPrivacySub": "Verilerini yönet"
+    "menuPrivacySub": "Verilerini yönet",
+    "editSheetTitle": "Profili Düzenle",
+    "editNameLabel": "Ad Soyad",
+    "editNameHint": "Adınızı girin",
+    "editSave": "Kaydet",
+    "editCancel": "İptal"
   },
   "nav": {
     "home": "Ana Sayfa",
