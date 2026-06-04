@@ -1,20 +1,7 @@
-"""
-outfit_scorer.py  v2
---------------------
-Kombin skorlama motoru.
-
-Skor bilesenleri:
-  - Renk uyumu    (0-1)  14x14 simetrik matris
-  - Etkinlik      (0-1)  kiyafet x occasion tablosu
-  - Sicaklik      (0-1)  feels_like bazli
-  - Hava tipi     (0-1)  rain/snow/sunny/windy kurallari
-  - Mevsim uyumu  (0-1)  kiyafet sezonu x gercek hava
-"""
 
 from __future__ import annotations
 
 def get_weather_type(description: str) -> str:
-    """OpenWeather description -> "rain"|"snow"|"storm"|"sunny"|"windy"|"cloudy" """
     d = description.lower()
     if "thunderstorm" in d or "storm" in d:  return "storm"
     if "snow" in d or "blizzard" in d:       return "snow"
@@ -221,7 +208,7 @@ def weather_type_score(category: str, color: str, weather_type: str) -> float:
     return 1.0
 
 _SEASON_RANGES = {
-    "summer":(-20,50),"spring":(8,22),"fall":(5,20),
+    "summer":(20,50),"spring":(8,22),"fall":(5,20),
     "winter":(-20,10),"all":(-20,50),
 }
 
