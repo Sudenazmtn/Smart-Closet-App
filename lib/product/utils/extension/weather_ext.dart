@@ -13,5 +13,6 @@ extension WeatherEmojiExtension on WeatherModel {
 
   String get temperatureLabel => '$temperature°C';
 
-  String get cityTemperatureLabel => '$city, $temperature°C';
+  String get cityTemperatureLabel =>
+      city.isNotEmpty ? '$city, $temperature°C' : '$temperature°C';
 }

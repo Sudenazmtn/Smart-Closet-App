@@ -25,10 +25,20 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
   Future<void> _fetchWeather() async {
     if (!mounted) return;
     try {
+      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        await _fetchWeatherFallback();
+        return;
+      }
+
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) return;
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        await _fetchWeatherFallback();
+        return;
       }
 
       final position = await Geolocator.getCurrentPosition(
@@ -36,18 +46,21 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
       );
 
       if (!mounted) return;
-
       await context.read<WeatherProvider>().fetchWeather(
         lat: position.latitude,
         lon: position.longitude,
       );
     } catch (_) {
-      if (!mounted) return;
-      await context.read<WeatherProvider>().fetchWeather(
-        lat: 41.0082,
-        lon: 28.9784,
-      );
+      await _fetchWeatherFallback();
     }
+  }
+
+  Future<void> _fetchWeatherFallback() async {
+    if (!mounted) return;
+    await context.read<WeatherProvider>().fetchWeather(
+      lat: 41.0082,
+      lon: 28.9784,
+    );
   }
 
   String greeting(String morning, String afternoon, String evening) {
