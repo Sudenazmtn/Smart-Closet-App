@@ -1,0 +1,172 @@
+{
+  "appName": "SmartCloset",
+  "appTagline": "Your AI Wardrobe",
+  "appSlogan": "Dress with intention.",
+  "appSloganSub": "AI-powered outfit suggestions tailored to your wardrobe, weather, and day.",
+  "auth": {
+    "getStarted": "Get Started",
+    "signIn": "Sign In",
+    "signInTitle": "Welcome back",
+    "signInSubtitle": "Sign in to your wardrobe.",
+    "signUp": "Sign Up",
+    "signUpTitle": "Create account",
+    "signUpSubtitle": "Start building your smart wardrobe today.",
+    "signOut": "Sign Out",
+    "continueWithGoogle": "Continue with Google",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset password",
+    "forgotPasswordSubtitle": "Enter your email address and we'll send you a reset link.",
+    "sendResetLink": "Send Reset Link",
+    "backToSignIn": "Back to Sign In",
+    "rememberedPassword": "Remembered it?",
+    "securityNote": "Your data is encrypted and stored securely.",
+    "resetStep1": "Check your inbox for an email from SmartCloset.",
+    "resetStep2": "Click the link to create a new password.",
+    "resetStep3": "Log in with your new password."
+  },
+  "field": {
+    "fullName": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "hintFullName": "e.g. Sude Yilmaz",
+    "hintEmail": "sude@example.com",
+    "hintPassword": "Min. 8 characters",
+    "hintConfirmPassword": "Repeat password",
+    "hintEmailAddress": "Your email address",
+    "hintItemName": "e.g. Beige linen coat"
+  },
+  "validation": {
+    "required": "{field} is required.",
+    "emailInvalid": "Please enter a valid email address.",
+    "passwordShort": "Password must be at least 8 characters.",
+    "passwordMismatch": "Passwords do not match."
+  },
+  "home": {
+    "goodMorning": "Good morning,",
+    "goodAfternoon": "Good afternoon,",
+    "goodEvening": "Good evening,",
+    "aiButton": "Get AI Suggestion",
+    "aiButtonSub": "What to wear today?",
+    "sectionWardrobe": "My Wardrobe",
+    "sectionOutfit": "Today's Outfit",
+    "viewAll": "View all",
+    "matchPercent": "{}% match",
+    "matchLabel": "Match",
+    "quickAi": "Get AI\nOutfit",
+    "quickAdd": "Add\nClothing"
+  },
+  "wardrobe": {
+    "title": "My Wardrobe",
+    "itemCount": "{} items",
+    "filterAll": "All",
+    "filterTops": "Tops",
+    "filterBottoms": "Bottoms",
+    "filterDresses": "Dresses",
+    "filterOuterwear": "Outerwear",
+    "filterShoes": "Shoes",
+    "filterBags": "Bags"
+  },
+  "addItem": {
+    "title": "Add Item",
+    "save": "Add to Wardrobe",
+    "photoPrompt": "Tap to take photo or upload from gallery",
+    "autoClassify": "Auto-classify",
+    "fieldName": "Item Name",
+    "fieldCategory": "Category",
+    "fieldSeason": "Season",
+    "fieldColor": "Color"
+  },
+  "season": {
+    "spring": "Spring",
+    "summer": "Summer",
+    "fall": "Fall",
+    "winter": "Winter",
+    "all": "All"
+  },
+  "color": {
+    "beige": "Beige",
+    "black": "Black",
+    "white": "White",
+    "navy": "Navy",
+    "red": "Red"
+  },
+  "outfit": {
+    "title": "Today's look",
+    "eventCasual": "Casual",
+    "eventWork": "Work",
+    "eventSport": "Sport",
+    "eventEvening": "Evening",
+    "aiLabel": "AI Recommendation",
+    "claudeSays": "Stylist says:",
+    "save": "Save Outfit",
+    "askPlaceholder": "Get an outfit suggestion...",
+    "aiGreeting": "Hello! What kind of occasion are you dressing for today? ✨",
+    "aiError": "I couldn't generate a suggestion. Please try again."
+  },
+  "stats": {
+    "title": "Statistics",
+    "overview": "Overview",
+    "periodWeek": "Week",
+    "periodMonth": "Month",
+    "periodAllTime": "All time",
+    "chartLabel": "Outfits worn per day",
+    "mostWorn": "Most worn items",
+    "wornTimes": "Worn {} times",
+    "neverWorn": "Items never worn",
+    "neverWornSub": "Tap to review"
+  },
+  "profile": {
+    "title": "My Profile",
+    "editButton": "Edit Profile",
+    "statItems": "Items",
+    "statOutfits": "Outfits",
+    "statAiUses": "AI Uses",
+    "menuEditProfile": "Edit Profile",
+    "menuEditProfileSub": "Name, photo, preferences",
+    "menuNotifications": "Notifications",
+    "menuNotificationsSub": "Daily outfit reminder on",
+    "menuLocation": "Location",
+    "menuPrivacy": "Privacy & Security",
+    "menuPrivacySub": "Manage your data",
+    "editSheetTitle": "Edit Profile",
+    "editNameLabel": "Full Name",
+    "editNameHint": "Enter your name",
+    "editSave": "Save",
+    "editCancel": "Cancel"
+  },
+  "weather_tip_winter": "Cold winter weather — layer up with a warm coat, scarf and boots.",
+  "weather_tip_spring": "Spring weather — a light jacket or cardigan is a smart choice.",
+  "weather_tip_summer": "Warm summer weather — light, breathable fabrics are your best bet.",
+  "weather_tip_autumn": "Cool autumn weather — a medium coat or layered outfit works well.",
+  "nav": {
+    "home": "Home",
+    "wardrobe": "Wardrobe",
+    "ai": "AI",
+    "profile": "Profile"
+  },
+  "error": {
+    "general": "Something went wrong. Please try again.",
+    "noInternet": "No internet connection.",
+    "invalidCredentials": "Invalid email or password.",
+    "emailInUse": "This email is already in use.",
+    "weakPassword": "Password is too weak.",
+    "userNotFound": "No account found with this email."
+  },
+  "success": {
+    "resetEmailSent": "Reset email sent. Check your inbox.",
+    "itemAdded": "Item added to wardrobe.",
+    "outfitSaved": "Outfit saved."
+  },
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save",
+    "loading": "Loading...",
+    "retry": "Retry",
+    "deleteConfirmTitle": "Delete item?",
+    "deleteConfirmMessage": "This action cannot be undone."
+  }
+}

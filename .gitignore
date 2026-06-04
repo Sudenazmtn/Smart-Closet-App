@@ -43,3 +43,35 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment variables
+.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+backend/uploads/
+
+# ML model weights
+*.h5
+*.pkl
+*.pt
+
+# Firebase
+##google-services.json
+GoogleService-Info.plist
+
+"backend/instance/"
+"backend/*.db"
+"backend/python"
+backend/instance/
+backend/__pycache__/
+
+# Claude Code
+.claude/
+
+# ML model binary
+backend/app/ai/model/*.pkl

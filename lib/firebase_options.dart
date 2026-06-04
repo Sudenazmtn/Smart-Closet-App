@@ -1,0 +1,79 @@
+import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+
+class DefaultFirebaseOptions {
+  static FirebaseOptions get currentPlatform {
+    if (kIsWeb) {
+      return web;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        return android;
+      case TargetPlatform.iOS:
+        return ios;
+      case TargetPlatform.macOS:
+        return macos;
+      case TargetPlatform.windows:
+        return windows;
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      default:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions are not supported for this platform.',
+        );
+    }
+  }
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCYcdOPiuicPmy6_lhJUUMmyx1tvE83Gyo',
+    appId: '1:521052803228:web:e4c92a20405f8f884d1d59',
+    messagingSenderId: '521052803228',
+    projectId: 'smart-closet-app-7f24f',
+    authDomain: 'smart-closet-app-7f24f.firebaseapp.com',
+    storageBucket: 'smart-closet-app-7f24f.firebasestorage.app',
+    measurementId: 'G-CBBSZ0WEDY',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBPE09rQR0EDQ4PfeIdsIl1BZqjAtpw8F4',
+    appId: '1:521052803228:android:32581622fce970f74d1d59',
+    messagingSenderId: '521052803228',
+    projectId: 'smart-closet-app-7f24f',
+    storageBucket: 'smart-closet-app-7f24f.firebasestorage.app',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCmKFfMtN0VoTObSNKaf7PgAnfnLpXh3Oo',
+    appId: '1:521052803228:ios:a253fded55a3b16b4d1d59',
+    messagingSenderId: '521052803228',
+    projectId: 'smart-closet-app-7f24f',
+    storageBucket: 'smart-closet-app-7f24f.firebasestorage.app',
+    iosClientId: '521052803228-g9j8ms4lhgsjrb1m2ubrr57loevfcg7u.apps.googleusercontent.com',
+    iosBundleId: 'com.example.smartClosetApp',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCmKFfMtN0VoTObSNKaf7PgAnfnLpXh3Oo',
+    appId: '1:521052803228:ios:a253fded55a3b16b4d1d59',
+    messagingSenderId: '521052803228',
+    projectId: 'smart-closet-app-7f24f',
+    storageBucket: 'smart-closet-app-7f24f.firebasestorage.app',
+    iosClientId: '521052803228-g9j8ms4lhgsjrb1m2ubrr57loevfcg7u.apps.googleusercontent.com',
+    iosBundleId: 'com.example.smartClosetApp',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyCYcdOPiuicPmy6_lhJUUMmyx1tvE83Gyo',
+    appId: '1:521052803228:web:5b7fc53b631432284d1d59',
+    messagingSenderId: '521052803228',
+    projectId: 'smart-closet-app-7f24f',
+    authDomain: 'smart-closet-app-7f24f.firebaseapp.com',
+    storageBucket: 'smart-closet-app-7f24f.firebasestorage.app',
+    measurementId: 'G-PTJ11LLW82',
+  );
+
+}
