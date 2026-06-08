@@ -77,6 +77,34 @@ class LocaleKeys {
   static const addItemFieldCategory = 'addItem.fieldCategory';
   static const addItemFieldSeason = 'addItem.fieldSeason';
   static const addItemFieldColor = 'addItem.fieldColor';
+  static const addItemFieldSubCategory = 'addItem.fieldSubCategory';
+
+  static const subcategoryTshirt = 'subcategory.tshirt';
+  static const subcategoryShirt = 'subcategory.shirt';
+  static const subcategoryBlouse = 'subcategory.blouse';
+  static const subcategorySweater = 'subcategory.sweater';
+  static const subcategoryHoodie = 'subcategory.hoodie';
+  static const subcategoryBlazer = 'subcategory.blazer';
+  static const subcategoryJacket = 'subcategory.jacket';
+  static const subcategoryCoat = 'subcategory.coat';
+  static const subcategoryTrenchCoat = 'subcategory.trenchCoat';
+  static const subcategoryVest = 'subcategory.vest';
+  static const subcategoryDress = 'subcategory.dress';
+  static const subcategoryCardigan = 'subcategory.cardigan';
+  static const subcategoryTankTop = 'subcategory.tankTop';
+  static const subcategoryPolo = 'subcategory.polo';
+  static const subcategoryJeans = 'subcategory.jeans';
+  static const subcategoryTrousers = 'subcategory.trousers';
+  static const subcategoryShorts = 'subcategory.shorts';
+  static const subcategorySkirt = 'subcategory.skirt';
+  static const subcategoryLeggings = 'subcategory.leggings';
+  static const subcategorySweatpants = 'subcategory.sweatpants';
+  static const subcategorySneakers = 'subcategory.sneakers';
+  static const subcategoryHeels = 'subcategory.heels';
+  static const subcategoryBoots = 'subcategory.boots';
+  static const subcategoryLoafers = 'subcategory.loafers';
+  static const subcategorySandals = 'subcategory.sandals';
+  static const subcategoryOxfords = 'subcategory.oxfords';
 
   static const seasonSpring = 'season.spring';
   static const seasonSummer = 'season.summer';
@@ -89,6 +117,14 @@ class LocaleKeys {
   static const colorWhite = 'color.white';
   static const colorNavy = 'color.navy';
   static const colorRed = 'color.red';
+  static const colorGray = 'color.gray';
+  static const colorBrown = 'color.brown';
+  static const colorGreen = 'color.green';
+  static const colorBlue = 'color.blue';
+  static const colorYellow = 'color.yellow';
+  static const colorOrange = 'color.orange';
+  static const colorPurple = 'color.purple';
+  static const colorPink = 'color.pink';
 
   static const outfitTitle = 'outfit.title';
   static const outfitEventCasual = 'outfit.eventCasual';

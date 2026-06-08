@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/mixin/add_clothing_mixin.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_chip_selector.dart';
+import 'package:smart_closet_app/feature/add_clothing/view/widget/add_multi_chip_selector.dart';
+import 'package:smart_closet_app/feature/add_clothing/view/widget/add_subcategory_selector.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_color_selector.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_photo_picker.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_section_label.dart';
@@ -59,13 +61,25 @@ class _AddClothingViewState extends State<AddClothingView>
                   onSelected: onCategorySelected,
                 ),
                 const SizedBox(height: AppSizes.m),
+                if (_kSubCategories.containsKey(selectedCategory)) ...[
+                  AddSectionLabel(LocaleKeys.addItemFieldSubCategory.tr()),
+                  const SizedBox(height: AppSizes.xs),
+                  AddSubcategorySelector(
+                    options: _kSubCategories[selectedCategory]!
+                        .map((o) => (value: o.value, label: o.localeKey.tr()))
+                        .toList(),
+                    selectedValue: selectedSubCategory,
+                    onSelected: onSubCategorySelected,
+                  ),
+                  const SizedBox(height: AppSizes.m),
+                ],
                 AddSectionLabel(LocaleKeys.addItemFieldSeason.tr()),
                 const SizedBox(height: AppSizes.xs),
-                AddChipSelector(
+                AddMultiChipSelector(
                   options: _kSeasons
                       .map((o) => (value: o.value, label: o.localeKey.tr()))
                       .toList(),
-                  selectedValue: selectedSeason,
+                  selectedValues: selectedSeasons,
                   onSelected: onSeasonSelected,
                 ),
                 const SizedBox(height: AppSizes.m),

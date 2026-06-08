@@ -4,16 +4,16 @@ import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
-class AddChipSelector extends StatelessWidget {
-  const AddChipSelector({
+class AddMultiChipSelector extends StatelessWidget {
+  const AddMultiChipSelector({
     super.key,
     required this.options,
-    required this.selectedValue,
+    required this.selectedValues,
     required this.onSelected,
   });
 
   final List<({String value, String label})> options;
-  final String selectedValue;
+  final List<String> selectedValues;
   final ValueChanged<String> onSelected;
 
   @override
@@ -22,7 +22,7 @@ class AddChipSelector extends StatelessWidget {
       spacing: AppSizes.xs,
       runSpacing: AppSizes.xs,
       children: options.map((opt) {
-        final isActive = opt.value == selectedValue;
+        final isActive = selectedValues.contains(opt.value);
         return GestureDetector(
           onTap: () => onSelected(opt.value),
           child: AnimatedContainer(
