@@ -9,6 +9,10 @@ import 'package:smart_closet_app/product/data/services/api_service.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_emojis.dart';
+import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 import 'package:smart_closet_app/product/utils/extension/clothing_category_ext.dart';
 
@@ -63,7 +67,7 @@ class HomeTodaysOutfitCard extends StatelessWidget {
                 child: _OutfitContent(
                   items: recent,
                   score: null,
-                  tip: 'Henüz kombin önerisi yok. AI\'a sor!',
+                  tip: LocaleKeys.homeNoSuggestionTip.tr(),
                   isSuggestion: false,
                 ),
               );
@@ -87,10 +91,10 @@ class _CardShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: AppPaddings.allM,
       decoration: BoxDecoration(
         color: AppColors.backgroundCard,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.allM,
         border: Border.all(color: AppColors.border, width: 0.8),
       ),
       child: child,
@@ -108,28 +112,28 @@ class _EmptyState extends StatelessWidget {
       onTap: onTap,
       child: Column(
         children: [
-          const Text('✨', style: TextStyle(fontSize: 36)),
+          const Text(AppEmojis.sparkle, style: TextStyle(fontSize: AppSizes.emojiL)),
           const SizedBox(height: 8),
           Text(
-            'AI\'dan kombin önerisi al',
+            LocaleKeys.homeEmptyOutfitTitle.tr(),
             style: AppTextStyles.headingSmall,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
           Text(
-            'Gardırobuna göre en iyi kombini seçelim',
+            LocaleKeys.homeEmptyOutfitSub.tr(),
             style: AppTextStyles.bodySmall,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.m, vertical: AppSizes.xs),
+            decoration: const BoxDecoration(
               color: AppColors.primary,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: AppRadius.pill,
             ),
             child: Text(
-              'AI\'a Sor →',
+              LocaleKeys.homeAskAiButton.tr(),
               style: AppTextStyles.bodySmall.copyWith(
                 color: AppColors.textOnDark,
                 fontWeight: FontWeight.w600,
@@ -192,7 +196,9 @@ class _OutfitContent extends StatelessWidget {
         GestureDetector(
           onTap: () => context.go(AppRoutes.outfit),
           child: Text(
-            isSuggestion ? 'Farklı kombin iste →' : 'AI\'dan kombin al →',
+            isSuggestion
+                ? LocaleKeys.homeDifferentOutfit.tr()
+                : LocaleKeys.homeGetAiOutfit.tr(),
             style: AppTextStyles.bodySmall.copyWith(
               color: AppColors.accent,
               fontWeight: FontWeight.w600,
@@ -212,7 +218,7 @@ class _ItemThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     if (item.imageUrl != null) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: AppRadius.allSoft,
         child: Image.network(
           '${ApiService.baseUrl}${item.imageUrl}',
           width: 60,
@@ -237,10 +243,10 @@ class _EmojiThumb extends StatelessWidget {
       height: 60,
       decoration: BoxDecoration(
         color: item.categoryColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: AppRadius.allSoft,
       ),
       child: Center(
-        child: Text(item.categoryEmoji, style: const TextStyle(fontSize: 28)),
+        child: Text(item.categoryEmoji, style: const TextStyle(fontSize: AppSizes.emojiS)),
       ),
     );
   }
@@ -253,30 +259,18 @@ class _MatchBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.xs, vertical: AppSizes.xxs + AppSizes.xxxs),
+      decoration: const BoxDecoration(
         color: AppColors.accent,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: AppRadius.allSoft,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            '$percent%',
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
-          ),
+          Text('$percent%', style: AppTextStyles.matchBadgePercent),
           Text(
             LocaleKeys.homeMatchLabel.tr(),
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 10,
-              color: Colors.white,
-            ),
+            style: AppTextStyles.labelTag.copyWith(color: Colors.white),
           ),
         ],
       ),
@@ -291,7 +285,7 @@ class _LoadingState extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: AppPaddings.allM,
         child: CircularProgressIndicator(
           color: AppColors.accent,
           strokeWidth: 2,

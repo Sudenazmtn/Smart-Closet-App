@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
   ApiService._();
@@ -9,10 +10,14 @@ class ApiService {
 
   static const String _envUrl = String.fromEnvironment('BASE_URL');
 
+  /// Dev IP, .env dosyasındaki DEV_IP değerinden okunur.
+  /// .env dosyasına şunu ekle: DEV_IP=10.33.10.72
+  static String get _devIp => dotenv.get('DEV_IP', fallback: 'localhost');
+
   static String get baseUrl {
     if (_envUrl.isNotEmpty) return _envUrl;
     if (kIsWeb) return 'http://localhost:5000';
-    return 'http://localhost:5000';
+    return 'http://$_devIp:5000';
   }
 
   late final Dio _dio =

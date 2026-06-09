@@ -4,8 +4,13 @@ import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 class AppTextStyles {
   AppTextStyles._();
 
-  static const String _serif = 'PlayfairDisplay';
-  static const String _sans = 'DMSans';
+  static const String fontSans  = 'DMSans';
+  static const String fontSerif = 'PlayfairDisplay';
+
+  // ignore: unused_field
+  static const String _serif = fontSerif;
+  // ignore: unused_field
+  static const String _sans  = fontSans;
 
   static final TextStyle displayLarge = TextStyle(
     fontFamily: _serif,
@@ -259,5 +264,106 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
     height: 1.3,
+  );
+
+  // Auth
+  static const TextStyle logoTitle = TextStyle(
+    fontFamily: _serif,
+    fontSize: 34,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    letterSpacing: -0.5,
+  );
+
+  static const TextStyle authLink = TextStyle(
+    fontFamily: _sans,
+    fontSize: 13,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.4,
+  );
+
+  static const TextStyle googleButtonText = TextStyle(
+    fontFamily: _sans,
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textPrimary,
+    height: 1.4,
+  );
+
+  // Onboarding
+  static const TextStyle displayHero = TextStyle(
+    fontFamily: _serif,
+    fontSize: 42,
+    fontWeight: FontWeight.w500,
+    color: AppColors.textOnDark,
+    height: 1.2,
+  );
+
+  // Home
+  static const TextStyle homeGreetingText = TextStyle(
+    fontFamily: _sans,
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textPrimary,
+    height: 1.3,
+  );
+
+  static const TextStyle homeGreetingName = TextStyle(
+    fontFamily: _serif,
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.3,
+  );
+
+  static const TextStyle homeAvatarInitial = TextStyle(
+    fontFamily: _serif,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textOnDark,
+    height: 1.2,
+  );
+
+  static const TextStyle statChipValue = TextStyle(
+    fontFamily: _sans,
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textOnDark,
+    height: 1.2,
+  );
+
+  static const TextStyle matchBadgePercent = TextStyle(
+    fontFamily: _sans,
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textOnDark,
+    height: 1.2,
+  );
+
+  // Wardrobe
+  static const TextStyle wardrobeTitle = TextStyle(
+    fontFamily: _serif,
+    fontSize: 30,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.2,
+  );
+
+  // Nav
+  static const TextStyle navLabelActive = TextStyle(
+    fontFamily: _sans,
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+    color: AppColors.textPrimary,
+    height: 1.4,
+  );
+
+  static const TextStyle navLabelInactive = TextStyle(
+    fontFamily: _sans,
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+    color: AppColors.textMuted,
+    height: 1.4,
   );
 }

@@ -5,7 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_emojis.dart';
 import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 import '../provider/auth_provider.dart';
@@ -48,7 +50,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView>
                       shape: BoxShape.circle,
                     ),
                     child: const Center(
-                      child: Text('🔒', style: TextStyle(fontSize: 32)),
+                      child: Text(AppEmojis.lock, style: TextStyle(fontSize: AppSizes.xl)),
                     ),
                   ),
                 ),

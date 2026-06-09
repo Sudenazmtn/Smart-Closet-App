@@ -52,6 +52,10 @@ class AppColors {
   static const Color iconBgRed = Color(0xFFFEE2E2);
   static const Color iconBgGreen = Color(0xFFD1FAE5);
   static const Color iconBgPurple = Color(0xFFEDE9FE);
+  static const Color iconBgBlue = Color(0xFFDBEAFE);
+
+  static const Color authFieldBg = Color(0xFFF7F7F7);
+  static const Color googleBlue  = Color(0xFF4285F4);
 
   static const Color white = Colors.white;
   static const Color black = Colors.black;

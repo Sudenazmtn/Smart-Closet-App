@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_emojis.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 class _ClothingTileData {
@@ -22,10 +25,10 @@ class _ClothingTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: data.color,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.allM,
       ),
       child: Center(
-        child: Text(data.emoji, style: const TextStyle(fontSize: 36)),
+        child: Text(data.emoji, style: const TextStyle(fontSize: AppSizes.emojiL)),
       ),
     );
   }
@@ -45,12 +48,12 @@ class _OnboardingViewState extends State<OnboardingView>
   late Animation<Offset> _slideUp;
 
   static const List<_ClothingTileData> _items = [
-    _ClothingTileData(emoji: '👚', color: Color(0xFFF5C5C5)),
-    _ClothingTileData(emoji: '👗', color: Color(0xFFBDD8C0)),
-    _ClothingTileData(emoji: '👜', color: Color(0xFFB8CEDD)),
-    _ClothingTileData(emoji: '👖', color: Color(0xFFB8CEDD)),
-    _ClothingTileData(emoji: '👠', color: Color(0xFFF5C5C5)),
-    _ClothingTileData(emoji: '🧣', color: Color(0xFFBDD8C0)),
+    _ClothingTileData(emoji: AppEmojis.tops,      color: Color(0xFFF5C5C5)),
+    _ClothingTileData(emoji: AppEmojis.dress,     color: Color(0xFFBDD8C0)),
+    _ClothingTileData(emoji: AppEmojis.bags,      color: Color(0xFFB8CEDD)),
+    _ClothingTileData(emoji: AppEmojis.bottoms,   color: Color(0xFFB8CEDD)),
+    _ClothingTileData(emoji: AppEmojis.shoes,     color: Color(0xFFF5C5C5)),
+    _ClothingTileData(emoji: AppEmojis.scarf,     color: Color(0xFFBDD8C0)),
   ];
 
   @override
@@ -134,23 +137,18 @@ class _OnboardingViewState extends State<OnboardingView>
                             const SizedBox(height: 48),
 
                             RichText(
-                              text: const TextSpan(
+                              text: TextSpan(
                                 children: [
                                   TextSpan(
                                     text: 'Dress with\n',
-                                    style: TextStyle(
-                                      fontFamily: 'PlayfairDisplay',
-                                      fontSize: 42,
-                                      fontWeight: FontWeight.w500,
+                                    style: AppTextStyles.displayHero.copyWith(
                                       color: AppColors.textPrimary,
                                       height: 1.15,
                                     ),
                                   ),
                                   TextSpan(
                                     text: 'intention.',
-                                    style: TextStyle(
-                                      fontFamily: 'PlayfairDisplay',
-                                      fontSize: 42,
+                                    style: AppTextStyles.displayHero.copyWith(
                                       fontWeight: FontWeight.w400,
                                       fontStyle: FontStyle.italic,
                                       color: AppColors.accent,
@@ -180,17 +178,12 @@ class _OnboardingViewState extends State<OnboardingView>
                                   foregroundColor: AppColors.textOnDark,
                                   elevation: 0,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
+                                    borderRadius: AppRadius.allS,
                                   ),
                                 ),
                                 child: Text(
                                   LocaleKeys.authGetStarted.tr(),
-                                  style: const TextStyle(
-                                    fontFamily: 'DMSans',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                  ),
+                                  style: AppTextStyles.buttonPrimary,
                                 ),
                               ),
                             ),
@@ -209,12 +202,7 @@ class _OnboardingViewState extends State<OnboardingView>
                                   onTap: () => context.go(AppRoutes.login),
                                   child: Text(
                                     LocaleKeys.authSignIn.tr(),
-                                    style: const TextStyle(
-                                      fontFamily: 'DMSans',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                    ),
+                                    style: AppTextStyles.authLink,
                                   ),
                                 ),
                               ],

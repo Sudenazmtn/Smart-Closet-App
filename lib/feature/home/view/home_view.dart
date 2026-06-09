@@ -15,6 +15,9 @@ import 'package:smart_closet_app/feature/wardrobe/provider/clothing_provider.dar
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 part 'home_view_categories.dart';
@@ -122,10 +125,10 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
       builder: (context, clothing, _) {
         if (clothing.totalItems == 0) return const SizedBox.shrink();
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
+          padding: AppPaddings.allM,
+          decoration: const BoxDecoration(
             color: AppColors.primary,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: AppRadius.allCard,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -133,19 +136,19 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
               _StatChip(
                 icon: Icons.checkroom_outlined,
                 label: '${clothing.totalItems}',
-                sub: 'parça',
+                sub: LocaleKeys.homeStatPieces.tr(),
               ),
               _Divider(),
               _StatChip(
                 icon: Icons.star_outline_rounded,
                 label: '${clothing.favoriteCount}',
-                sub: 'favori',
+                sub: LocaleKeys.homeStatFavorites.tr(),
               ),
               _Divider(),
               _StatChip(
                 icon: Icons.loop_rounded,
                 label: '${clothing.neverWornCount}',
-                sub: 'giyilmedi',
+                sub: LocaleKeys.homeStatNeverWorn.tr(),
               ),
             ],
           ),
@@ -194,20 +197,10 @@ class _StatChip extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.accent, size: 18),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(
-            fontFamily: 'DMSans',
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textOnDark,
-          ),
-        ),
+        Text(label, style: AppTextStyles.statChipValue),
         Text(
           sub,
-          style: TextStyle(
-            fontFamily: 'DMSans',
-            fontSize: 11,
+          style: AppTextStyles.statLabel.copyWith(
             color: AppColors.textOnDark.withValues(alpha: 0.6),
           ),
         ),
@@ -247,22 +240,20 @@ class _ActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: AppPaddings.verticalM,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: AppRadius.allCard,
           border: Border.all(color: AppColors.border, width: 0.8),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: textColor, size: 24),
-            const SizedBox(height: 8),
+            Icon(icon, color: textColor, size: AppSizes.l),
+            const SizedBox(height: AppSizes.xs),
             Text(
               label,
-              style: TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 12,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: textColor,
               ),

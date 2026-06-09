@@ -24,4 +24,19 @@ final class AppSizes {
   static const maxiM = 100.0;
 
   static const maxiL = 150.0;
+
+  // Layout
+  static const screenH    = 20.0;  // standard screen horizontal padding
+  static const buttonSize = 44.0;  // standard icon button tap target
+  static const categoryCard = 72.0; // category card size
+  static const spinnerS      = 20.0;  // small loading indicator size
+  static const navIndicatorW = 20.0;  // nav bar active indicator width
+
+  // Emoji display sizes
+  static const emojiXS   = 22.0;
+  static const emojiS    = 28.0;
+  static const emojiM    = 30.0;
+  static const emojiL    = 36.0;
+  static const emojiXXL  = 48.0;
+  static const emojiXXXL = 52.0;
 }

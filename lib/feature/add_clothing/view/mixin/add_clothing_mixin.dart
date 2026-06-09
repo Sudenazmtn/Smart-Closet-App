@@ -11,7 +11,7 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
 
   String _selectedCategory = '';
   String _selectedSubCategory = '';
-  List<String> _selectedSeasons = [];
+  final List<String> _selectedSeasons = [];
   String _selectedColor = '';
   String? _imagePath;
 
@@ -47,8 +47,7 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
-  void onColorSelected(String value) =>
-      setState(() => _selectedColor = value);
+  void onColorSelected(String value) => setState(() => _selectedColor = value);
 
   Future<void> pickFromCamera() => _pick(ImageSource.camera);
   Future<void> pickFromGallery() => _pick(ImageSource.gallery);
@@ -67,13 +66,13 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
     if (!formKey.currentState!.validate()) return;
     if (!_isFormValid) return;
     await context.read<ClothingProvider>().addClothing(
-          name: nameController.text.trim(),
-          category: _selectedCategory,
-          subCategory: _selectedSubCategory.isEmpty ? null : _selectedSubCategory,
-          color: _selectedColor,
-          seasons: _selectedSeasons,
-          imagePath: _imagePath,
-        );
+      name: nameController.text.trim(),
+      category: _selectedCategory,
+      subCategory: _selectedSubCategory.isEmpty ? null : _selectedSubCategory,
+      color: _selectedColor,
+      seasons: _selectedSeasons,
+      imagePath: _imagePath,
+    );
     if (context.mounted) context.pop();
   }
 }

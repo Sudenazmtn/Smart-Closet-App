@@ -4,6 +4,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_bar.dart';
+import 'package:smart_closet_app/feature/auth/provider/auth_provider.dart';
+import 'package:smart_closet_app/feature/home/provider/weather_provider.dart';
+import 'package:smart_closet_app/feature/wardrobe/provider/clothing_provider.dart';
+import 'package:smart_closet_app/feature/wardrobe/provider/outfit_provider.dart';
+import 'package:smart_closet_app/product/data/services/notification_service.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
@@ -11,11 +16,6 @@ import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
 import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
-
-import '../../../feature/auth/provider/auth_provider.dart';
-import '../../../feature/home/provider/weather_provider.dart';
-import '../../../feature/wardrobe/provider/clothing_provider.dart';
-import '../../../feature/wardrobe/provider/outfit_provider.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -41,8 +41,9 @@ class _ProfileViewState extends State<ProfileView> {
         return;
       }
       var perm = await Geolocator.checkPermission();
-      if (perm == LocationPermission.denied)
+      if (perm == LocationPermission.denied) {
         perm = await Geolocator.requestPermission();
+      }
       if (perm == LocationPermission.denied ||
           perm == LocationPermission.deniedForever) {
         await _fetchFallback();
@@ -96,70 +97,38 @@ class _ProfileViewState extends State<ProfileView> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      color: AppColors.primary,
+                    Padding(
                       padding: EdgeInsets.fromLTRB(
                         AppSizes.l,
-                        AppSizes.m,
                         AppSizes.l,
-                        AppSizes.xl,
+                        AppSizes.l,
+                        AppSizes.m,
                       ),
-                      child: Column(
+                      child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Container(
+                            width: AppSizes.maxiS + AppSizes.xxs,
+                            height: AppSizes.maxiS + AppSizes.xxs,
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                initial,
+                                style: AppTextStyles.headingOnDark,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSizes.s + AppSizes.xxs),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                LocaleKeys.profileTitle.tr(),
-                                style: AppTextStyles.displaySmall.copyWith(
-                                  color: AppColors.textOnDark,
-                                ),
+                                displayName,
+                                style: AppTextStyles.headingSmall,
                               ),
-                              Icon(
-                                Icons.settings_outlined,
-                                color: AppColors.textOnDark.withValues(
-                                  alpha: 0.6,
-                                ),
-                                size: AppSizes.m + AppSizes.xs - AppSizes.xxs,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSizes.m),
-                          Row(
-                            children: [
-                              Container(
-                                width: AppSizes.maxiS + AppSizes.xxs,
-                                height: AppSizes.maxiS + AppSizes.xxs,
-                                decoration: const BoxDecoration(
-                                  color: AppColors.accent,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    initial,
-                                    style: AppTextStyles.headingOnDark,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: AppSizes.s + AppSizes.xxs),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    displayName,
-                                    style: AppTextStyles.headingOnDark,
-                                  ),
-                                  Text(
-                                    email,
-                                    style: AppTextStyles.bodySmall.copyWith(
-                                      color: AppColors.textOnDark.withValues(
-                                        alpha: 0.6,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              Text(email, style: AppTextStyles.bodySmall),
                             ],
                           ),
                         ],
@@ -184,21 +153,30 @@ class _ProfileViewState extends State<ProfileView> {
                             label: LocaleKeys.profileMenuNotifications.tr(),
                             subtitle: LocaleKeys.profileMenuNotificationsSub
                                 .tr(),
-                            onTap: () {},
+                            onTap: () => _showNotificationsSheet(context),
                           ),
                           _MenuItem(
-                            icon: Icons.language_outlined,
+                            icon: Icons.location_on_outlined,
                             iconBg: AppColors.iconBgGreen,
                             label: LocaleKeys.profileMenuLocation.tr(),
                             subtitle: locationSubtitle,
                             onTap: () {},
                           ),
                           _MenuItem(
+                            icon: Icons.language_outlined,
+                            iconBg: AppColors.iconBgBlue,
+                            label: LocaleKeys.profileMenuLanguage.tr(),
+                            subtitle: context.locale.languageCode == 'tr'
+                                ? LocaleKeys.profileMenuLanguageTr.tr()
+                                : LocaleKeys.profileMenuLanguageEn.tr(),
+                            onTap: () => _showLanguageSheet(context),
+                          ),
+                          _MenuItem(
                             icon: Icons.lock_outline,
                             iconBg: AppColors.iconBgPurple,
                             label: LocaleKeys.profileMenuPrivacy.tr(),
                             subtitle: LocaleKeys.profileMenuPrivacySub.tr(),
-                            onTap: () {},
+                            onTap: () => _showPrivacySheet(context),
                           ),
 
                           const SizedBox(height: AppSizes.m),
@@ -234,6 +212,31 @@ class _ProfileViewState extends State<ProfileView> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showNotificationsSheet(BuildContext context) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => const _NotificationsSheet(),
+    );
+  }
+
+  Future<void> _showPrivacySheet(BuildContext context) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _PrivacySheet(),
+    );
+  }
+
+  Future<void> _showLanguageSheet(BuildContext context) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const _LanguageSheet(),
     );
   }
 
@@ -357,7 +360,7 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: AppRadius.topL,
         ),
         padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
         child: Form(
@@ -372,7 +375,7 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
                   height: 4,
                   decoration: BoxDecoration(
                     color: AppColors.border,
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: AppRadius.allXXXS,
                   ),
                 ),
               ),
@@ -479,5 +482,473 @@ class _EditProfileSheetState extends State<_EditProfileSheet> {
     if (mounted && auth.errorMessage == null) {
       Navigator.of(context).pop();
     }
+  }
+}
+
+class _LanguageSheet extends StatelessWidget {
+  const _LanguageSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final currentLocale = context.locale;
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadius.topL,
+      ),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: AppRadius.allXXXS,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            LocaleKeys.profileLanguageSheetTitle.tr(),
+            style: AppTextStyles.headingSmall,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            LocaleKeys.profileLanguageSheetSubtitle.tr(),
+            style: AppTextStyles.bodySmall,
+          ),
+          const SizedBox(height: 20),
+          _LanguageOption(
+            flag: '🇹🇷',
+            label: LocaleKeys.profileMenuLanguageTr.tr(),
+            isSelected: currentLocale.languageCode == 'tr',
+            onTap: () async {
+              await context.setLocale(const Locale('tr'));
+              if (context.mounted) Navigator.of(context).pop();
+            },
+          ),
+          const SizedBox(height: 12),
+          _LanguageOption(
+            flag: '🇬🇧',
+            label: LocaleKeys.profileMenuLanguageEn.tr(),
+            isSelected: currentLocale.languageCode == 'en',
+            onTap: () async {
+              await context.setLocale(const Locale('en'));
+              if (context.mounted) Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PrivacySheet extends StatelessWidget {
+  const _PrivacySheet();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadius.topL,
+      ),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: AppRadius.allXXXS,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            LocaleKeys.profilePrivacySheetTitle.tr(),
+            style: AppTextStyles.headingSmall,
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: AppColors.accentLight,
+              borderRadius: AppRadius.allS,
+              border: Border.all(color: AppColors.border, width: 0.8),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(
+                  Icons.shield_outlined,
+                  size: 18,
+                  color: AppColors.textSecondary,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    LocaleKeys.profilePrivacyDataNote.tr(),
+                    style: AppTextStyles.bodySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () => _confirmDelete(context),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: AppColors.errorLight.withValues(alpha: 0.3),
+                borderRadius: AppRadius.allS,
+                border: Border.all(color: AppColors.errorLight, width: 0.8),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.delete_outline_rounded,
+                    size: 20,
+                    color: AppColors.error,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          LocaleKeys.profilePrivacyDeleteAccount.tr(),
+                          style: AppTextStyles.headingSmall.copyWith(
+                            color: AppColors.error,
+                          ),
+                        ),
+                        Text(
+                          LocaleKeys.profilePrivacyDeleteAccountSub.tr(),
+                          style: AppTextStyles.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppColors.error,
+                    size: 22,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _confirmDelete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.allM),
+        title: Text(
+          LocaleKeys.profilePrivacyDeleteConfirmTitle.tr(),
+          style: AppTextStyles.headingSmall,
+        ),
+        content: Text(
+          LocaleKeys.profilePrivacyDeleteConfirmBody.tr(),
+          style: AppTextStyles.bodySmall,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(
+              LocaleKeys.profilePrivacyDeleteCancel.tr(),
+              style: AppTextStyles.bodySmall,
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              LocaleKeys.profilePrivacyDeleteConfirmBtn.tr(),
+              style: AppTextStyles.bodySmall.copyWith(color: AppColors.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      final auth = context.read<AuthProvider>();
+      Navigator.of(context).pop();
+      await auth.signOut();
+    }
+  }
+}
+
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.flag,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String flag;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppColors.primary.withValues(alpha: 0.08)
+              : AppColors.accentLight,
+          borderRadius: AppRadius.allS,
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.border,
+            width: isSelected ? 1.5 : 0.8,
+          ),
+        ),
+        child: Row(
+          children: [
+            Text(flag, style: const TextStyle(fontSize: AppSizes.l)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: AppTextStyles.headingSmall.copyWith(
+                  color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                ),
+              ),
+            ),
+            if (isSelected)
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.primary,
+                size: 22,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationsSheet extends StatefulWidget {
+  const _NotificationsSheet();
+
+  @override
+  State<_NotificationsSheet> createState() => _NotificationsSheetState();
+}
+
+class _NotificationsSheetState extends State<_NotificationsSheet> {
+  bool _enabled = false;
+  TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPrefs();
+  }
+
+  Future<void> _loadPrefs() async {
+    final prefs = await NotificationService.loadPrefs();
+    if (mounted) {
+      setState(() {
+        _enabled = prefs.enabled;
+        _time = prefs.time;
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _onToggle(bool value) async {
+    if (value) {
+      final granted = await NotificationService.requestPermission();
+      if (!granted) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(LocaleKeys.profileNotifPermissionDenied.tr()),
+            ),
+          );
+        }
+        return;
+      }
+      await NotificationService.scheduleDailyReminder(
+        hour: _time.hour,
+        minute: _time.minute,
+        title: LocaleKeys.profileNotifReminderTitle.tr(),
+        body: LocaleKeys.profileNotifReminderBody.tr(),
+      );
+      if (mounted) {
+        setState(() => _enabled = true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(LocaleKeys.profileNotifSaved.tr())),
+        );
+      }
+    } else {
+      await NotificationService.cancelDailyReminder();
+      if (mounted) {
+        setState(() => _enabled = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(LocaleKeys.profileNotifCancelled.tr())),
+        );
+      }
+    }
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(context: context, initialTime: _time);
+    if (picked == null || !mounted) return;
+    setState(() => _time = picked);
+    if (_enabled) {
+      await NotificationService.scheduleDailyReminder(
+        hour: picked.hour,
+        minute: picked.minute,
+        title: LocaleKeys.profileNotifReminderTitle.tr(),
+        body: LocaleKeys.profileNotifReminderBody.tr(),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(LocaleKeys.profileNotifSaved.tr())),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadius.topL,
+      ),
+      padding: EdgeInsets.fromLTRB(
+        24,
+        20,
+        24,
+        MediaQuery.of(context).viewInsets.bottom + 32,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: AppRadius.allXXXS,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            LocaleKeys.profileNotifSheetTitle.tr(),
+            style: AppTextStyles.headingSmall,
+          ),
+          const SizedBox(height: 20),
+          if (_loading)
+            const Center(
+              child: CircularProgressIndicator(color: AppColors.accent),
+            )
+          else ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.accentLight,
+                borderRadius: AppRadius.allS,
+                border: Border.all(color: AppColors.border, width: 0.8),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          LocaleKeys.profileNotifDailyToggle.tr(),
+                          style: AppTextStyles.headingSmall,
+                        ),
+                        Text(
+                          LocaleKeys.profileNotifDailyToggleSub.tr(),
+                          style: AppTextStyles.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Switch(
+                    value: _enabled,
+                    onChanged: _onToggle,
+                    activeThumbColor: AppColors.primary,
+                    activeTrackColor: AppColors.primary.withValues(alpha: 0.4),
+                  ),
+                ],
+              ),
+            ),
+            if (_enabled) ...[
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: _pickTime,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.accentLight,
+                    borderRadius: AppRadius.allS,
+                    border: Border.all(color: AppColors.border, width: 0.8),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.access_time_rounded,
+                        size: 20,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          LocaleKeys.profileNotifTimeLabel.tr(),
+                          style: AppTextStyles.bodySmall,
+                        ),
+                      ),
+                      Text(
+                        _time.format(context),
+                        style: AppTextStyles.headingSmall,
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppColors.border,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ],
+      ),
+    );
   }
 }
