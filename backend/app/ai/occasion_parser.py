@@ -19,7 +19,7 @@ OCCASION_KEYWORD = {
         "anniversary", "valentine", "first date", "night out",
         "restaurant", "picnic date",
         "randevu", "sevgili", "romantik", "akşam yemeği",
-        "kahve buluşması", "yıl dönümü", "özel gece",
+        "kahve", "kahve buluşması", "yıl dönümü", "özel gece",
     ],
     "business": [
         "business", "work", "meeting", "office", "presentation",

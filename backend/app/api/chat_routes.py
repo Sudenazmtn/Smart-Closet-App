@@ -75,6 +75,7 @@ def message():
     w_override       = data.get('weather_desc')
     fl_override      = data.get('feels_like')
     exclude_item_ids = data.get('exclude_item_ids') or []
+    print(f"RECEIVED EXCLUDE_ITEM_IDS: {exclude_item_ids}", flush=True)
 
     if not user_message:
         return jsonify({'error': 'Message cannot be empty'}), 400
