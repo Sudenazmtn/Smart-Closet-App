@@ -139,6 +139,45 @@ def get_recommendation(
         "note":         _generate_note(best_outfit, event_type, fl, wt),
     }
 
+
+def get_top_recommendations(
+    wardrobe:         list,
+    event_type:       str,
+    weather:          str,
+    temperature:      int,
+    feels_like:       int | None       = None,
+    weather_type:     str | None       = None,
+    exclude_item_ids: list[int] | None = None,
+    n:                int               = 3,
+    preferences:      dict | None       = None,
+) -> list[dict]:
+    """Return n non-overlapping outfit recommendations ordered by score."""
+    if not wardrobe:
+        return []
+
+    results:     list[dict] = []
+    seen_ids:    set[int]   = set(exclude_item_ids or [])
+
+    for _ in range(n):
+        rec = get_recommendation(
+            wardrobe         = wardrobe,
+            event_type       = event_type,
+            weather          = weather,
+            temperature      = temperature,
+            feels_like       = feels_like,
+            weather_type     = weather_type,
+            exclude_item_ids = list(seen_ids),
+        )
+        if "error" in rec or not rec.get("outfit"):
+            break
+
+        results.append(rec)
+        # Exclude items used in this outfit so the next one is different
+        for item in rec["outfit"]:
+            seen_ids.add(item["id"])
+
+    return results
+
 _TEMP_TIPS = {
     "freeze": "Dondurucu soguk — kalin katmanlar zorunlu.",
     "cold":   "Soguk hava — kalin bir mont tercih edildi.",
