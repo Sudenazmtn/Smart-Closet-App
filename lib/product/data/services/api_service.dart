@@ -9,10 +9,14 @@ class ApiService {
 
   static const String _envUrl = String.fromEnvironment('BASE_URL');
 
+  // Geliştirme ortamı için bilgisayarının yerel IP adresini buraya yaz.
+  // ipconfig (Windows) veya ifconfig (Mac/Linux) ile öğrenebilirsin.
+  static const String _devIp = '10.33.10.72';
+
   static String get baseUrl {
     if (_envUrl.isNotEmpty) return _envUrl;
     if (kIsWeb) return 'http://localhost:5000';
-    return 'http://localhost:5000';
+    return 'http://$_devIp:5000';
   }
 
   late final Dio _dio =
