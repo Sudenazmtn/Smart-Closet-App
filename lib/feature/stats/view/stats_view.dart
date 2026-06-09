@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/stats/view/mixin/stats_mixin.dart';
 import 'package:smart_closet_app/feature/stats/view/widget/stats_most_worn_item.dart';
 import 'package:smart_closet_app/feature/stats/view/widget/stats_never_worn_item.dart';
+import 'package:smart_closet_app/feature/stats/view/widget/stats_outfit_history.dart';
 import 'package:smart_closet_app/feature/stats/view/widget/stats_overview_card.dart';
+import 'package:smart_closet_app/feature/stats/view/widget/stats_wardrobe_suggestion.dart';
 import 'package:smart_closet_app/feature/wardrobe/provider/outfit_provider.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
@@ -118,6 +120,18 @@ class _StatsViewState extends State<StatsView> with StatsMixin {
                           ),
                           const SizedBox(height: AppSizes.m),
                         ],
+
+                        // Feature 1: Wardrobe suggestions
+                        if (stats.wardrobeSuggestions.isNotEmpty) ...[
+                          StatsWardrobeSuggestions(
+                            suggestions: stats.wardrobeSuggestions,
+                          ),
+                          const SizedBox(height: AppSizes.m),
+                        ],
+
+                        // Feature 2: Outfit history
+                        StatsOutfitHistory(outfits: stats.recentOutfits),
+                        const SizedBox(height: AppSizes.m),
                       ],
                     ),
                   );
