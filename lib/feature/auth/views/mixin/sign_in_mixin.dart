@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
+import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/enums/auth_status_enum.dart';
 
 import '../../provider/auth_provider.dart';
@@ -57,9 +59,9 @@ mixin SignInMixin<T extends StatefulWidget> on State<T> {
     messenger.showSnackBar(
       SnackBar(
         content: Text(messageKey.tr()),
-        backgroundColor: const Color(0xFFA32D2D),
+        backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.allSoft),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 class AuthBottomLink extends StatelessWidget {
@@ -23,15 +22,7 @@ class AuthBottomLink extends StatelessWidget {
         const SizedBox(width: 4),
         GestureDetector(
           onTap: onTap,
-          child: Text(
-            actionText,
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
-          ),
+          child: Text(actionText, style: AppTextStyles.authLink),
         ),
       ],
     );

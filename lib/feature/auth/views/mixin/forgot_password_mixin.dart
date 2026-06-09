@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
+import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/enums/auth_status_enum.dart';
 
 import '../../provider/auth_provider.dart';
@@ -28,17 +30,17 @@ mixin ForgotPasswordMixin<T extends StatefulWidget> on State<T> {
     if (auth.status == AuthStatus.success) {
       messenger.showSnackBar(SnackBar(
         content: Text(LocaleKeys.successResetEmailSent.tr()),
-        backgroundColor: const Color(0xFF3B6D11),
+        backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.allSoft),
       ));
       router.go(AppRoutes.login);
     } else if (auth.status == AuthStatus.error) {
       messenger.showSnackBar(SnackBar(
         content: Text((auth.errorMessage ?? '').tr()),
-        backgroundColor: const Color(0xFFA32D2D),
+        backgroundColor: AppColors.error,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.allSoft),
       ));
     }
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 class AuthFormField extends StatelessWidget {
@@ -34,29 +36,26 @@ class AuthFormField extends StatelessWidget {
         hintText: hintText,
         hintStyle: AppTextStyles.inputHint,
         filled: true,
-        fillColor: const Color(0xFFF7F7F7),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 16,
-        ),
+        fillColor: AppColors.authFieldBg,
+        contentPadding: AppPaddings.allM,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppRadius.allS,
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppRadius.allS,
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppRadius.allS,
           borderSide: const BorderSide(color: AppColors.accent, width: 1.2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppRadius.allS,
           borderSide: const BorderSide(color: AppColors.error, width: 0.8),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: AppRadius.allS,
           borderSide: const BorderSide(color: AppColors.error, width: 1.2),
         ),
         suffixIcon: suffixIcon,
