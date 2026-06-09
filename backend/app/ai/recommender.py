@@ -18,7 +18,8 @@ _MAX_CANDIDATES = 400
 def _categorize(items: list) -> dict:
     groups: dict[str, list] = {"top":[],"bottom":[],"shoes":[],"other":[]}
     for item in items:
-        cat = item.category.lower()
+        cat = getattr(item, 'sub_category', None) or item.category
+        cat = cat.lower()
         if any(c in cat for c in TOP_CATEGORIES):         groups["top"].append(item)
         elif any(c in cat for c in BOTTOM_CATEGORIES):    groups["bottom"].append(item)
         elif any(c in cat for c in SHOE_CATEGORIES):      groups["shoes"].append(item)
@@ -38,12 +39,12 @@ def _season_filter(items: list, feels_like: int) -> list:
 def _weather_filter(items: list, weather_type: str) -> list:
     if weather_type in ("rain","storm"):
         filtered = [i for i in items
-                    if not (i.category.lower() == "sandals"
+                    if not ((getattr(i, 'sub_category', None) or i.category).lower() == "sandals"
                             and i.color.lower() in ("white","beige"))]
         return filtered if filtered else items
     if weather_type == "snow":
         filtered = [i for i in items
-                    if i.category.lower() not in ("sandals","shorts")]
+                    if (getattr(i, 'sub_category', None) or i.category).lower() not in ("sandals","shorts")]
         return filtered if filtered else items
     return items
 
@@ -78,8 +79,8 @@ def get_recommendation(
     shoes   = _pre_sort(groups["shoes"]  or [],        event_type, temperature, fl, wt)[:8]
 
     candidates: list[list] = []
-    dresses        = [i for i in tops if "dress" in i.category.lower()]
-    non_dress_tops = [i for i in tops if "dress" not in i.category.lower()]
+    dresses        = [i for i in tops if "dress" in (getattr(i, 'sub_category', None) or i.category).lower()]
+    non_dress_tops = [i for i in tops if "dress" not in (getattr(i, 'sub_category', None) or i.category).lower()]
 
     for dress in dresses:
         if len(candidates) >= _MAX_CANDIDATES: break
@@ -113,7 +114,7 @@ def get_recommendation(
 
     for s, combo in scored_candidates:
         combo_ids = {item.id for item in combo}
-        if excl and combo_ids & excl:
+        if excl and combo_ids.issubset(excl):
             continue
         best_score  = s
         best_outfit = combo

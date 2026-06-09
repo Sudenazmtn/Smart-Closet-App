@@ -10,6 +10,7 @@ class ClothingItem(db.Model):
     category   = db.Column(db.String(50),  nullable=False)
     color      = db.Column(db.String(50),  nullable=False)
     season     = db.Column(db.String(50),  nullable=False)
+    sub_category = db.Column(db.String(50),  nullable=True)
     image_url  = db.Column(db.String(255), nullable=True)
     wear_count  = db.Column(db.Integer, default=0)
     is_favorite = db.Column(db.Boolean, default=False, nullable=False)
@@ -22,6 +23,7 @@ class ClothingItem(db.Model):
             'user_id':     self.user_id,
             'name':        self.name,
             'category':    self.category,
+            'sub_category':self.sub_category,
             'color':       self.color,
             'season':      self.season,
             'image_url':   self.image_url,

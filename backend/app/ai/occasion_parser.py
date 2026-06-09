@@ -1,3 +1,5 @@
+import re
+
 OCCASION_KEYWORD = {
     "casual": [
         "everyday", "chill", "relaxed", "normal",
@@ -94,11 +96,26 @@ CITY_MAP = {
     "tokyo": "Tokyo",
 }
 
+def normalize_turkish(text: str) -> str:
+    replacements = {
+        'ı': 'i', 'I': 'i', 'i': 'i', 'İ': 'i',
+        'ş': 's', 'Ş': 's',
+        'ğ': 'g', 'Ğ': 'g',
+        'ü': 'u', 'Ü': 'u',
+        'ö': 'o', 'Ö': 'o',
+        'ç': 'c', 'Ç': 'c'
+    }
+    for search, replace in replacements.items():
+        text = text.replace(search, replace)
+    return text.lower()
+
 def parse_occasion(message: str) -> str:
-    msg = message.lower()
+    msg = normalize_turkish(message)
     for occasion, keywords in OCCASION_KEYWORD.items():
-        if any(keyword in msg for keyword in keywords):
-            return occasion
+        for keyword in keywords:
+            norm_kw = normalize_turkish(keyword)
+            if re.search(r'\b' + re.escape(norm_kw), msg):
+                return occasion
     return "casual"
 
 def parse_destination_city(message: str) -> str | None:

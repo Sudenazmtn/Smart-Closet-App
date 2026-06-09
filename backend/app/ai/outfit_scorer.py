@@ -82,7 +82,7 @@ _EVENT_CATEGORY: dict[str, dict[str, float]] = {
         "t-shirt":1.0,"jeans":1.0,"sneakers":1.0,"hoodie":0.90,
         "shorts":0.90,"skirt":0.75,"dress":0.70,"cardigan":0.80,
         "polo":0.80,"leggings":0.80,"sandals":0.80,"tank-top":0.85,
-        "sweatpants":0.70,"boots":0.70,"blouse":0.70,"sweater":0.80,
+        "sweatpants":0.90,"boots":0.70,"blouse":0.70,"sweater":0.80,
         "loafers":0.80,"blazer":0.40,"trousers":0.60,"heels":0.30,
         "oxfords":0.50,"tops":0.90,"bottoms":0.90,"outerwear":0.60,
         "shoes":0.80,"bags":0.50,
@@ -98,7 +98,7 @@ _EVENT_CATEGORY: dict[str, dict[str, float]] = {
     },
     "sport": {
         "t-shirt":1.0,"shorts":1.0,"sneakers":1.0,"leggings":1.0,
-        "sweatpants":0.90,"tank-top":1.0,"hoodie":0.70,"polo":0.60,
+        "sweatpants":1.0,"tank-top":1.0,"hoodie":0.70,"polo":0.60,
         "jeans":0.20,"dress":0.10,"blazer":0.0,"sweater":0.15,
         "trousers":0.10,"heels":0.0,"boots":0.15,"shirt":0.20,
         "loafers":0.10,"oxfords":0.0,"sandals":0.20,"skirt":0.10,
@@ -223,10 +223,11 @@ def season_match_score(item_season: str | None, feels_like: int, weather_type: s
 def score_item(item, event_type: str, temperature: int,
                feels_like: int | None = None, weather_type: str = "cloudy") -> float:
     fl = feels_like if feels_like is not None else temperature
+    cat = item.sub_category if getattr(item, 'sub_category', None) else item.category
     return round(
-        temperature_score(item.category, fl)              * 0.25 +
-        event_score(item.category, event_type)            * 0.35 +
-        weather_type_score(item.category, item.color, weather_type) * 0.25 +
+        temperature_score(cat, fl)              * 0.25 +
+        event_score(cat, event_type)            * 0.35 +
+        weather_type_score(cat, item.color, weather_type) * 0.25 +
         season_match_score(item.season, fl, weather_type) * 0.15,
         3
     )

@@ -36,7 +36,7 @@ def get_clothes():
     color    = request.args.get('color')
 
     if category: query = query.filter_by(category=category)
-    if season:   query = query.filter_by(season=season)
+    if season:   query = query.filter(ClothingItem.season.contains(season))
     if color:    query = query.filter_by(color=color)
 
     items = query.order_by(ClothingItem.created_at.desc()).all()
@@ -60,10 +60,11 @@ def add_clothing():
     if err:
         return err, code
 
-    name     = request.form.get('name')
-    category = request.form.get('category')
-    color    = request.form.get('color')
-    season   = request.form.get('season')
+    name         = request.form.get('name')
+    category     = request.form.get('category')
+    sub_category = request.form.get('sub_category')
+    color        = request.form.get('color')
+    season       = request.form.get('season')
 
     if not all([name, category, color, season]):
         return jsonify({'error': 'name, category, color and season are required'}), 400
@@ -82,6 +83,7 @@ def add_clothing():
         user_id=user.id,
         name=name,
         category=category,
+        sub_category=sub_category,
         color=color,
         season=season,
         image_url=image_url,
@@ -102,10 +104,11 @@ def update_clothing(item_id):
         return jsonify({'error': 'Item not found'}), 404
 
     data = request.get_json() or {}
-    if data.get('name'):     item.name     = data['name']
-    if data.get('category'): item.category = data['category']
-    if data.get('color'):    item.color    = data['color']
-    if data.get('season'):   item.season   = data['season']
+    if data.get('name'):         item.name         = data['name']
+    if data.get('category'):     item.category     = data['category']
+    if 'sub_category' in data:   item.sub_category = data['sub_category']
+    if data.get('color'):        item.color        = data['color']
+    if data.get('season'):       item.season       = data['season']
 
     db.session.commit()
     return jsonify({'message': 'Updated successfully', 'item': item.to_dict()}), 200

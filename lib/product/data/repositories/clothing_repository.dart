@@ -39,6 +39,7 @@ class ClothingRepository {
   Future<ClothingModel> addClothing({
     required String name,
     required String category,
+    String? subCategory,
     required String color,
     required String season,
     String? imagePath,
@@ -46,6 +47,7 @@ class ClothingRepository {
     final formData = FormData.fromMap({
       'name': name,
       'category': category,
+      if (subCategory != null) 'sub_category': subCategory,
       'color': color,
       'season': season,
       if (imagePath != null)
@@ -69,12 +71,14 @@ class ClothingRepository {
     int id, {
     String? name,
     String? category,
+    String? subCategory,
     String? color,
     String? season,
   }) async {
     final body = <String, String>{};
     if (name != null) body['name'] = name;
     if (category != null) body['category'] = category;
+    if (subCategory != null) body['sub_category'] = subCategory;
     if (color != null) body['color'] = color;
     if (season != null) body['season'] = season;
 

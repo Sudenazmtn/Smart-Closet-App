@@ -6,6 +6,7 @@ class ClothingModel {
     required this.category,
     required this.color,
     required this.season,
+    this.subCategory,
     this.imageUrl,
     required this.wearCount,
     this.isFavorite = false,
@@ -19,8 +20,11 @@ class ClothingModel {
   final String category;
   final String color;
   final String season;
+  final String? subCategory;
   final String? imageUrl;
   final int wearCount;
+
+  List<String> get seasonsList => season.split(',').where((s) => s.isNotEmpty).toList();
   final bool isFavorite;
   final DateTime? lastWorn;
   final DateTime createdAt;
@@ -33,6 +37,7 @@ class ClothingModel {
       category:   json['category']   as String,
       color:      json['color']      as String,
       season:     json['season']     as String,
+      subCategory:json['sub_category'] as String?,
       imageUrl:   json['image_url']  as String?,
       wearCount:  json['wear_count'] as int?  ?? 0,
       isFavorite: json['is_favorite'] as bool? ?? false,
@@ -47,6 +52,7 @@ class ClothingModel {
     return {
       'name':     name,
       'category': category,
+      'sub_category': subCategory,
       'color':    color,
       'season':   season,
     };
@@ -57,6 +63,7 @@ class ClothingModel {
     String? category,
     String? color,
     String? season,
+    String? subCategory,
     String? imageUrl,
     int? wearCount,
     bool? isFavorite,
@@ -69,6 +76,7 @@ class ClothingModel {
       category:   category   ?? this.category,
       color:      color      ?? this.color,
       season:     season     ?? this.season,
+      subCategory:subCategory?? this.subCategory,
       imageUrl:   imageUrl   ?? this.imageUrl,
       wearCount:  wearCount  ?? this.wearCount,
       isFavorite: isFavorite ?? this.isFavorite,

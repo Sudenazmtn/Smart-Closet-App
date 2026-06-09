@@ -58,8 +58,9 @@ class ClothingProvider extends ChangeNotifier {
   Future<void> addClothing({
     required String name,
     required String category,
+    String? subCategory,
     required String color,
-    required String season,
+    required List<String> seasons,
     String? imagePath,
   }) async {
     _setLoading();
@@ -67,8 +68,9 @@ class ClothingProvider extends ChangeNotifier {
       final newItem = await _repository.addClothing(
         name: name,
         category: category,
+        subCategory: subCategory,
         color: color,
-        season: season,
+        season: seasons.join(','),
         imagePath: imagePath,
       );
       _items.insert(0, newItem);

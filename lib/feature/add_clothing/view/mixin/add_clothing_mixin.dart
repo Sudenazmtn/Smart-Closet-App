@@ -10,12 +10,14 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
   final _picker = ImagePicker();
 
   String _selectedCategory = '';
-  String _selectedSeason = '';
+  String _selectedSubCategory = '';
+  List<String> _selectedSeasons = [];
   String _selectedColor = '';
   String? _imagePath;
 
   String get selectedCategory => _selectedCategory;
-  String get selectedSeason => _selectedSeason;
+  String get selectedSubCategory => _selectedSubCategory;
+  List<String> get selectedSeasons => _selectedSeasons;
   String get selectedColor => _selectedColor;
   String? get imagePath => _imagePath;
 
@@ -25,11 +27,25 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
     super.dispose();
   }
 
-  void onCategorySelected(String value) =>
-      setState(() => _selectedCategory = value);
+  void onCategorySelected(String value) {
+    setState(() {
+      _selectedCategory = value;
+      _selectedSubCategory = '';
+    });
+  }
 
-  void onSeasonSelected(String value) =>
-      setState(() => _selectedSeason = value);
+  void onSubCategorySelected(String value) =>
+      setState(() => _selectedSubCategory = value);
+
+  void onSeasonSelected(String value) {
+    setState(() {
+      if (_selectedSeasons.contains(value)) {
+        _selectedSeasons.remove(value);
+      } else {
+        _selectedSeasons.add(value);
+      }
+    });
+  }
 
   void onColorSelected(String value) =>
       setState(() => _selectedColor = value);
@@ -44,7 +60,7 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
 
   bool get _isFormValid =>
       _selectedCategory.isNotEmpty &&
-      _selectedSeason.isNotEmpty &&
+      _selectedSeasons.isNotEmpty &&
       _selectedColor.isNotEmpty;
 
   Future<void> onSave(BuildContext context) async {
@@ -53,8 +69,9 @@ mixin AddClothingMixin<T extends StatefulWidget> on State<T> {
     await context.read<ClothingProvider>().addClothing(
           name: nameController.text.trim(),
           category: _selectedCategory,
+          subCategory: _selectedSubCategory.isEmpty ? null : _selectedSubCategory,
           color: _selectedColor,
-          season: _selectedSeason,
+          seasons: _selectedSeasons,
           imagePath: _imagePath,
         );
     if (context.mounted) context.pop();
