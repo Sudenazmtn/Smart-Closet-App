@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 import 'package:smart_closet_app/product/data/services/api_service.dart';
+import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
+import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 class HomeCategoryCard extends StatelessWidget {
   const HomeCategoryCard({
@@ -25,37 +28,37 @@ class HomeCategoryCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            width: 72,
-            height: 72,
+            width: AppSizes.categoryCard,
+            height: AppSizes.categoryCard,
             decoration: BoxDecoration(
               color: imageUrl != null ? AppColors.accentLight : color,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.allM,
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.allM,
               child: imageUrl != null
                   ? Image.network(
                       '${ApiService.baseUrl}$imageUrl',
-                      width: 72,
-                      height: 72,
+                      width: AppSizes.categoryCard,
+                      height: AppSizes.categoryCard,
                       fit: BoxFit.contain,
-                      errorBuilder: (_, _, _) =>
-                          Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
+                      errorBuilder: (_, _, _) => Center(
+                        child: Text(
+                          emoji,
+                          style: const TextStyle(fontSize: AppSizes.emojiM),
+                        ),
+                      ),
                     )
-                  : Center(child: Text(emoji, style: const TextStyle(fontSize: 30))),
+                  : Center(
+                      child: Text(
+                        emoji,
+                        style: const TextStyle(fontSize: AppSizes.emojiM),
+                      ),
+                    ),
             ),
           ),
-          
           const SizedBox(height: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: AppColors.textMuted,
-            ),
-          ),
+          Text(label, style: AppTextStyles.bodySmall),
         ],
       ),
     );
