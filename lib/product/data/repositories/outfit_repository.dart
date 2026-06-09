@@ -9,9 +9,13 @@ class OutfitRepository {
 
   final Dio _dio;
 
-  Future<List<OutfitModel>> getOutfits({bool? isFavorite}) async {
+  Future<List<OutfitModel>> getOutfits({
+    bool? isFavorite,
+    bool includeItems = false,
+  }) async {
     final params = <String, String>{};
     if (isFavorite == true) params['is_favorite'] = 'true';
+    if (includeItems)       params['include_items'] = 'true';
 
     final response = await _dio.get(
       '/outfit/',

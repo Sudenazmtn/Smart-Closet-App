@@ -86,12 +86,14 @@ class OutfitProvider extends ChangeNotifier {
       _messages = [
         ..._messages,
         ChatMessageModel(
-          sender: MessageSender.ai,
-          text: aiResponse.message,
-          suggestedItems: aiResponse.items.isNotEmpty ? aiResponse.items : null,
-          styleTip: aiResponse.styleTip,
+          sender:          MessageSender.ai,
+          text:            aiResponse.message,
+          suggestedItems:  aiResponse.items.isNotEmpty ? aiResponse.items : null,
+          allOutfits:      aiResponse.allOutfits.isNotEmpty ? aiResponse.allOutfits : null,
+          eventType:       aiResponse.eventType,
+          styleTip:        aiResponse.styleTip,
           destinationCity: aiResponse.destinationCity,
-          score: aiResponse.score,
+          score:           aiResponse.score,
         ),
       ];
       _setSuccess();
@@ -119,21 +121,46 @@ class OutfitProvider extends ChangeNotifier {
     }
   }
 
+  /// Loads outfits silently with full item details — safe to call from home.
+  Future<void> loadOutfitsSilently() async {
+    try {
+      _outfits = await _repository.getOutfits(includeItems: true);
+      notifyListeners();
+    } catch (_) {}
+  }
+
+  /// Saves an outfit. Pass [itemsData] so the card appears immediately
+  /// with full clothing details without a re-fetch.
   Future<void> saveOutfit({
     required List<int> itemIds,
+    List<ClothingModel>? itemsData,
     String? name,
     String? eventType,
     String? aiNote,
   }) async {
     _setLoading();
     try {
-      final newOutfit = await _repository.saveOutfit(
-        itemIds: itemIds,
-        name: name,
+      final saved = await _repository.saveOutfit(
+        itemIds:   itemIds,
+        name:      name,
         eventType: eventType,
-        aiNote: aiNote,
+        aiNote:    aiNote,
       );
-      _outfits.insert(0, newOutfit);
+      // Populate itemsData immediately so the card shows clothing details
+      final withItems = itemsData != null
+          ? OutfitModel(
+              id:         saved.id,
+              userId:     saved.userId,
+              name:       saved.name,
+              eventType:  saved.eventType,
+              aiNote:     saved.aiNote,
+              isFavorite: saved.isFavorite,
+              items:      saved.items,
+              createdAt:  saved.createdAt,
+              itemsData:  itemsData,
+            )
+          : saved;
+      _outfits.insert(0, withItems);
       _setSuccess();
     } catch (e) {
       _setError(e.toString());
