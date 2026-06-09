@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:smart_closet_app/product/data/model/clothing_model.dart';
-
-import '../services/api_service.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 
 class ClothingRepository {
   ClothingRepository() : _dio = ApiService.instance.dio;
@@ -47,7 +46,7 @@ class ClothingRepository {
     final formData = FormData.fromMap({
       'name': name,
       'category': category,
-      if (subCategory != null) 'sub_category': subCategory,
+      'sub_category': ?subCategory,
       'color': color,
       'season': season,
       if (imagePath != null)
@@ -57,10 +56,7 @@ class ClothingRepository {
         ),
     });
 
-    final response = await _dio.post(
-      '/clothes/',
-      data: formData,
-    );
+    final response = await _dio.post('/clothes/', data: formData);
 
     return ClothingModel.fromJson(
       response.data['item'] as Map<String, dynamic>,
