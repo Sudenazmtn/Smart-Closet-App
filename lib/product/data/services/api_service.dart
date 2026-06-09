@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
   ApiService._();
@@ -9,9 +10,9 @@ class ApiService {
 
   static const String _envUrl = String.fromEnvironment('BASE_URL');
 
-  // Geliştirme ortamı için bilgisayarının yerel IP adresini buraya yaz.
-  // ipconfig (Windows) veya ifconfig (Mac/Linux) ile öğrenebilirsin.
-  static const String _devIp = '10.33.10.72';
+  /// Dev IP, .env dosyasındaki DEV_IP değerinden okunur.
+  /// .env dosyasına şunu ekle: DEV_IP=10.33.10.72
+  static String get _devIp => dotenv.get('DEV_IP', fallback: 'localhost');
 
   static String get baseUrl {
     if (_envUrl.isNotEmpty) return _envUrl;

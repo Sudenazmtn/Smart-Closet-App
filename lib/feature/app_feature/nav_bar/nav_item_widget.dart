@@ -40,7 +40,7 @@ class NavItemWidget extends StatelessWidget {
           const SizedBox(height: AppSizes.xxs),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: isActive ? AppSizes.screenH : 0,
+            width: isActive ? AppSizes.navIndicatorW : 0,
             height: AppSizes.xxxs,
             decoration: BoxDecoration(
               color: AppColors.accent,

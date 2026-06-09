@@ -29,6 +29,8 @@ final class AppSizes {
   static const screenH    = 20.0;  // standard screen horizontal padding
   static const buttonSize = 44.0;  // standard icon button tap target
   static const categoryCard = 72.0; // category card size
+  static const spinnerS      = 20.0;  // small loading indicator size
+  static const navIndicatorW = 20.0;  // nav bar active indicator width
 
   // Emoji display sizes
   static const emojiXS   = 22.0;

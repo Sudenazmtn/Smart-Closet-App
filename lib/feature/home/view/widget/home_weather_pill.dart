@@ -56,8 +56,8 @@ class HomeWeatherPillLoading extends StatelessWidget {
       ),
       child: Center(
         child: SizedBox(
-          width: AppSizes.screenH,
-          height: AppSizes.screenH,
+          width: AppSizes.spinnerS,
+          height: AppSizes.spinnerS,
           child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accent),
         ),
       ),

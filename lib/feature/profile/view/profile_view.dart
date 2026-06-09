@@ -686,8 +686,8 @@ class _PrivacySheet extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      Navigator.of(context).pop();
       final auth = context.read<AuthProvider>();
+      Navigator.of(context).pop();
       await auth.signOut();
     }
   }
@@ -815,7 +815,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
 
   Future<void> _pickTime() async {
     final picked = await showTimePicker(context: context, initialTime: _time);
-    if (picked == null) return;
+    if (picked == null || !mounted) return;
     setState(() => _time = picked);
     if (_enabled) {
       await NotificationService.scheduleDailyReminder(

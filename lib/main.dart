@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/auth/provider/auth_provider.dart';
 import 'package:smart_closet_app/feature/home/provider/weather_provider.dart';
@@ -13,6 +14,11 @@ import 'package:smart_closet_app/product/utils/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(
+    fileName: '.env',
+    mergeWith: {'DEV_IP': 'localhost'},
+    isOptional: true,   // .env yoksa crash etme, mergeWith değerleri kullanılır
+  );
   await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await NotificationService.initialize();
