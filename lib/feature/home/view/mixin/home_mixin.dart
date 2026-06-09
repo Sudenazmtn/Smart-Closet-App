@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/home/provider/weather_provider.dart';
+import 'package:smart_closet_app/feature/wardrobe/provider/outfit_provider.dart';
 
 import '../../../wardrobe/provider/clothing_provider.dart';
 
@@ -19,6 +20,7 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
     await Future.wait([
       context.read<ClothingProvider>().loadClothes(),
       _fetchWeather(),
+      context.read<OutfitProvider>().loadOutfitsSilently(),
     ]);
   }
 
@@ -42,7 +44,9 @@ mixin HomeMixin<T extends StatefulWidget> on State<T> {
       }
 
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(accuracy: LocationAccuracy.low),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.low,
+        ),
       );
 
       if (!mounted) return;

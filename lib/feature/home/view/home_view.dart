@@ -8,10 +8,12 @@ import 'package:smart_closet_app/feature/auth/provider/auth_provider.dart';
 import 'package:smart_closet_app/feature/home/provider/weather_provider.dart';
 import 'package:smart_closet_app/feature/home/view/mixin/home_mixin.dart';
 import 'package:smart_closet_app/feature/home/view/widget/header.dart';
+import 'package:smart_closet_app/feature/home/view/widget/home_recent_outfits.dart';
 import 'package:smart_closet_app/feature/home/view/widget/home_today_outfit_card.dart';
 import 'package:smart_closet_app/feature/home/view/widget/home_wardrobe_category.dart';
 import 'package:smart_closet_app/feature/home/view/widget/home_weather_pill.dart';
 import 'package:smart_closet_app/feature/wardrobe/provider/clothing_provider.dart';
+import 'package:smart_closet_app/feature/wardrobe/provider/outfit_provider.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/init/routes/app_router.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
@@ -82,7 +84,15 @@ class _HomeViewState extends State<HomeView> with HomeMixin {
                       builder: (context, clothing, _) =>
                           HomeTodaysOutfitCard(isLoading: clothing.isLoading),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSizes.l),
+                    Consumer<OutfitProvider>(
+                      builder: (context, outfit, _) {
+                        if (outfit.outfits.isEmpty)
+                          return const SizedBox.shrink();
+                        return HomeRecentOutfits(outfits: outfit.outfits);
+                      },
+                    ),
+                    const SizedBox(height: AppSizes.l),
                   ],
                 ),
               ),
