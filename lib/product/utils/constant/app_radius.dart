@@ -34,6 +34,26 @@ final class AppRadius {
     Radius.circular(AppSizes.xxl),
   );
 
+  static const BorderRadius allXXXS = BorderRadius.all(
+    Radius.circular(AppSizes.xxxs), // 2 — drag handles
+  );
+
+  static const BorderRadius allSoft = BorderRadius.all(
+    Radius.circular(10), // dialogs, snackbars
+  );
+
+  static const BorderRadius allCard = BorderRadius.all(
+    Radius.circular(14), // cards, pills, weather
+  );
+
+  static const BorderRadius pill = BorderRadius.all(
+    Radius.circular(AppSizes.screenH), // 20 — pill buttons/badges
+  );
+
+  static const BorderRadius topL = BorderRadius.vertical(
+    top: Radius.circular(AppSizes.l), // 24 — bottom sheets
+  );
+
   static const BorderRadius bottomXL = BorderRadius.only(
     bottomLeft: Radius.circular(AppSizes.xl),
     bottomRight: Radius.circular(AppSizes.xl),

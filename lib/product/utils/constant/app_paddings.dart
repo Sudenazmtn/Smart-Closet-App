@@ -85,4 +85,12 @@ final class AppPaddings {
   static const EdgeInsets verticalXXL = EdgeInsets.symmetric(
     vertical: AppSizes.xxl,
   );
+
+  static const EdgeInsets screenH = EdgeInsets.symmetric(
+    horizontal: AppSizes.screenH,
+  );
+
+  static const EdgeInsets screenHTop = EdgeInsets.fromLTRB(
+    AppSizes.screenH, AppSizes.screenH, AppSizes.screenH, 0,
+  );
 }
