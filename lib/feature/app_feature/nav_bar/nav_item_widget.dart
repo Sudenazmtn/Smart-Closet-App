@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_item_model.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
+import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
+import 'package:smart_closet_app/product/utils/constant/app_size.dart';
+import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 
 class NavItemWidget extends StatelessWidget {
   const NavItemWidget({
@@ -24,27 +27,24 @@ class NavItemWidget extends StatelessWidget {
         children: [
           Icon(
             isActive ? item.activeIcon : item.icon,
-            size: 24,
+            size: AppSizes.l,
             color: isActive ? AppColors.textPrimary : AppColors.textMuted,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSizes.xxs),
           Text(
             item.label,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 11,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-              color: isActive ? AppColors.textPrimary : AppColors.textMuted,
-            ),
+            style: isActive
+                ? AppTextStyles.navLabelActive
+                : AppTextStyles.navLabelInactive,
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSizes.xxs),
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: isActive ? 20 : 0,
-            height: 2,
+            width: isActive ? AppSizes.screenH : 0,
+            height: AppSizes.xxxs,
             decoration: BoxDecoration(
               color: AppColors.accent,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: AppRadius.allXXXS,
             ),
           ),
         ],
