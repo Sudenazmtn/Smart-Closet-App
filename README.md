@@ -1,67 +1,66 @@
 # 👗 Smart Closet App
 
-AI destekli kişisel gardırop asistanı. Hava durumuna, etkinliğe ve renk uyumuna göre kombin önerileri sunar.
+AI-powered personal wardrobe assistant. Suggests outfits based on weather, occasion, and color harmony.
 
 ---
 
-## 🚀 Teknoloji Stack
+## 🚀 Tech Stack
 
-| Katman | Teknoloji |
+| Layer | Technology |
 |--------|-----------|
-| Mobil | Flutter (Dart) |
+| Mobile | Flutter (Dart) |
 | Backend | Python / Flask |
-| Veritabanı | SQLite (SQLAlchemy) |
+| Database | SQLite (SQLAlchemy) |
 | AI Model | Random Forest (scikit-learn) |
-| AI Chat | Claude API (Anthropic) |
 | Auth | Firebase Authentication |
-| Hava Durumu | OpenWeatherMap API |
+| Weather | OpenWeatherMap API |
 
 ---
 
-## 📁 Proje Yapısı
+## 📁 Project Structure
 
 ```
 smart-closet-app/
-├── lib/                        # Flutter uygulaması
+├── lib/                        # Flutter application
 │   ├── feature/
-│   │   ├── auth/               # Giriş, kayıt, Google Sign-In
-│   │   ├── home/               # Ana sayfa, hava durumu widget
-│   │   ├── wardrobe/           # Gardırop, kıyafet kartları
-│   │   ├── outfit/             # AI kombin chat
-│   │   ├── add_clothing/       # Kıyafet ekleme formu
-│   │   ├── stats/              # İstatistikler
-│   │   └── profile/            # Profil, konum, düzenleme
+│   │   ├── auth/               # Sign-in, sign-up, Google Sign-In
+│   │   ├── home/               # Home screen, weather widget
+│   │   ├── wardrobe/           # Wardrobe, clothing cards
+│   │   ├── outfit/             # AI outfit chat
+│   │   ├── add_clothing/       # Add clothing form
+│   │   ├── stats/              # Statistics
+│   │   └── profile/            # Profile, location, editing
 │   └── product/
-│       ├── data/               # Modeller, repository'ler, servisler
-│       └── utils/              # Renkler, stiller, sabitler
+│       ├── data/               # Models, repositories, services
+│       └── utils/              # Colors, styles, constants
 ├── backend/                    # Flask API
 │   ├── app/
-│   │   ├── ai/                 # ML model, skor motoru, öneri sistemi
-│   │   │   ├── dataset/        # Eğitim verisi üretimi
-│   │   │   ├── model/          # Eğitilmiş model (.pkl)
+│   │   ├── ai/                 # ML model, scoring engine, recommender
+│   │   │   ├── dataset/        # Training data generation
+│   │   │   ├── model/          # Trained model (.pkl)
 │   │   │   ├── outfit_scorer.py
 │   │   │   ├── ml_scorer.py
 │   │   │   ├── recommender.py
 │   │   │   ├── claude_client.py
 │   │   │   └── train.py
-│   │   ├── api/                # REST endpoint'leri
-│   │   └── models/             # SQLAlchemy modelleri
-│   ├── uploads/                # Yüklenen kıyafet görselleri
+│   │   ├── api/                # REST endpoints
+│   │   └── models/             # SQLAlchemy models
+│   ├── uploads/                # Uploaded clothing images
 │   └── instance/
-│       └── smartcloset.db      # SQLite veritabanı
+│       └── smartcloset.db      # SQLite database
 └── assets/
-    └── locales/                # TR / EN çeviriler
+    └── locales/                # TR / EN translations
 ```
 
 ---
 
-## ⚙️ Kurulum
+## ⚙️ Setup
 
-### Gereksinimler
+### Requirements
 
 - Flutter SDK 3.x+
 - Python 3.10+
-- Firebase projesi
+- A Firebase project
 
 ### 1. Backend
 
@@ -74,14 +73,13 @@ venv\Scripts\activate        # Windows
 pip install -r requirements.txt
 ```
 
-
-Modeli eğit:
+Train the model:
 
 ```bash
 python -m app.ai.train
 ```
 
-Sunucuyu başlat:
+Start the server:
 
 ```bash
 python run.py
@@ -96,74 +94,94 @@ flutter run
 
 ---
 
-## 🤖 AI Sistemi
+## 🤖 AI System
 
-### Hibrit Skorlama
+### Hybrid Scoring
 
-Her kombin iki katmanlı skorlama sistemiyle değerlendirilir:
+Every outfit is evaluated with a two-layer scoring system:
 
 ```
 final_score = rule_score × 0.60 + ml_score × 0.40
 ```
 
-**Kural tabanlı** (her zaman çalışır):
-- Sıcaklık uyumu (25%)
-- Etkinlik uyumu (35%)
-- Hava tipi uyumu (25%)
-- Mevsim uyumu (15%)
-- Renk uyumu — 14×14 simetrik uyum matrisi
+**Rule-based** (always runs):
+- Temperature match (25%)
+- Occasion match (35%)
+- Weather type match (25%)
+- Season match (15%)
+- Color harmony — 14×14 symmetric compatibility matrix
 
-**ML modeli** (Random Forest, 400 ağaç):
-- 6.000 satır sentetik eğitim verisi
-- Özellikler: top, bottom, shoes, renkler, occasion, weather_type, temperature, feels_like, season_match
+**ML model** (Random Forest, 400 trees):
+- 6,000 rows of synthetic training data
+- Features: top, bottom, shoes, colors, occasion, weather_type, temperature, feels_like, season_match
 - R²: ~0.59 | MAE: ~0.044
 
-### Desteklenen Kategoriler
+### Supported Categories
 
-| Üstler | Altlar | Ayakkabılar |
+| Tops | Bottoms | Shoes |
 |--------|--------|-------------|
 | t-shirt, shirt, blouse, sweater, hoodie, blazer, dress, cardigan, tank-top, polo | jeans, trousers, shorts, skirt, leggings, sweatpants | sneakers, heels, boots, loafers, sandals, oxfords |
 
 ---
 
-## 🌐 API Endpoint'leri
+## 🌐 API Endpoints
 
 ### Chat
-| Method | Endpoint | Açıklama |
+| Method | Endpoint | Description |
 |--------|----------|----------|
-| GET | `/chat/greet` | Karşılama mesajı |
-| POST | `/chat/message` | Kombin önerisi al |
+| GET | `/chat/greet` | Greeting message |
+| POST | `/chat/message` | Get an outfit suggestion |
 
-### Kıyafetler
-| Method | Endpoint | Açıklama |
+### Clothes
+| Method | Endpoint | Description |
 |--------|----------|----------|
-| GET | `/clothes/` | Gardırobu listele |
-| POST | `/clothes/` | Kıyafet ekle |
-| PUT | `/clothes/<id>` | Kıyafet güncelle |
-| DELETE | `/clothes/<id>` | Kıyafet sil |
-| POST | `/clothes/<id>/wear` | Giyildi olarak işaretle |
-| PATCH | `/clothes/<id>/favorite` | Favori toggle |
+| GET | `/clothes/` | List wardrobe |
+| POST | `/clothes/` | Add a clothing item |
+| PUT | `/clothes/<id>` | Update a clothing item |
+| DELETE | `/clothes/<id>` | Delete a clothing item |
+| POST | `/clothes/<id>/wear` | Mark as worn |
+| PATCH | `/clothes/<id>/favorite` | Toggle favorite |
 
-### Kombin
-| Method | Endpoint | Açıklama |
+### Outfit
+| Method | Endpoint | Description |
 |--------|----------|----------|
-| GET | `/outfit/` | Kayıtlı kombinler |
-| POST | `/outfit/save` | Kombin kaydet |
-| PATCH | `/outfit/<id>/favorite` | Favori toggle |
-| GET | `/outfit/stats` | İstatistikler |
+| GET | `/outfit/` | Saved outfits |
+| POST | `/outfit/save` | Save an outfit |
+| PATCH | `/outfit/<id>/favorite` | Toggle favorite |
+| GET | `/outfit/stats` | Statistics |
 
-### Hava Durumu
-| Method | Endpoint | Açıklama |
+### Weather
+| Method | Endpoint | Description |
 |--------|----------|----------|
-| GET | `/weather/?lat=&lon=` | Koordinata göre hava durumu |
+| GET | `/weather/?lat=&lon=` | Weather by coordinates |
+
+## 📱 Features
+
+- 🔐 Sign in with email and Google
+- 👚 Photo-based wardrobe management
+- ❤️ Mark favorite clothing items
+- 🌤️ Real-time weather integration
+- 🤖 AI-powered outfit suggestions (chat interface)
+- 📍 GPS-based location and city name
+
+<br></br>
+
+
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/5c6efc74-dfde-4950-a9b9-aeeb9a36e747" />
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/1f15ef28-d29c-416e-bb4f-4787f3b1066f" />
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/d8e7163e-a3b7-4a6a-b969-ed2d82080541" />
+<br></br>
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/5d808e6a-b2fd-497a-bcd4-e6505408b74d" />
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/d838e7a4-9741-4413-aee6-f0c2d9a45344" />
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/4a960baf-16f0-4fcb-8b59-54347ba2883f" />
+<br></br>
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/0d317177-dd53-4f7c-8a9c-49b7214bc404" />
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/8793adad-f0dc-4a7a-b998-b420ff525bbe" />
+<img width="315" height="650" alt="image" src="https://github.com/user-attachments/assets/9107785d-0d09-4235-994a-91c622f07eec" />
 
 
 
-## 📱 Özellikler
 
-- 🔐 E-posta ve Google ile giriş
-- 👚 Fotoğraflı gardırop yönetimi
-- ❤️ Favori kıyafet işaretleme
-- 🌤️ Gerçek zamanlı hava durumu entegrasyonu
-- 🤖 AI destekli kombin önerisi (chat arayüzü)
-- 📍 GPS tabanlı konum ve şehir adı
+
+
+
