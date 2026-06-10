@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_closet_app/feature/app_feature/nav_bar/nav_bar.dart';
 import 'package:smart_closet_app/feature/auth/provider/auth_provider.dart';
@@ -16,6 +17,7 @@ import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
 import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
+import 'package:smart_closet_app/product/utils/enums/auth_status_enum.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -106,18 +108,14 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       child: Row(
                         children: [
-                          Container(
-                            width: AppSizes.maxiS + AppSizes.xxs,
-                            height: AppSizes.maxiS + AppSizes.xxs,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primary,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Text(
-                                initial,
-                                style: AppTextStyles.headingOnDark,
-                              ),
+                          GestureDetector(
+                            onTap: auth.isLoading
+                                ? null
+                                : () => _showPhotoSheet(context),
+                            child: _ProfileAvatar(
+                              photoUrl: user?.photoURL,
+                              initial: initial,
+                              isLoading: auth.isLoading,
                             ),
                           ),
                           const SizedBox(width: AppSizes.s + AppSizes.xxs),
@@ -215,6 +213,39 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  Future<void> _showPhotoSheet(BuildContext context) async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const _PhotoSourceSheet(),
+    );
+    if (source == null || !mounted) return;
+    await _pickAndUploadPhoto(source);
+  }
+
+  Future<void> _pickAndUploadPhoto(ImageSource source) async {
+    final file = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 80,
+      maxWidth: 600,
+    );
+    if (file == null || !mounted) return;
+
+    final auth = context.read<AuthProvider>();
+    await auth.updateProfilePhoto(file.path);
+
+    if (!mounted) return;
+    if (auth.status == AuthStatus.success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(LocaleKeys.profilePhotoUpdated.tr())),
+      );
+    } else if (auth.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(auth.errorMessage!.tr())),
+      );
+    }
+  }
+
   Future<void> _showNotificationsSheet(BuildContext context) async {
     await showModalBottomSheet<void>(
       context: context,
@@ -261,6 +292,169 @@ class _ProfileViewState extends State<ProfileView> {
     if (context.mounted) {
       context.go(AppRoutes.onboarding);
     }
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar({
+    required this.photoUrl,
+    required this.initial,
+    required this.isLoading,
+  });
+
+  final String? photoUrl;
+  final String initial;
+  final bool isLoading;
+
+  static const double _size = AppSizes.maxiS + AppSizes.xxs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        ClipOval(
+          child: Container(
+            width: _size,
+            height: _size,
+            color: AppColors.primary,
+            child: photoUrl != null
+                ? Image.network(
+                    photoUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => _InitialBox(initial: initial),
+                  )
+                : _InitialBox(initial: initial),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: Container(
+            padding: const EdgeInsets.all(AppSizes.xxxs),
+            decoration: BoxDecoration(
+              color: AppColors.accent,
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.accentLight, width: 1.5),
+            ),
+            child: isLoading
+                ? const SizedBox(
+                    width: AppSizes.xs,
+                    height: AppSizes.xs,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.5,
+                      color: AppColors.textOnAccent,
+                    ),
+                  )
+                : const Icon(
+                    Icons.photo_camera_rounded,
+                    size: AppSizes.xs,
+                    color: AppColors.textOnAccent,
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _InitialBox extends StatelessWidget {
+  const _InitialBox({required this.initial});
+  final String initial;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(initial, style: AppTextStyles.headingOnDark),
+    );
+  }
+}
+
+class _PhotoSourceSheet extends StatelessWidget {
+  const _PhotoSourceSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: AppRadius.topL,
+      ),
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 40),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppColors.border,
+                borderRadius: AppRadius.allXXXS,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Text(
+            LocaleKeys.profilePhotoSheetTitle.tr(),
+            style: AppTextStyles.headingSmall,
+          ),
+          const SizedBox(height: 20),
+          _PhotoSourceOption(
+            icon: Icons.photo_camera_outlined,
+            label: LocaleKeys.profilePhotoTakePhoto.tr(),
+            onTap: () => Navigator.of(context).pop(ImageSource.camera),
+          ),
+          const SizedBox(height: 12),
+          _PhotoSourceOption(
+            icon: Icons.photo_library_outlined,
+            label: LocaleKeys.profilePhotoFromGallery.tr(),
+            onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PhotoSourceOption extends StatelessWidget {
+  const _PhotoSourceOption({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppColors.accentLight,
+          borderRadius: AppRadius.allS,
+          border: Border.all(color: AppColors.border, width: 0.8),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: AppColors.textSecondary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(label, style: AppTextStyles.headingSmall),
+            ),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: AppColors.border,
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

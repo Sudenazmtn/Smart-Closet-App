@@ -1,8 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:smart_closet_app/product/data/model/user_model.dart';
 import 'package:smart_closet_app/product/data/repositories/auth_repository.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/utils/enums/auth_status_enum.dart';
 import 'package:smart_closet_app/product/utils/extension/firebase_error_ext.dart';
@@ -132,6 +134,25 @@ class AuthProvider extends ChangeNotifier {
       await _firebaseUser?.reload();
       _firebaseUser = _auth.currentUser;
       _setSuccess();
+    } catch (e) {
+      _setError(LocaleKeys.errorGeneral);
+    }
+  }
+
+  /// Uploads the photo to the app backend and stores its URL on the
+  /// Firebase Auth user (photoURL), so it persists across devices.
+  Future<void> updateProfilePhoto(String filePath) async {
+    final user = _firebaseUser;
+    if (user == null) return;
+    _setLoading();
+    try {
+      final imageUrl = await _repository.uploadProfilePhoto(filePath);
+      await user.updatePhotoURL('${ApiService.baseUrl}$imageUrl');
+      await user.reload();
+      _firebaseUser = _auth.currentUser;
+      _setSuccess();
+    } on DioException catch (e) {
+      _setError(e.error?.toString() ?? LocaleKeys.errorGeneral);
     } catch (e) {
       _setError(LocaleKeys.errorGeneral);
     }
