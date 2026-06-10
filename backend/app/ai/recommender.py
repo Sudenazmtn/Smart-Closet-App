@@ -5,6 +5,7 @@ from itertools import product as iterproduct
 from .outfit_scorer import (
     score_outfit, score_item, get_weather_type,
     season_match_score, weather_type_score,
+    _normalize_name, _DENIM_WORDS, _DRESSY_WORDS,
 )
 
 TOP_CATEGORIES    = {"t-shirt","shirt","blouse","sweater","hoodie","blazer",
@@ -48,6 +49,26 @@ def _weather_filter(items: list, weather_type: str) -> list:
         return filtered if filtered else items
     return items
 
+# Subcategories that clearly don't belong in a sport outfit. Items matching
+# these (or with denim/dressy material words in their name) are dropped from
+# the candidate pool when sporty alternatives exist in the same group.
+_SPORT_EXCLUDE = {"jeans","trousers","blazer","shirt","blouse","skirt","dress",
+                  "heels","oxfords","loafers","sandals","cardigan"}
+
+def _event_filter(items: list, event_type: str) -> list:
+    if event_type.lower() != "sport":
+        return items
+
+    def _suitable(item) -> bool:
+        cat = (getattr(item, 'sub_category', None) or item.category).lower()
+        if cat in _SPORT_EXCLUDE:
+            return False
+        name = _normalize_name(getattr(item, 'name', '') or '')
+        return not any(w in name for w in _DENIM_WORDS | _DRESSY_WORDS)
+
+    filtered = [i for i in items if _suitable(i)]
+    return filtered if filtered else items
+
 def _pre_sort(items: list, event_type: str, temperature: int,
               feels_like: int, weather_type: str) -> list:
     return sorted(items,
@@ -74,9 +95,12 @@ def get_recommendation(
     filtered = _weather_filter(filtered, wt)
 
     groups  = _categorize(filtered)
-    tops    = _pre_sort(groups["top"]    or filtered, event_type, temperature, fl, wt)[:12]
-    bottoms = _pre_sort(groups["bottom"] or [],        event_type, temperature, fl, wt)[:10]
-    shoes   = _pre_sort(groups["shoes"]  or [],        event_type, temperature, fl, wt)[:8]
+    tops    = _pre_sort(_event_filter(groups["top"], event_type) or filtered,
+                        event_type, temperature, fl, wt)[:12]
+    bottoms = _pre_sort(_event_filter(groups["bottom"], event_type),
+                        event_type, temperature, fl, wt)[:10]
+    shoes   = _pre_sort(_event_filter(groups["shoes"], event_type),
+                        event_type, temperature, fl, wt)[:8]
 
     candidates: list[list] = []
     dresses        = [i for i in tops if "dress" in (getattr(i, 'sub_category', None) or i.category).lower()]

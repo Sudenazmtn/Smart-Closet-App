@@ -220,17 +220,51 @@ def season_match_score(item_season: str | None, feels_like: int, weather_type: s
     dist = max(lo - feels_like, feels_like - hi)
     return round(max(0.0, 1.0 - min(dist / 15.0, 1.0)), 3)
 
+# --- Name-based material/style hints -------------------------------------
+# The category table can't tell a denim short from running shorts, so we
+# also look at material/style words in the item name.
+_DENIM_WORDS  = {"kot", "denim", "jean"}
+_DRESSY_WORDS = {"saten", "satin", "kadife", "velvet", "sifon", "chiffon",
+                 "dantel", "lace", "deri", "leather", "topuklu", "ipek", "silk"}
+_SPORTY_WORDS = {"esofman", "spor", "jogger", "tayt", "antrenman", "training",
+                 "running", "kosu", "fitness", "athletic"}
+
+_TR_CHAR_MAP = str.maketrans("ışğüöçİŞĞÜÖÇ", "isguocisguoc")
+
+def _normalize_name(name: str) -> str:
+    return name.translate(_TR_CHAR_MAP).lower()
+
+def name_event_modifier(name: str | None, event_type: str) -> float:
+    """Score adjustment based on material/style words in the item name."""
+    if not name:
+        return 0.0
+    n  = _normalize_name(name)
+    et = event_type.lower()
+    has_denim  = any(w in n for w in _DENIM_WORDS)
+    has_dressy = any(w in n for w in _DRESSY_WORDS)
+    has_sporty = any(w in n for w in _SPORTY_WORDS)
+
+    mod = 0.0
+    if et == "sport":
+        if has_denim or has_dressy: mod -= 0.35
+        if has_sporty:              mod += 0.10
+    elif et in ("formal", "business"):
+        if has_sporty:              mod -= 0.25
+        if has_denim:               mod -= 0.10
+    return mod
+
 def score_item(item, event_type: str, temperature: int,
                feels_like: int | None = None, weather_type: str = "cloudy") -> float:
     fl = feels_like if feels_like is not None else temperature
     cat = item.sub_category if getattr(item, 'sub_category', None) else item.category
-    return round(
+    base = (
         temperature_score(cat, fl)              * 0.25 +
         event_score(cat, event_type)            * 0.35 +
         weather_type_score(cat, item.color, weather_type) * 0.25 +
-        season_match_score(item.season, fl, weather_type) * 0.15,
-        3
+        season_match_score(item.season, fl, weather_type) * 0.15
     )
+    base += name_event_modifier(getattr(item, 'name', None), event_type)
+    return round(min(1.0, max(0.0, base)), 3)
 
 def score_outfit(items: list, event_type: str, temperature: int,
                  feels_like: int | None = None, weather_type: str = "cloudy") -> float:
