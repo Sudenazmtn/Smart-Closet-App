@@ -12,9 +12,13 @@ mixin WardrobeMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
+  /// Loads clothes for the currently selected filter so the list always
+  /// matches the highlighted filter chip (e.g. when arriving from a home
+  /// category card or returning to the wardrobe).
   Future<void> _loadInitialData() async {
     if (!mounted) return;
-    await context.read<ClothingProvider>().loadClothes();
+    final provider = context.read<ClothingProvider>();
+    await provider.changeFilter(provider.selectedFilter);
   }
 
   Future<void> onFilterChanged(String value) async {
@@ -24,7 +28,8 @@ mixin WardrobeMixin<T extends StatefulWidget> on State<T> {
 
   Future<void> onRetry() async {
     if (!mounted) return;
-    await context.read<ClothingProvider>().loadClothes();
+    final provider = context.read<ClothingProvider>();
+    await provider.changeFilter(provider.selectedFilter);
   }
 
   Future<void> onDeleteItem(int id) async {

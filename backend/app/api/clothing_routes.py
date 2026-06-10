@@ -35,7 +35,15 @@ def get_clothes():
     season   = request.args.get('season')
     color    = request.args.get('color')
 
-    if category: query = query.filter_by(category=category)
+    if category == 'dress':
+        # Older items were saved as category=tops + sub_category=dress;
+        # include them in the dress filter as well.
+        query = query.filter(
+            (ClothingItem.category == 'dress')
+            | (ClothingItem.sub_category == 'dress')
+        )
+    elif category:
+        query = query.filter_by(category=category)
     if season:   query = query.filter(ClothingItem.season.contains(season))
     if color:    query = query.filter_by(color=color)
 
