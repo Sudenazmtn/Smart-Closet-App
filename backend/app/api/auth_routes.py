@@ -1,8 +1,15 @@
-from flask import Blueprint, request, jsonify
+import os
+import time
+
+from flask import Blueprint, request, jsonify, current_app
+from werkzeug.utils import secure_filename
+
 from app import db
 from app.models.user import User
 
 auth_bp = Blueprint('auth', __name__)
+
+ALLOWED_PHOTO_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 def _get_uid():
     return request.headers.get('X-Firebase-UID')
@@ -65,6 +72,42 @@ def me():
         return jsonify({'error': 'User not found'}), 404
 
     return jsonify({'user': user.to_dict()}), 200
+
+@auth_bp.route('/profile-photo', methods=['POST'])
+def upload_profile_photo():
+    uid = _get_uid()
+    if not uid:
+        return jsonify({'error': 'X-Firebase-UID header is required'}), 401
+
+    user = User.query.filter_by(firebase_uid=uid).first()
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    if 'image' not in request.files:
+        return jsonify({'error': 'image file is required'}), 400
+
+    file = request.files['image']
+    if not file or not file.filename or '.' not in file.filename:
+        return jsonify({'error': 'Invalid file'}), 400
+
+    ext = file.filename.rsplit('.', 1)[1].lower()
+    if ext not in ALLOWED_PHOTO_EXTENSIONS:
+        return jsonify({'error': 'File type not allowed'}), 400
+
+    upload_folder = current_app.config['UPLOAD_FOLDER']
+
+    # Remove previous profile photo regardless of its extension
+    for old_ext in ALLOWED_PHOTO_EXTENSIONS:
+        old_path = os.path.join(upload_folder, f'profile_{user.id}.{old_ext}')
+        if os.path.exists(old_path):
+            os.remove(old_path)
+
+    filename = secure_filename(f'profile_{user.id}.{ext}')
+    file.save(os.path.join(upload_folder, filename))
+
+    # Cache-buster query param so clients refresh the image after re-upload
+    image_url = f'/uploads/{filename}?v={int(time.time())}'
+    return jsonify({'message': 'Profile photo updated', 'image_url': image_url}), 200
 
 @auth_bp.route('/delete', methods=['DELETE'])
 def delete_account():

@@ -111,39 +111,7 @@ class _EmptyState extends StatelessWidget {
           style: AppTextStyles.bodySmall,
           textAlign: TextAlign.center,
         ),
-        const SizedBox(height: AppSizes.s),
-        const _AutoClassifyBadge(),
       ],
-    );
-  }
-}
-
-class _AutoClassifyBadge extends StatelessWidget {
-  const _AutoClassifyBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: AppPaddings.horizontalS + AppPaddings.verticalXXS,
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: AppRadius.allS,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.auto_awesome_rounded,
-            size: AppSizes.s,
-            color: AppColors.accent,
-          ),
-          const SizedBox(width: AppSizes.xxs),
-          Text(
-            LocaleKeys.addItemAutoClassify.tr(),
-            style: AppTextStyles.badgeDark,
-          ),
-        ],
-      ),
     );
   }
 }

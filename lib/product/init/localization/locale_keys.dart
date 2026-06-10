@@ -88,12 +88,17 @@ class LocaleKeys {
   static const addItemTitle = 'addItem.title';
   static const addItemSave = 'addItem.save';
   static const addItemPhotoPrompt = 'addItem.photoPrompt';
-  static const addItemAutoClassify = 'addItem.autoClassify';
   static const addItemFieldName = 'addItem.fieldName';
   static const addItemFieldCategory = 'addItem.fieldCategory';
   static const addItemFieldSeason = 'addItem.fieldSeason';
   static const addItemFieldColor = 'addItem.fieldColor';
   static const addItemFieldSubCategory = 'addItem.fieldSubCategory';
+
+  static const itemDetailTitle = 'itemDetail.title';
+  static const itemDetailSave = 'itemDetail.save';
+  static const itemDetailDelete = 'itemDetail.delete';
+  static const itemDetailUpdated = 'itemDetail.updated';
+  static const itemDetailNeverWorn = 'itemDetail.neverWorn';
 
   static const subcategoryTshirt = 'subcategory.tshirt';
   static const subcategoryShirt = 'subcategory.shirt';
@@ -243,6 +248,10 @@ class LocaleKeys {
   static const profilePrivacyDeleteCancel = 'profile.privacyDeleteCancel';
   static const profileMenuPrivacy = 'profile.menuPrivacy';
   static const profileMenuPrivacySub = 'profile.menuPrivacySub';
+  static const profilePhotoSheetTitle = 'profile.photoSheetTitle';
+  static const profilePhotoTakePhoto = 'profile.photoTakePhoto';
+  static const profilePhotoFromGallery = 'profile.photoFromGallery';
+  static const profilePhotoUpdated = 'profile.photoUpdated';
   static const profileEditSheetTitle = 'profile.editSheetTitle';
   static const profileEditNameLabel = 'profile.editNameLabel';
   static const profileEditNameHint = 'profile.editNameHint';

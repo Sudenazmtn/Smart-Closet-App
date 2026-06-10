@@ -80,6 +80,32 @@ class ClothingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateClothing(
+    int id, {
+    String? name,
+    String? category,
+    String? subCategory,
+    String? color,
+    String? season,
+  }) async {
+    _setLoading();
+    try {
+      final updated = await _repository.updateClothing(
+        id,
+        name: name,
+        category: category,
+        subCategory: subCategory,
+        color: color,
+        season: season,
+      );
+      final index = _items.indexWhere((item) => item.id == id);
+      if (index != -1) _items[index] = updated;
+      _setSuccess();
+    } catch (e) {
+      _setError(e.toString());
+    }
+  }
+
   Future<void> deleteClothing(int id) async {
     _setLoading();
     try {
@@ -133,13 +159,21 @@ class ClothingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// First photo for a home category card. Items saved earlier as
+  /// tops + sub_category=dress also count as dress; items without a
+  /// photo are skipped so the card shows an image whenever one exists.
   String? firstImageForCategory(String filter) {
-  try {
-    return _items.firstWhere((item) => item.category == filter).imageUrl;
-  } catch (_) {
-    return null;
+    bool matches(ClothingModel item) =>
+        item.category == filter ||
+        (filter == 'dress' && item.subCategory == 'dress');
+    try {
+      return _items
+          .firstWhere((item) => matches(item) && item.imageUrl != null)
+          .imageUrl;
+    } catch (_) {
+      return null;
+    }
   }
-}
 
   void _setLoading() {
     _status = ClothingStatus.loading;

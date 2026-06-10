@@ -69,8 +69,8 @@ class _WardrobeViewState extends State<WardrobeView> with WardrobeMixin {
                   }
                   return WardrobeGrid(
                     items: clothing.items,
-                    onItemTap: (item) {
-                    },
+                    onItemTap: (item) =>
+                        context.push(AppRoutes.clothingDetail, extra: item),
                     onItemLongPress: (item) => onDeleteItem(item.id),
                   );
                 },
