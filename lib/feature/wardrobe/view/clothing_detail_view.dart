@@ -1,14 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_closet_app/feature/add_clothing/view/mixin/add_clothing_mixin.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_chip_selector.dart';
-import 'package:smart_closet_app/feature/add_clothing/view/widget/add_multi_chip_selector.dart';
-import 'package:smart_closet_app/feature/add_clothing/view/widget/add_subcategory_selector.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_color_selector.dart';
-import 'package:smart_closet_app/feature/add_clothing/view/widget/add_photo_picker.dart';
+import 'package:smart_closet_app/feature/add_clothing/view/widget/add_multi_chip_selector.dart';
 import 'package:smart_closet_app/feature/add_clothing/view/widget/add_section_label.dart';
+import 'package:smart_closet_app/feature/add_clothing/view/widget/add_subcategory_selector.dart';
 import 'package:smart_closet_app/feature/wardrobe/provider/clothing_provider.dart';
+import 'package:smart_closet_app/feature/wardrobe/view/mixin/clothing_detail_mixin.dart';
+import 'package:smart_closet_app/product/data/model/clothing_model.dart';
+import 'package:smart_closet_app/product/data/services/api_service.dart';
 import 'package:smart_closet_app/product/init/localization/locale_keys.dart';
 import 'package:smart_closet_app/product/utils/constant/app_color.dart';
 import 'package:smart_closet_app/product/utils/constant/app_paddings.dart';
@@ -16,23 +17,24 @@ import 'package:smart_closet_app/product/utils/constant/app_radius.dart';
 import 'package:smart_closet_app/product/utils/constant/app_size.dart';
 import 'package:smart_closet_app/product/utils/constant/app_text_styles.dart';
 import 'package:smart_closet_app/product/utils/constant/clothing_form_options.dart';
+import 'package:smart_closet_app/product/utils/extension/clothing_category_ext.dart';
 
-part 'add_clothing_filter_data.dart';
+class ClothingDetailView extends StatefulWidget {
+  const ClothingDetailView({super.key, required this.item});
 
-class AddClothingView extends StatefulWidget {
-  const AddClothingView({super.key});
+  final ClothingModel item;
 
   @override
-  State<AddClothingView> createState() => _AddClothingViewState();
+  State<ClothingDetailView> createState() => _ClothingDetailViewState();
 }
 
-class _AddClothingViewState extends State<AddClothingView>
-    with AddClothingMixin {
+class _ClothingDetailViewState extends State<ClothingDetailView>
+    with ClothingDetailMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.accentLight,
-      appBar: _AddClothingAppBar(onSave: () => onSave(context)),
+      appBar: _DetailAppBar(onSave: () => onSave(context)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: AppPaddings.allM,
@@ -42,11 +44,9 @@ class _AddClothingViewState extends State<AddClothingView>
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: AppSizes.xs),
-                AddPhotoPicker(
-                  imagePath: imagePath,
-                  onCameraTap: pickFromCamera,
-                  onGalleryTap: pickFromGallery,
-                ),
+                _ItemPhoto(item: item),
+                const SizedBox(height: AppSizes.xs),
+                _WearInfo(item: item),
                 const SizedBox(height: AppSizes.l),
                 AddSectionLabel(LocaleKeys.addItemFieldName.tr()),
                 const SizedBox(height: AppSizes.xs),
@@ -55,18 +55,18 @@ class _AddClothingViewState extends State<AddClothingView>
                 AddSectionLabel(LocaleKeys.addItemFieldCategory.tr()),
                 const SizedBox(height: AppSizes.xs),
                 AddChipSelector(
-                  options: _kCategories
+                  options: kClothingCategories
                       .map((o) => (value: o.value, label: o.localeKey.tr()))
                       .toList(),
                   selectedValue: selectedCategory,
                   onSelected: onCategorySelected,
                 ),
                 const SizedBox(height: AppSizes.m),
-                if (_kSubCategories.containsKey(selectedCategory)) ...[
+                if (kClothingSubCategories.containsKey(selectedCategory)) ...[
                   AddSectionLabel(LocaleKeys.addItemFieldSubCategory.tr()),
                   const SizedBox(height: AppSizes.xs),
                   AddSubcategorySelector(
-                    options: _kSubCategories[selectedCategory]!
+                    options: kClothingSubCategories[selectedCategory]!
                         .map((o) => (value: o.value, label: o.localeKey.tr()))
                         .toList(),
                     selectedValue: selectedSubCategory,
@@ -77,7 +77,7 @@ class _AddClothingViewState extends State<AddClothingView>
                 AddSectionLabel(LocaleKeys.addItemFieldSeason.tr()),
                 const SizedBox(height: AppSizes.xs),
                 AddMultiChipSelector(
-                  options: _kSeasons
+                  options: kClothingSeasons
                       .map((o) => (value: o.value, label: o.localeKey.tr()))
                       .toList(),
                   selectedValues: selectedSeasons,
@@ -87,7 +87,7 @@ class _AddClothingViewState extends State<AddClothingView>
                 AddSectionLabel(LocaleKeys.addItemFieldColor.tr()),
                 const SizedBox(height: AppSizes.xs),
                 AddColorSelector(
-                  options: _kColors
+                  options: kClothingColors
                       .map((o) => (
                             value: o.value,
                             label: o.localeKey.tr(),
@@ -98,7 +98,9 @@ class _AddClothingViewState extends State<AddClothingView>
                   onSelected: onColorSelected,
                 ),
                 const SizedBox(height: AppSizes.xl),
-                _AddToWardrobeButton(onPressed: () => onSave(context)),
+                _SaveButton(onPressed: () => onSave(context)),
+                const SizedBox(height: AppSizes.s),
+                _DeleteButton(onPressed: () => onDelete(context)),
                 const SizedBox(height: AppSizes.m),
               ],
             ),
@@ -109,9 +111,8 @@ class _AddClothingViewState extends State<AddClothingView>
   }
 }
 
-class _AddClothingAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
-  const _AddClothingAppBar({required this.onSave});
+class _DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _DetailAppBar({required this.onSave});
   final VoidCallback onSave;
 
   @override
@@ -132,7 +133,7 @@ class _AddClothingAppBar extends StatelessWidget
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
-        LocaleKeys.addItemTitle.tr(),
+        LocaleKeys.itemDetailTitle.tr(),
         style: AppTextStyles.headingSmall,
       ),
       centerTitle: true,
@@ -141,10 +142,81 @@ class _AddClothingAppBar extends StatelessWidget
           builder: (context, clothing, _) => TextButton(
             onPressed: clothing.isLoading ? null : onSave,
             child: Text(
-              LocaleKeys.addItemSave.tr(),
+              LocaleKeys.commonSave.tr(),
               style: AppTextStyles.buttonLink,
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ItemPhoto extends StatelessWidget {
+  const _ItemPhoto({required this.item});
+  final ClothingModel item;
+
+  static const double _height = 180;
+
+  @override
+  Widget build(BuildContext context) {
+    if (item.imageUrl != null) {
+      return ClipRRect(
+        borderRadius: AppRadius.allM,
+        child: Image.network(
+          '${ApiService.baseUrl}${item.imageUrl}',
+          height: _height,
+          fit: BoxFit.cover,
+          errorBuilder: (_, _, _) => _EmojiBox(item: item),
+        ),
+      );
+    }
+    return _EmojiBox(item: item);
+  }
+}
+
+class _EmojiBox extends StatelessWidget {
+  const _EmojiBox({required this.item});
+  final ClothingModel item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: _ItemPhoto._height,
+      decoration: BoxDecoration(
+        color: item.categoryColor,
+        borderRadius: AppRadius.allM,
+      ),
+      child: Center(
+        child: Text(
+          item.categoryEmoji,
+          style: const TextStyle(fontSize: AppSizes.emojiL),
+        ),
+      ),
+    );
+  }
+}
+
+class _WearInfo extends StatelessWidget {
+  const _WearInfo({required this.item});
+  final ClothingModel item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.checkroom_outlined,
+          size: AppSizes.s,
+          color: AppColors.textMuted,
+        ),
+        const SizedBox(width: AppSizes.xxs),
+        Text(
+          item.wearCount > 0
+              ? LocaleKeys.statsWornTimes.tr(args: ['${item.wearCount}'])
+              : LocaleKeys.itemDetailNeverWorn.tr(),
+          style: AppTextStyles.bodySmall,
         ),
       ],
     );
@@ -175,8 +247,7 @@ class _NameField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: AppRadius.allS,
-          borderSide:
-              const BorderSide(color: AppColors.accent, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.accent, width: 1.5),
         ),
         contentPadding: AppPaddings.allS,
       ),
@@ -191,8 +262,8 @@ class _NameField extends StatelessWidget {
   }
 }
 
-class _AddToWardrobeButton extends StatelessWidget {
-  const _AddToWardrobeButton({required this.onPressed});
+class _SaveButton extends StatelessWidget {
+  const _SaveButton({required this.onPressed});
   final VoidCallback onPressed;
 
   @override
@@ -206,9 +277,7 @@ class _AddToWardrobeButton extends StatelessWidget {
             backgroundColor: AppColors.accent,
             foregroundColor: AppColors.textOnAccent,
             elevation: 0,
-            shape: RoundedRectangleBorder(
-              borderRadius: AppRadius.allS,
-            ),
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.allS),
           ),
           child: clothing.isLoading
               ? const SizedBox(
@@ -220,9 +289,40 @@ class _AddToWardrobeButton extends StatelessWidget {
                   ),
                 )
               : Text(
-                  LocaleKeys.addItemTitle.tr(),
+                  LocaleKeys.itemDetailSave.tr(),
                   style: AppTextStyles.buttonAccent,
                 ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DeleteButton extends StatelessWidget {
+  const _DeleteButton({required this.onPressed});
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ClothingProvider>(
+      builder: (context, clothing, _) => SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: clothing.isLoading ? null : onPressed,
+          icon: const Icon(
+            Icons.delete_outline_rounded,
+            size: AppSizes.m,
+            color: AppColors.error,
+          ),
+          label: Text(
+            LocaleKeys.itemDetailDelete.tr(),
+            style: AppTextStyles.buttonDestructive,
+          ),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: AppColors.errorLight, width: 0.8),
+            shape: RoundedRectangleBorder(borderRadius: AppRadius.allS),
+            padding: AppPaddings.verticalS,
+          ),
         ),
       ),
     );

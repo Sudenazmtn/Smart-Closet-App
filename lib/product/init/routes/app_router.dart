@@ -10,7 +10,9 @@ import 'package:smart_closet_app/feature/home/view/home_view.dart';
 import 'package:smart_closet_app/feature/outfit/view/outfit_view.dart';
 import 'package:smart_closet_app/feature/profile/view/profile_view.dart';
 import 'package:smart_closet_app/feature/stats/view/stats_view.dart';
+import 'package:smart_closet_app/feature/wardrobe/view/clothing_detail_view.dart';
 import 'package:smart_closet_app/feature/wardrobe/view/wardrobe_view.dart';
+import 'package:smart_closet_app/product/data/model/clothing_model.dart';
 import 'package:smart_closet_app/feature/saved_outfits/view/saved_outfits_view.dart';
 
 class AppRoutes {
@@ -23,6 +25,7 @@ class AppRoutes {
   static const home = '/home';
   static const wardrobe = '/wardrobe';
   static const addClothing = '/wardrobe/add';
+  static const clothingDetail = '/wardrobe/detail';
   static const outfit = '/outfit';
   static const stats = '/stats';
   static const profile        = '/profile';
@@ -81,6 +84,12 @@ final appRouter = GoRouter(
           path: 'add',
           name: 'addClothing',
           builder: (context, state) => const AddClothingView(),
+        ),
+        GoRoute(
+          path: 'detail',
+          name: 'clothingDetail',
+          builder: (context, state) =>
+              ClothingDetailView(item: state.extra! as ClothingModel),
         ),
       ],
     ),

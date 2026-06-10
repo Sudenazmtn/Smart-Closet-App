@@ -89,12 +89,18 @@
     "title": "Add Item",
     "save": "Add to Wardrobe",
     "photoPrompt": "Tap to take photo or upload from gallery",
-    "autoClassify": "Auto-classify",
     "fieldName": "Item Name",
     "fieldCategory": "Category",
     "fieldSeason": "Season",
     "fieldColor": "Color",
     "fieldSubCategory": "Subcategory"
+  },
+  "itemDetail": {
+    "title": "Item Detail",
+    "save": "Save Changes",
+    "delete": "Delete Item",
+    "updated": "Item updated.",
+    "neverWorn": "Never worn yet"
   },
   "subcategory": {
     "tshirt": "T-Shirt",
@@ -241,6 +247,10 @@
     "menuLanguageEn": "English",
     "menuPrivacy": "Privacy & Security",
     "menuPrivacySub": "Manage your data",
+    "photoSheetTitle": "Profile Photo",
+    "photoTakePhoto": "Take Photo",
+    "photoFromGallery": "Choose from Gallery",
+    "photoUpdated": "Profile photo updated.",
     "editSheetTitle": "Edit Profile",
     "editNameLabel": "Full Name",
     "editNameHint": "Enter your name",

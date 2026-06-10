@@ -89,12 +89,18 @@
     "title": "Parça Ekle",
     "save": "Gardıroba Ekle",
     "photoPrompt": "Fotoğraf çekmek veya galeriden yüklemek için dokun",
-    "autoClassify": "Otomatik Sınıflandır",
     "fieldName": "Parça Adı",
     "fieldCategory": "Kategori",
     "fieldSeason": "Mevsim",
     "fieldColor": "Renk",
     "fieldSubCategory": "Alt Kategori"
+  },
+  "itemDetail": {
+    "title": "Parça Detayı",
+    "save": "Değişiklikleri Kaydet",
+    "delete": "Parçayı Sil",
+    "updated": "Parça güncellendi.",
+    "neverWorn": "Henüz hiç giyilmedi"
   },
   "subcategory": {
     "tshirt": "Tişört",
@@ -241,6 +247,10 @@
     "menuLanguageEn": "İngilizce",
     "menuPrivacy": "Gizlilik & Güvenlik",
     "menuPrivacySub": "Verilerini yönet",
+    "photoSheetTitle": "Profil Fotoğrafı",
+    "photoTakePhoto": "Fotoğraf Çek",
+    "photoFromGallery": "Galeriden Seç",
+    "photoUpdated": "Profil fotoğrafı güncellendi.",
     "editSheetTitle": "Profili Düzenle",
     "editNameLabel": "Ad Soyad",
     "editNameHint": "Adınızı girin",
